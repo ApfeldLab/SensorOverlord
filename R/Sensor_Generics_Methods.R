@@ -63,5 +63,36 @@ setMethod("getE", "redoxSensor", definition =
                   )
               })
 
+setGeneric('getError', def = function(object, ...) standardGeneric("getError"))
 
+setMethod("getError", "Sensor", definition =
+              function(object, R, FUN, Error_Model, ...) {
+                  answer <- c()
+                  for (R_individual in R) {
+                      R_error <- Error_Model(R_individual)
+                      R_lower <- R_individual + R_error
+                      R_upper <- R_individual - R_error
+
+
+                      # Get the absolute difference in running the function between R and the R + error
+                      # You may get an error, in which case the error is infinite
+                      value_error_up <- suppressWarnings(FUN(object, (R_upper), ...) - FUN(object, (R_individual), ...))
+                      value_error_up = ifelse(test = is.na(value_error_up), yes = Inf, no = abs(value_error_up))
+
+                      # Same thing, but with function between R and R - error
+                      value_error_down <- suppressWarnings(FUN(object, (R_lower), ...) - FUN(object, (R_individual), ...))
+                      value_error_down = ifelse(test = is.na(value_error_down), yes = Inf, no = abs(value_error_down))
+
+                      # Get the maximum error
+                      max_error <- max(value_error_down, value_error_up)
+
+                      # Append the maximum error to the answer
+                      answer <- c(answer, max_error)
+
+                      # Print stuff
+                      print(paste(R_individual, R_lower, R_upper, value_error_up, value_error_down, max_error))
+                  }
+
+                  return(answer)
+              })
 
