@@ -50,3 +50,18 @@ setMethod("getFractionMax", "Sensor", definition =
                       (R - object@Rmin) / ((R - object@Rmin) + object@delta * (object@Rmax - R))
                   )
               })
+
+setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
+
+setMethod("getE", "redoxSensor", definition =
+              function(object, R, temp = 295.15) {
+                  return(
+                      return(object@e0 - (8.315 * temp)/(2 * 96.48104) *
+                                 log(
+                                     (object@delta * object@Rmax - object@delta * R) /
+                                         (R - object@Rmin)))
+                  )
+              })
+
+
+
