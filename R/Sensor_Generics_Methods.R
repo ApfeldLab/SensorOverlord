@@ -22,6 +22,26 @@ setMethod('getR', "Sensor", definition =
                   return(seq(object@Rmin, object@Rmax, by = by))
               })
 
+#' Get the fraction of sensors in the state corresponding to "Rmax"
+#'
+#' This method corresponds to finding the "OxD" in a redox sensor
+#'
+#' @param object A sensor object
+#' @param R A single number or numeric vector corresponding to an R between Rmin and Rmax
+#'
+#' @return A single number of numeric vector of the fraction of sensors
+#' in the maximum-emission state corresponding to the given R
+#'
+#' @export
+#' @docType methods
+#' @rdname getR-methods
+#'
+#' @examples
+#' my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
+#' getFractionMax(my_sensor, R = 1)
+#' getFractionMax(my_sensor, R = 3)
+#' getFractionMax(my_sensor, R = 5)
+
 setGeneric('getFractionMax', def = function(object, ...) standardGeneric("getFractionMax"))
 
 setMethod("getFractionMax", "Sensor", definition =
