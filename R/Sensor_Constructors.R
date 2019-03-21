@@ -1,6 +1,7 @@
 # Sensor constructors ------
 
 # lambda_1 and lambda_2 are arrays of length two describing the range of values to measure
+#' @export
 newSensorFromSpectra <- function(sensorSpectra, lambda_1, lambda_2) {
     values_maximum = sensorSpectra@values_maximum
     values_minimum = sensorSpectra@values_minimum
@@ -29,6 +30,7 @@ newSensorFromSpectra <- function(sensorSpectra, lambda_1, lambda_2) {
 # values_minimum represents state corresponding to Rmin
 # values_maximum represents state corresponding to Rmax
 # Turn two pairs of lambda-emission spectra into a 3-column dataframe
+#' @export
 spectraMatrixFromValues <- function(lambdas_minimum, values_minimum, lambdas_maximum, values_maximum) {
 
     # Set beginning and ending lambda values

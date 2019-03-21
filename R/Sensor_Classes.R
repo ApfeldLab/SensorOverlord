@@ -1,4 +1,5 @@
 # Sensor classes
+#' @export
 setClass("Sensor",
          slots =
              list(Rmin = "numeric", Rmax = "numeric", delta = "numeric")
@@ -16,6 +17,7 @@ setValidity("Sensor",
 
 # Rmax always represents fully oxidized
 # Rmin always represents fully reduced
+#' @export
 setClass("redoxSensor",
          slots =
              list(e0 = "numeric"),
@@ -24,6 +26,7 @@ setClass("redoxSensor",
 
 # Rmax always represents fully deprotenated
 # Rmin always represents fully protenated
+#' @export
 setClass("pHSensor",
          slots =
              list(pKa = "numeric"),

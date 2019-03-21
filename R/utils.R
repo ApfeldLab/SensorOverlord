@@ -1,4 +1,5 @@
 # Rescale y to the same size as the new x values
+#' @export
 rescaleToRange <- function(new_xs, old_xs, y) {
     # Initalize rescaled y values
     new_y <- c()
