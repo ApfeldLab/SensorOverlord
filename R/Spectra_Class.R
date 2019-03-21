@@ -6,6 +6,8 @@
 #' @slot values_maximum represents the relative emission values of the sensor state
 #' corresponding to the highest R value Rmax
 #'
+#' @export
+#'
 #' @import methods
 setClass("sensorSpectra",
          slots =
