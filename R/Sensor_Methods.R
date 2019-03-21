@@ -15,9 +15,9 @@
 #' @examples
 #' my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
 #' getR(my_sensor, by = 0.1)
-
 setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
 
+#' @export
 setMethod('getR', "Sensor", definition =
               function(object, by = 0.01) {
                   return(seq(object@Rmin, object@Rmax, by = by))
@@ -64,8 +64,10 @@ setMethod("getFractionMax", "Sensor", definition =
                   )
               })
 
+#' @export
 setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
 
+#' @export
 setMethod("getE", "redoxSensor", definition =
               function(object, R, temp = 295.15) {
                   return(
@@ -76,8 +78,10 @@ setMethod("getE", "redoxSensor", definition =
                   )
               })
 
+#' @export
 setGeneric('getError', def = function(object, ...) standardGeneric("getError"))
 
+#' @export
 setMethod("getError", "Sensor", definition =
               function(object, R, FUN, Error_Model, ...) {
                   answer <- c()
@@ -109,3 +113,50 @@ setMethod("getError", "Sensor", definition =
                   return(answer)
               })
 
+#' @export
+setGeneric('plotFractionMax', def = function(object) standardGeneric("plotFractionMax"))
+
+#' @export
+setMethod("plotFractionMax", "Sensor", definition =
+              function(object) {
+                  R <- getR(object)
+                  R_OXD <- data.frame(R = R, OXD = getFractionMax(object, R))
+
+                  plot <- ggplot(R_OXD) +
+                      geom_line(aes(x = R_OXD$R, y = R_OXD$OXD)) +
+                      xlab("R")  +
+                      ylab("Fraction in Max State")
+
+                  return(plot)
+              })
+
+#' @export
+setMethod("plotFractionMax", "redoxSensor", definition =
+              function(object) {
+                  R <- getR(object)
+                  R_OXD <- data.frame(R = R, OXD = getFractionMax(object, R))
+
+                  plot <- ggplot(R_OXD) +
+                      geom_line(aes(x = R_OXD$R, y = R_OXD$OXD)) +
+                      xlab("R")  +
+                      ylab("Fraction Oxidized (OXD)")
+
+                  return(plot)
+              })
+
+#' @export
+setGeneric('plotE', def = function(object) standardGeneric("plotE"))
+
+#' @export
+setMethod("plotE", "redoxSensor", definition =
+              function(object) {
+                  R <- getR(object)
+                  R_E <- data.frame(R = R, E = getE(object, R))
+
+                  plot <- ggplot(R_E) +
+                      geom_line(aes(x = R_E$R, y = R_E$E)) +
+                      xlab("R")  +
+                      ylab("E_GSH (mV)")
+
+                  return(plot)
+              })
