@@ -221,7 +221,7 @@ setMethod("plotFractionMax", "Sensor", definition =
 #'
 #' @export
 #' @docType methods
-#' @rdname plotFractionMax-Sensor
+#' @rdname plotFractionMax-redoxSensor
 setMethod("plotFractionMax", "redoxSensor", definition =
               function(object) {
                   R <- getR(object)
@@ -235,10 +235,29 @@ setMethod("plotFractionMax", "redoxSensor", definition =
                   return(plot)
               })
 
+#' Plot the fraction of E of an object
+#'
+#' @param object An object
+#'
+#' @returns A ggplot object
+#'
 #' @export
+#' @docType methods
+#' @rdname plotE-generic
 setGeneric('plotE', def = function(object) standardGeneric("plotE"))
 
+#' Plot the fraction of E of a redoxSensor
+#'
+#' Creates a ggplot object that has the ratio R on the horizontal axis
+#' and the redox potential (E) on the vertical axis
+#'
+#' @param object An redoxSensor object
+#'
+#' @returns A ggplot object
+#'
 #' @export
+#' @docType methods
+#' @rdname plotE-redoxSensor
 setMethod("plotE", "redoxSensor", definition =
               function(object) {
                   R <- getR(object)
