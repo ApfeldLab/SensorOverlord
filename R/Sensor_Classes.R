@@ -1,5 +1,14 @@
 # Sensor classes
+
+#' An S4 class to represent a 2-state sensor
+#'
+#' @slot Rmin To represent the ratio emission value R in the minimum state
+#' @slot Rmax to represent the ratio emission value R in the maximum state
+#' @slot delta To represent the ratio between emission in the maximum and
+#' minimum states in the second wavelength of the ratio.
+#'
 #' @export
+#' @import methods
 setClass("Sensor",
          slots =
              list(Rmin = "numeric", Rmax = "numeric", delta = "numeric")
@@ -15,8 +24,14 @@ setValidity("Sensor",
                     TRUE
             })
 
-# Rmax always represents fully oxidized
-# Rmin always represents fully reduced
+#' An S4 class to represent a 2-state redox sensor
+#'
+#' @slot Rmin To represent the ratio emission value R in the reduced state
+#' @slot Rmax to represent the ratio emission value R in the oxidized state
+#' @slot delta To represent the ratio between emission in the oxidized and reduced
+#' states in the second wavelength of the ratio.
+#' @slot e0 The midpoint potential of the redox sensor
+#'
 #' @export
 setClass("redoxSensor",
          slots =
@@ -24,8 +39,14 @@ setClass("redoxSensor",
          contains = "Sensor"
 )
 
-# Rmax always represents fully deprotenated
-# Rmin always represents fully protenated
+#' An S4 class to represent a 2-state redox sensor
+#'
+#' @slot Rmin To represent the ratio emission value R in the protenated state
+#' @slot Rmax to represent the ratio emission value R in the deprotenated state
+#' @slot delta To represent the ratio between emission in the deprotenated and protenated
+#' states in the second wavelength of the ratio.
+#' @slot pKa The midpoint/pKa of the redox sensor
+#'
 #' @export
 setClass("pHSensor",
          slots =
