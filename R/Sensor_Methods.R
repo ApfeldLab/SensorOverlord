@@ -76,10 +76,32 @@ setMethod("getFractionMax", "Sensor", definition =
                   )
               })
 
+#' Get the redox potential (E) value (generic)
+#'
+#' @param object An object
+#' @param ... ...
+#'
+#' @return A numeric array of E values
+#'
 #' @export
+#' @docType methods
+#' @rdname getE-generic
 setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
 
+#' Get the redox potential (E) for a redox sensor
+#'
+#' For a given redox sensor at a certain temperature, returns the
+#' redox potential corresponding to a given ratio (R) value
+#'
+#' @param object A redoxSensor object
+#' @param R A numeric value (can be an array) of ratio values
+#' @param temp The temperature, in Kelvin. Default is 295.15
+#'
+#' @returns A numeric array of E values
+#'
 #' @export
+#' @docType methods
+#' @rdname getE-method
 setMethod("getE", "redoxSensor", definition =
               function(object, R, temp = 295.15) {
                   return(
