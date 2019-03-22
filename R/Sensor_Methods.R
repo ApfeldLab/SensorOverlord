@@ -101,7 +101,7 @@ setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
 #'
 #' @export
 #' @docType methods
-#' @rdname getE-method
+#' @rdname getE-redoxSensor
 setMethod("getE", "redoxSensor", definition =
               function(object, R, temp = 295.15) {
                   return(
@@ -112,10 +112,35 @@ setMethod("getE", "redoxSensor", definition =
                   )
               })
 
+#' Get the error (generic)
+#'
+#' @param object An object
+#' @param ... ...
+#'
+#' @returns A numeric array of errors
+#'
 #' @export
+#' @docType methods
+#' @rdname getError-generic
 setGeneric('getError', def = function(object, ...) standardGeneric("getError"))
 
+#' Get the error for a given sensor object
+#'
+#' Each R will have a certain error, defined by the Error_Model parameter
+#' That error in R will propagate when applied to the FUN function parameter
+#' This method returns that error
+#'
+#' @param object A sensor object
+#' @param R An array of numeric ratio values
+#' @param FUN A function that will be applied to R
+#' @param Error_Model A function in the form Error_Model(R) --> Error in R
+#' @param ... Extra parameters applied to the FUN function
+#'
+#' @returns A numeric array of errors
+#'
 #' @export
+#' @docType methods
+#' @rdName getError-sensor
 setMethod("getError", "Sensor", definition =
               function(object, R, FUN, Error_Model, ...) {
                   answer <- c()
