@@ -14,6 +14,9 @@
 
 \item{temp}{The temperature, in Kelvin. Default is 295.15}
 }
+\value{
+A numeric array of E values
+}
 \description{
 For a given redox sensor at a certain temperature, returns the
 redox potential corresponding to a given ratio (R) value

@@ -97,7 +97,7 @@ setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
 #' @param R A numeric value (can be an array) of ratio values
 #' @param temp The temperature, in Kelvin. Default is 295.15
 #'
-#' @returns A numeric array of E values
+#' @return A numeric array of E values
 #'
 #' @export
 #' @docType methods
@@ -117,7 +117,7 @@ setMethod("getE", "redoxSensor", definition =
 #' @param object An object
 #' @param ... ...
 #'
-#' @returns A numeric array of errors
+#' @return A numeric array of errors
 #'
 #' @export
 #' @docType methods
@@ -136,11 +136,11 @@ setGeneric('getError', def = function(object, ...) standardGeneric("getError"))
 #' @param Error_Model A function in the form Error_Model(R) --> Error in R
 #' @param ... Extra parameters applied to the FUN function
 #'
-#' @returns A numeric array of errors
+#' @return A numeric array of errors
 #'
 #' @export
 #' @docType methods
-#' @rdName getError-sensor
+#' @rdname getError-sensor
 setMethod("getError", "Sensor", definition =
               function(object, R, FUN, Error_Model, ...) {
                   answer <- c()
@@ -177,7 +177,7 @@ setMethod("getError", "Sensor", definition =
 #' @param object An object
 #' @param ... ...
 #'
-#' @returns A ggplot object
+#' @return A ggplot object
 #'
 #' @export
 #' @docType methods
@@ -192,7 +192,7 @@ setGeneric('plotFractionMax', def = function(object, ...) standardGeneric("plotF
 #' @param object An sensor object
 #' @param FUN A function in the form FUN(Sensor, R) --> Fraction in Max State
 #'
-#' @returns A ggplot object
+#' @return A ggplot object
 #'
 #' @export
 #' @docType methods
@@ -217,7 +217,7 @@ setMethod("plotFractionMax", "Sensor", definition =
 #'
 #' @param object An redoxSensor object
 #'
-#' @returns A ggplot object
+#' @return A ggplot object
 #'
 #' @export
 #' @docType methods
@@ -239,7 +239,7 @@ setMethod("plotFractionMax", "redoxSensor", definition =
 #'
 #' @param object An object
 #'
-#' @returns A ggplot object
+#' @return A ggplot object
 #'
 #' @export
 #' @docType methods
@@ -253,7 +253,7 @@ setGeneric('plotE', def = function(object) standardGeneric("plotE"))
 #'
 #' @param object An redoxSensor object
 #'
-#' @returns A ggplot object
+#' @return A ggplot object
 #'
 #' @export
 #' @docType methods

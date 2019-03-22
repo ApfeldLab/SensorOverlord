@@ -13,7 +13,6 @@
 #' @return A Sensor object
 #'
 #' @export
-#' @docType functions
 #' @rdname newSensorFromSpectra-function
 newSensorFromSpectra <- function(sensorSpectra, lambda_1, lambda_2) {
     values_maximum = sensorSpectra@values_maximum

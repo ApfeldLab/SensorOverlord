@@ -1,9 +1,21 @@
 # sensorSpectra constructors -----
 
-# values_minimum represents state corresponding to Rmin
-# values_maximum represents state corresponding to Rmax
-# Turn two pairs of lambda-emission spectra into a 3-column dataframe
+#' A function to make a sensorSpectra from a set of 4 vectors
+#'
+#' I'll typically collect spectra data in an excel file with 4 columns: the lambda and emission
+#' values corresponding to the minimum and maximum states. This function takes data from those 4
+#' columns, condenses them into a 3-column dataframe (with matching lambda values) and makes
+#' a sensorSpectra object
+#'
+#' @param lambdas_minimum Lambdas of the values corresponding to the Rmin state
+#' @param values_minimum Emission values corresponding to the Rmin state
+#' @param lambdas_maximum Lambdas of the values corresponding to the Rmax state
+#' @param values_maximum Emission values corresponding to the Rmax state
+
+#' @return A sensorSpectra object
+#'
 #' @export
+#' @rdname spectraMatrixFromValues-function
 #' @import stats
 spectraMatrixFromValues <- function(lambdas_minimum, values_minimum, lambdas_maximum, values_maximum) {
     # Trim any NA values
