@@ -3,7 +3,7 @@
 \docType{methods}
 \name{plotSpectra}
 \alias{plotSpectra}
-\title{Create a spectra plot}
+\title{A generic for the plotSpectra method}
 \usage{
 plotSpectra(object, ...)
 }
@@ -16,5 +16,5 @@ plotSpectra(object, ...)
 A ggplot object
 }
 \description{
-This just generates a ggplot object of the emission spectra from a sensorSpectra object
+A generic for the plotSpectra method
 }

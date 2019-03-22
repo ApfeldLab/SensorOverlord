@@ -3,7 +3,7 @@
 \docType{methods}
 \name{getR}
 \alias{getR}
-\title{Get an array of R values from a sensor}
+\title{Get an array of R values (generic)}
 \usage{
 getR(object, ...)
 }
@@ -11,16 +11,10 @@ getR(object, ...)
 \item{object}{A sensor object}
 
 \item{...}{...}
-
-\item{by}{The "by" argument for seq. Specifies intervals between subsequent R values}
 }
 \value{
-A numeric array between Rmin and Rmax
+A numeric array
 }
 \description{
 This is just a simple method that generates a range of values between Rmin and Rmax
-}
-\examples{
-my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
-getR(my_sensor, by = 0.1)
 }
