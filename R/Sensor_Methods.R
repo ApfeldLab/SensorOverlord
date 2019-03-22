@@ -172,24 +172,56 @@ setMethod("getError", "Sensor", definition =
                   return(answer)
               })
 
+#' Plot the fraction of objects in the max state (generic)
+#'
+#' @param object An object
+#' @param ... ...
+#'
+#' @returns A ggplot object
+#'
 #' @export
-setGeneric('plotFractionMax', def = function(object) standardGeneric("plotFractionMax"))
+#' @docType methods
+#' @rdname plotFractionMax-generic
+setGeneric('plotFractionMax', def = function(object, ...) standardGeneric("plotFractionMax"))
 
+#' Plot the fraction of sensors in the max state
+#'
+#' Creates a ggplot object that has the ratio R on the horizontal axis
+#' and the fraction of sensors corresponding to the Rmax state on the vertical axis
+#'
+#' @param object An sensor object
+#' @param FUN A function in the form FUN(Sensor, R) --> Fraction in Max State
+#'
+#' @returns A ggplot object
+#'
 #' @export
+#' @docType methods
+#' @rdname plotFractionMax-Sensor
 setMethod("plotFractionMax", "Sensor", definition =
-              function(object) {
+              function(object, FUN) {
                   R <- getR(object)
-                  R_OXD <- data.frame(R = R, OXD = getFractionMax(object, R))
+                  R_Max <- data.frame(R = R, Max = FUN(object, R))
 
-                  plot <- ggplot(R_OXD) +
-                      geom_line(aes(x = R_OXD$R, y = R_OXD$OXD)) +
+                  plot <- ggplot(R_Max) +
+                      geom_line(aes(x = R_Max$R, y = R_Max$Max)) +
                       xlab("R")  +
                       ylab("Fraction in Max State")
 
                   return(plot)
               })
 
+#' Plot the fraction of redox sensors in the max state
+#'
+#' Creates a ggplot object that has the ratio R on the horizontal axis
+#' and the fraction oxidizied on the vertical axis
+#'
+#' @param object An redoxSensor object
+#'
+#' @returns A ggplot object
+#'
 #' @export
+#' @docType methods
+#' @rdname plotFractionMax-Sensor
 setMethod("plotFractionMax", "redoxSensor", definition =
               function(object) {
                   R <- getR(object)
