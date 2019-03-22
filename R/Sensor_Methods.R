@@ -1,23 +1,35 @@
-#' Get an array of R values from a sensor
+#' Get an array of R values (generic)
 #'
 #' This is just a simple method that generates a range of values between Rmin and Rmax
 #'
 #' @param object A sensor object
-#' @param by The "by" argument for seq. Specifies intervals between subsequent R values
 #' @param ... ...
+#'
+#' @return A numeric array
+#'
+#' @export
+#' @docType methods
+#' @rdname getR-generic
+#'
+
+setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
+
+#' Method to get an array of R values from a sensor
+#'
+#' Takes in a sensor object and returns a vector of valid R values
+#'
+#' @param object A sensor object
+#' @param by The "by" argument for seq. Specifies intervals between subsequent R values
 #'
 #' @return A numeric array between Rmin and Rmax
 #'
 #' @export
 #' @docType methods
-#' @rdname getR-methods
+#' @rdname getR-method
 #'
 #' @examples
 #' my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
 #' getR(my_sensor, by = 0.1)
-setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
-
-#' @export
 setMethod('getR', "Sensor", definition =
               function(object, by = 0.01) {
                   return(seq(object@Rmin, object@Rmax, by = by))
