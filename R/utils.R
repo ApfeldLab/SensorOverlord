@@ -1,5 +1,14 @@
-# Rescale y to the same size as the new x values
+#' A function to rescale a certain (x,y) matrix pair into a new (x_new, y) pair.
+#'
+#' @param new_xs Numeric vector. The new x labels that we want to rescale to
+#' @param old_xs Numeric vector. The x labels of the previous matrix
+#' @param y Numeric vector. The original y values corresponding to old_xs
+#'
+#' @return Numeric vector corresponding to the y's rescaled to fit the x_new vector
+#'
 #' @export
+#' @rdname reScaleToRange-function
+#' @import stats
 rescaleToRange <- function(new_xs, old_xs, y) {
     # Initalize rescaled y values
     new_y <- c()
