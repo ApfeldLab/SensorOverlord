@@ -7,8 +7,10 @@
 #' so this function must be supplied those (in the form lambda_1/lambda_2)
 #'
 #' @param sensorSpectra A sensorSpectra object
-#' @param lambda_1 the first wavelength in the excitation ratio lambda_1/lambda_2
-#' @param lambda_2 the second wavelength in the excitation ratio lambda_1/lambda_2
+#' @param lambda_1 the first wavelength in the
+#' excitation ratio lambda_1/lambda_2
+#' @param lambda_2 the second wavelength in the
+#' excitation ratio lambda_1/lambda_2
 
 #' @return A Sensor object
 #'

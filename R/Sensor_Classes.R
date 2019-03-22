@@ -28,7 +28,8 @@ setValidity("Sensor",
 #'
 #' @slot Rmin To represent the ratio emission value R in the reduced state
 #' @slot Rmax to represent the ratio emission value R in the oxidized state
-#' @slot delta To represent the ratio between emission in the oxidized and reduced
+#' @slot delta To represent the ratio between emission
+#'  in the oxidized and reduced
 #' states in the second wavelength of the ratio.
 #' @slot e0 The midpoint potential of the redox sensor
 #'
@@ -43,8 +44,8 @@ setClass("redoxSensor",
 #'
 #' @slot Rmin To represent the ratio emission value R in the protenated state
 #' @slot Rmax to represent the ratio emission value R in the deprotenated state
-#' @slot delta To represent the ratio between emission in the deprotenated and protenated
-#' states in the second wavelength of the ratio.
+#' @slot delta To represent the ratio between emission in the
+#' deprotenated and protenated states in the second wavelength of the ratio.
 #' @slot pKa The midpoint/pKa of the redox sensor
 #'
 #' @export

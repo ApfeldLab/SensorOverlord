@@ -1,6 +1,7 @@
 #' Get an array of R values (generic)
 #'
-#' This is just a simple method that generates a range of values between Rmin and Rmax
+#' This is just a simple method that generates a
+#' range of values between Rmin and Rmax
 #'
 #' @param object A sensor object
 #' @param ... ...
@@ -19,7 +20,8 @@ setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
 #' Takes in a sensor object and returns a vector of valid R values
 #'
 #' @param object A sensor object
-#' @param by The "by" argument for seq. Specifies intervals between subsequent R values
+#' @param by The "by" argument for seq.
+#' Specifies intervals between subsequent R values
 #'
 #' @return A numeric array between Rmin and Rmax
 #'
@@ -47,14 +49,16 @@ setMethod('getR', "Sensor", definition =
 #'
 #' @export
 #' @rdname getFractionMax-generics
-setGeneric('getFractionMax', def = function(object, ...) standardGeneric("getFractionMax"))
+setGeneric('getFractionMax', def = function(object, ...)
+    standardGeneric("getFractionMax"))
 
 #' Get the fraction of sensors in the state corresponding to "Rmax"
 #'
 #' This method corresponds to finding the "OxD" in a redox sensor
 #'
 #' @param object A sensor object
-#' @param R A single number or numeric vector corresponding to an R between Rmin and Rmax
+#' @param R A single number or numeric vector corresponding to an
+#' R between Rmin and Rmax
 #' @param ... ...
 #'
 #' @return A single number of numeric vector of the fraction of sensors
@@ -72,7 +76,8 @@ setGeneric('getFractionMax', def = function(object, ...) standardGeneric("getFra
 setMethod("getFractionMax", "Sensor", definition =
               function(object, R) {
                   return(
-                      (R - object@Rmin) / ((R - object@Rmin) + object@delta * (object@Rmax - R))
+                      (R - object@Rmin) /
+                          ((R - object@Rmin) + object@delta * (object@Rmax - R))
                   )
               })
 
@@ -107,7 +112,8 @@ setMethod("getE", "redoxSensor", definition =
                   return(
                       return(object@e0 - (8.315 * temp)/(2 * 96.48104) *
                                  log(
-                                     (object@delta * object@Rmax - object@delta * R) /
+                                     (object@delta *
+                                          object@Rmax - object@delta * R) /
                                          (R - object@Rmin)))
                   )
               })
@@ -153,11 +159,11 @@ setMethod("getError", "Sensor", definition =
                       # Get the absolute difference in running the function between R and the R + error
                       # You may get an error, in which case the error is infinite
                       value_error_up <- suppressWarnings(FUN(object, (R_upper), ...) - FUN(object, (R_individual), ...))
-                      value_error_up = ifelse(test = is.na(value_error_up), yes = Inf, no = abs(value_error_up))
+                      value_error_up <- ifelse(test = is.na(value_error_up), yes = Inf, no = abs(value_error_up))
 
                       # Same thing, but with function between R and R - error
                       value_error_down <- suppressWarnings(FUN(object, (R_lower), ...) - FUN(object, (R_individual), ...))
-                      value_error_down = ifelse(test = is.na(value_error_down), yes = Inf, no = abs(value_error_down))
+                      value_error_down <- ifelse(test = is.na(value_error_down), yes = Inf, no = abs(value_error_down))
 
                       # Get the maximum error
                       max_error <- max(value_error_down, value_error_up)
