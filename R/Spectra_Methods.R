@@ -1,6 +1,5 @@
-#' Create a spectra plot
-#'
-#' This just generates a ggplot object of the emission spectra from a sensorSpectra object
+
+#' A generic for the plotSpectra method
 #'
 #' @param object A spectra object
 #' @param ... ...
@@ -9,12 +8,25 @@
 #'
 #' @export
 #' @docType methods
-#' @rdname plotSpectra-methods
+#' @rdname plotSpectra-generic
 #'
 #' @import ggplot2
 setGeneric('plotSpectra', def = function(object, ...) standardGeneric("plotSpectra"))
 
+#' Create a plot (ggplot object) for a sensorSpetra object
+#'
+#' Returns a ggplot object plotting the emission (relative)
+#' as a function of wavelength (lambda) for a given sensorSpectra object
+#'
+#' @param object A sensorSpectra object
+#' @param minimum_name The legend label for the state corresponding to Rmin
+#' @param maximum_name The legend label for the state correspondign to Rmax
+#'
+#' @return A ggplot object
+#'
 #' @export
+#' @docType methods
+#' @rdname plotSpectra-sensorSpectra
 setMethod('plotSpectra', "sensorSpectra", definition =
               function(object, minimum_name = "Minimum State", maximum_name = "Maximum State") {
                 spectraData <- data.frame(lambda = object@lambdas, min = object@values_minimum, max = object@values_maximum)
