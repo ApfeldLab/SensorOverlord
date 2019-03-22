@@ -1,7 +1,20 @@
 # Sensor constructors ------
 
-# lambda_1 and lambda_2 are arrays of length two describing the range of values to measure
+#' A function to convert a sensorSpectra to a Sensor
+#'
+#' Converts a sensorSpectra object to a Sensor object.
+#' A sensor object exists alongside a wavelength ratio (e.g. 410/470),
+#' so this function must be supplied those (in the form lambda_1/lambda_2)
+#'
+#' @param sensorSpectra A sensorSpectra object
+#' @param lambda_1 the first wavelength in the excitation ratio lambda_1/lambda_2
+#' @param lambda_2 the second wavelength in the excitation ratio lambda_1/lambda_2
+
+#' @return A Sensor object
+#'
 #' @export
+#' @docType functions
+#' @rdname newSensorFromSpectra-function
 newSensorFromSpectra <- function(sensorSpectra, lambda_1, lambda_2) {
     values_maximum = sensorSpectra@values_maximum
     values_minimum = sensorSpectra@values_minimum
