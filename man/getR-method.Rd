@@ -10,7 +10,8 @@
 \arguments{
 \item{object}{A sensor object}
 
-\item{by}{The "by" argument for seq. Specifies intervals between subsequent R values}
+\item{by}{The "by" argument for seq.
+Specifies intervals between subsequent R values}
 }
 \value{
 A numeric array between Rmin and Rmax

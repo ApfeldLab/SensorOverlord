@@ -14,8 +14,8 @@ An S4 class to represent a 2-state redox sensor
 
 \item{\code{Rmax}}{to represent the ratio emission value R in the deprotenated state}
 
-\item{\code{delta}}{To represent the ratio between emission in the deprotenated and protenated
-states in the second wavelength of the ratio.}
+\item{\code{delta}}{To represent the ratio between emission in the
+deprotenated and protenated states in the second wavelength of the ratio.}
 
 \item{\code{pKa}}{The midpoint/pKa of the redox sensor}
 }}

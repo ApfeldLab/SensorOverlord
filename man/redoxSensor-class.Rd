@@ -14,7 +14,8 @@ An S4 class to represent a 2-state redox sensor
 
 \item{\code{Rmax}}{to represent the ratio emission value R in the oxidized state}
 
-\item{\code{delta}}{To represent the ratio between emission in the oxidized and reduced
+\item{\code{delta}}{To represent the ratio between emission
+ in the oxidized and reduced
 states in the second wavelength of the ratio.}
 
 \item{\code{e0}}{The midpoint potential of the redox sensor}

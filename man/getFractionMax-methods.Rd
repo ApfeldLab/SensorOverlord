@@ -10,7 +10,8 @@
 \arguments{
 \item{object}{A sensor object}
 
-\item{R}{A single number or numeric vector corresponding to an R between Rmin and Rmax}
+\item{R}{A single number or numeric vector corresponding to an
+R between Rmin and Rmax}
 
 \item{...}{...}
 }

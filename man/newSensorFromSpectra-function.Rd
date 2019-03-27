@@ -9,9 +9,11 @@ newSensorFromSpectra(sensorSpectra, lambda_1, lambda_2)
 \arguments{
 \item{sensorSpectra}{A sensorSpectra object}
 
-\item{lambda_1}{the first wavelength in the excitation ratio lambda_1/lambda_2}
+\item{lambda_1}{the first wavelength in the
+excitation ratio lambda_1/lambda_2}
 
-\item{lambda_2}{the second wavelength in the excitation ratio lambda_1/lambda_2}
+\item{lambda_2}{the second wavelength in the
+excitation ratio lambda_1/lambda_2}
 }
 \value{
 A Sensor object

@@ -16,5 +16,6 @@ getR(object, ...)
 A numeric array
 }
 \description{
-This is just a simple method that generates a range of values between Rmin and Rmax
+This is just a simple method that generates a
+range of values between Rmin and Rmax
 }

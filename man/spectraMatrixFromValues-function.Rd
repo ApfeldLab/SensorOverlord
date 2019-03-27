@@ -20,8 +20,9 @@ spectraMatrixFromValues(lambdas_minimum, values_minimum, lambdas_maximum,
 A sensorSpectra object
 }
 \description{
-I'll typically collect spectra data in an excel file with 4 columns: the lambda and emission
-values corresponding to the minimum and maximum states. This function takes data from those 4
-columns, condenses them into a 3-column dataframe (with matching lambda values) and makes
+I'll typically collect spectra data in an excel file with 4 columns:
+the lambda and emission  values corresponding to the minimum and
+maximum states. This function takes data from those 4 columns, condenses
+them into a 3-column dataframe (with matching lambda values), and makes
 a sensorSpectra object
 }
