@@ -117,6 +117,47 @@ setMethod("getE", "redoxSensor", definition =
                                          (R - object@Rmin)))
               })
 
+#' Get the pH value (generic)
+#'
+#' @param object An object
+#' @param ... ...
+#'
+#' @return A numeric array of pH values
+#'
+#' @export
+#' @docType methods
+setGeneric('getpH', def = function(object, ...) standardGeneric("getpH"))
+
+#' Get the redox potential (E) for a redox sensor
+#'
+#' For a given redox sensor at a certain temperature, returns the
+#' redox potential corresponding to a given ratio (R) value
+#'
+#' @param object A pHSensor object
+#' @param R (Optional, defaults to getR(Object)
+#' A numeric value (can be an array) of ratio values
+#'
+#' @return A numeric array of pH values
+#'
+#' @export
+#' @docType methods
+#' @rdname getpH-pHSensor
+setMethod("getpH", "pHSensor", definition =
+              function(object, R) {
+
+                  # Get the object's R, if no R is passed
+                  if(missing(R)) {
+                      R = getR(object)
+                  }
+
+                  return(
+                      object@pKa + log10(object@delta)
+                      + log10((object@Rmax - R) / (R - object@Rmin))
+                         )
+              })
+
+
+
 #' Get the the derivative of the redox potential (dE/dR) (generic)
 #'
 #' @param object An object
