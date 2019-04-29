@@ -5,7 +5,7 @@
 \alias{getR,Sensor-method}
 \title{Method to get an array of R values from a sensor}
 \usage{
-\S4method{getR}{Sensor}(object, by = 0.01)
+\S4method{getR}{Sensor}(object, by = 0.01, edgeBy = 100)
 }
 \arguments{
 \item{object}{A sensor object}
@@ -23,3 +23,7 @@ Takes in a sensor object and returns a vector of valid R values
 my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
 getR(my_sensor, by = 0.1)
 }
+\seealso{
+Other getR-methods: \code{\link{getR}}
+}
+\concept{getR-methods}
