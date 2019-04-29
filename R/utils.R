@@ -36,3 +36,106 @@ rescaleToRange <- function(new_xs, old_xs, y) {
 
     return(new_y)
 }
+
+
+#' Formats sensor information into a dataframe suitable for input into database
+#'
+#' @param name Character string. The name of the sensor
+#' @param sensor_type The type of sensor. One of:
+#' {redox, pH, ATP}
+#' @param sensor_readout The readout of the sensor. One of:
+#' {exitation ratiometric, emission ratiometric}
+#' @param lambda_max The lambda values corresponding to the emission in the
+#' maximum state (corresponding to Rmax)
+#' @param values_max The emission values in the maximum state (corresponding
+#' to Rmax)
+#' @param lambda_min The lambda values corresponding to the emission in the
+#' minimum state (corresponding to Rmin)
+#' @param values_min The emission values in the minimum state (corresponding
+#' to Rmin)
+#' @param sensor_midpoint Numeric. The midpoint of the sensor. Depending
+#' on your sensor, this could be:
+#' {e0, pKa, log-midpoint}
+#'
+#' @return A list object suitable to be pushed to the mongo database
+#'
+#' @export
+#' @rdname formatSensorData-function
+formatSpectraData <- function(name, type, readout, lambda_max, values_max,
+                              lambda_min, values_min, sensor_midpoint) {
+
+    # Data validation -------
+
+    # Validating lengths
+    if(length(name) != 1) {
+        stop("Length of the name argument is not 1")
+    }
+
+    if(length(type) != 1) {
+        stop("Length of the type argument is not 1")
+    }
+
+    if(length(readout) != 1) {
+        stop("Length of the readout argument is not 1")
+    }
+
+    if(length(sensor_midpoint) != 1) {
+        stop("Length of the sensor_midpoint argument is not 1")
+    }
+
+
+    if(length(lambda_max) != length(values_max)) {
+        stop("The lambda and values for the maximum state have
+             different lengths")
+    }
+
+    if(length(lambda_min) != length(values_min)) {
+        stop("The lambda and values for the maximum state have
+             different lengths")
+    }
+
+    # Validating types
+    supported_types <- c("redox", "pH", "ATP")
+    supported_readouts <- c("excitation ratiometric", "emission ratiometric")
+
+    if(typeof(name) != "character") {
+        stop("The name argument must be a character type")
+    }
+
+    if(typeof(type) != "character") {
+        stop("The type argument must be a character type")
+    }
+
+    if(typeof(readout) != "character") {
+        stop("The readout argument must be a character type")
+    }
+
+    if(!is.numeric(lambda_max)) {
+        stop("lambda_max must be numeric")
+    }
+
+    if(!is.numeric(values_max)) {
+        stop("values_max must be numeric")
+    }
+
+    if(!is.numeric(lambda_min)) {
+        stop("lambda_min must be numeric")
+    }
+
+    if(!is.numeric(values_min)) {
+        stop("values_min must be numeric")
+    }
+
+    if(!is.numeric(sensor_midpoint)) {
+        stop("sensor_midpoint must be numeric")
+    }
+
+    # ---------
+
+    # Create the final list
+    return(list(sensor_name = name, sensor_type = type,
+                sensor_readout = readout,
+                lambda_max = lambda_max, values_max = values_max,
+                lambda_min = lambda_min, values_min = values_min,
+                sensor_midpoint = sensor_midpoint))
+}
