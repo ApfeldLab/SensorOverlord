@@ -2,6 +2,7 @@
 
 export(formatSpectraData)
 export(getAbsError)
+export(getDb)
 export(getE)
 export(getE_deriv)
 export(getErrorTable)
@@ -32,4 +33,5 @@ exportMethods(plotFractionMax)
 exportMethods(plotSpectra)
 import(ggplot2)
 import(methods)
+import(mongolite)
 import(stats)

@@ -60,7 +60,6 @@ rescaleToRange <- function(new_xs, old_xs, y) {
 #' @return A list object suitable to be pushed to the mongo database
 #'
 #' @export
-#' @rdname formatSensorData-function
 formatSpectraData <- function(name, type, readout, lambda_max, values_max,
                               lambda_min, values_min, sensor_midpoint) {
 
@@ -138,4 +137,31 @@ formatSpectraData <- function(name, type, readout, lambda_max, values_max,
                 lambda_max = lambda_max, values_max = values_max,
                 lambda_min = lambda_min, values_min = values_min,
                 sensor_midpoint = sensor_midpoint))
+}
+
+#' Returns the sensor database
+#'
+#' @return The sensor database
+#'
+#' @export
+#' @import mongolite
+getDb <- function() {
+    options(mongodb = list(
+        "host" = "sensoroverlordcluster-mnopd.mongodb.net",
+        "username" = "sensoroverlord",
+        "password" = "test"
+    ))
+
+    databaseName <- "sensordb"
+    collectionName <- "responses"
+
+    return(
+        mongo(collection = collectionName,
+              url = sprintf(
+                  "mongodb+srv://%s:%s@%s/%s",
+                  options()$mongodb$username,
+                  options()$mongodb$password,
+                  options()$mongodb$host,
+                  databaseName))
+    )
 }
