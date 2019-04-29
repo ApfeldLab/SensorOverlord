@@ -8,8 +8,8 @@
 #'
 #' @return A numeric array
 #'
+#' @family getR-methods
 #' @export
-#' @docType methods
 setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
 
 #' Method to get an array of R values from a sensor
@@ -22,16 +22,28 @@ setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
 #'
 #' @return A numeric array between Rmin and Rmax
 #'
+#' @family getR-methods
 #' @export
 #' @docType methods
-#' @rdname getR-method
 #'
 #' @examples
 #' my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
 #' getR(my_sensor, by = 0.1)
 setMethod('getR', "Sensor", definition =
-              function(object, by = 0.01) {
-                  return(seq(object@Rmin, object@Rmax, by = by))
+              function(object, by = 0.01, edgeBy = 100) {
+                  origBy <- by
+                  return(
+                      c(
+                         seq(from = object@Rmin,
+                           to = object@Rmin + origBy,
+                           by = origBy/edgeBy),
+                        seq(from = (object@Rmin + (2 * origBy)),
+                           to = (object@Rmax - (2 * origBy)),
+                           by = origBy),
+                       seq(from = object@Rmax - origBy,
+                           to = object@Rmax,
+                           by = origBy/edgeBy))
+                  )
               })
 
 
