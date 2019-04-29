@@ -161,12 +161,29 @@ ui <- dashboardPage(
 
                 numericInput(
                     inputId = "rpres",
-                    label = "log10(R precision) (smaller = more computation)",
+                    label = "General R precision (log10: smaller = more computation)",
                     min = -Inf,
                     max = Inf,
                     step = 0.01,
                     value = -2
+                ),
+
+                numericInput(
+                    inputId = "rpres_edge",
+                    label = "Fold-increase of precision
+                    near edges (log10: larger = more computation)",
+                    min = -Inf,
+                    max = Inf,
+                    step = 0.01,
+                    value = 2
                 )
+            )
+        ),
+
+        fluidRow(
+            box(align="center",
+                width = 12,
+                textOutput(outputId = "precision")
             )
         ),
 
@@ -182,10 +199,10 @@ ui <- dashboardPage(
 
 # Define server logic required to draw a histogram
 server <- function(input, output, session) {
-    output$range <- renderPlot({
-
+    getMinMax <- reactive({
         # Set the precision in R actual value
         r_precision = 10^(input$rpres)
+        r_precision_edge = 10^(input$rpres_edge)
 
         # Update the sensor, if needed
         if(input$sensors != "None") {
@@ -221,27 +238,28 @@ server <- function(input, output, session) {
 
             sensor <- new("redoxSensor", sensor, e0 = input$e0)
 
-            error_df <- getErrorTable(sensor, R = getR(sensor, by = r_precision),
+            error_df <- getErrorTable(sensor, R = getR(sensor,
+                                                       by = r_precision, edgeBy = r_precision_edge),
                                       FUN = getE, Error_Model = error_model)
             bounds <- c(-400, -100)
 
-            }
+        }
 
         if(input$sensorType == 'pH') {
             sensor <- new("pHSensor", sensor, pKa = input$pKa)
-            error_df <- getErrorTable(sensor, R = getR(sensor, by = r_precision),
+            error_df <- getErrorTable(sensor, R = getR(sensor, by = r_precision, edgeBy = r_precision_edge),
                                       FUN = getpH, Error_Model = error_model)
             bounds <- c(1,14)
 
         }
 
         if(input$sensorType == 'other') {
-            error_df <- getErrorTable(sensor, R = getR(sensor, r_precision),
+            error_df <- getErrorTable(sensor, R = getR(sensor, r_precision, edgeBy = r_precision_edge),
                                       FUN = getFractionMax,
                                       Error_Model = error_model)
         }
 
-        error_filter <- subset(error_df, error_df$max_abs_error < input$acc)
+        error_filter <- subset(error_df, error_df$max_abs_error <= input$acc)
 
         minimum <- ifelse(test = length(error_filter$FUN_true) == 0,
                           yes = NaN, no = min(error_filter$FUN_true))
@@ -252,13 +270,13 @@ server <- function(input, output, session) {
         minMax <- data.frame(Minimum = c(round(minimum, 2)), Maximum = c(round(maximum,2)))
 
         if(minimum < bounds[1]) {
-            #bounds[2] = bounds[2] - 1000 - (bounds[1]-minimum)
-            bounds[1] = minimum - 1000
+            #bounds[2] = bounds[2] - 100 - (bounds[1]-minimum)
+            bounds[1] = minimum - 100
         }
 
         if(maximum > bounds[2]) {
-            #bounds[1] = bounds[1] + 1000 + (maximum - bounds[2])
-            bounds[2] = maximum + 1000
+            #bounds[1] = bounds[1] + 100 + (maximum - bounds[2])
+            bounds[2] = maximum + 100
         }
 
         if((is.nan(minMax$Minimum) || is.nan(minMax$Maximum))) {
@@ -266,6 +284,29 @@ server <- function(input, output, session) {
                  You are trying to be impossibly accurate,
                  given your microscopy errors."))
         }
+
+        return(list(minMax, bounds, error_df))
+    })
+
+    output$precision <- renderText({
+        error_df <- getMinMax()[[3]]
+        Es <- subset(error_df$FUN_true, abs(error_df$FUN_true) < Inf)
+
+
+
+        min <- round(min(Es),0)
+        max <- round(max(Es),0)
+
+        return(paste("The maximum values this app can generate are",
+                     min, "to", paste(max, ".", sep = ""), "to increase this range, adjust the
+                     general R precision and the precision near the edges.",
+                     sep = " "))
+    })
+
+    output$range <- renderPlot({
+
+        minMax <- getMinMax()[[1]]
+        bounds <- getMinMax()[[2]]
 
         # Define a function that rounds to 0 decimal places
         scaleFUN <- function(x) sprintf("%.0f", x)
