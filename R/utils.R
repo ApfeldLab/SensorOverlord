@@ -41,9 +41,9 @@ rescaleToRange <- function(new_xs, old_xs, y) {
 #' Formats sensor information into a dataframe suitable for input into database
 #'
 #' @param name Character string. The name of the sensor
-#' @param sensor_type The type of sensor. One of:
+#' @param type The type of sensor. One of:
 #' {redox, pH, ATP}
-#' @param sensor_readout The readout of the sensor. One of:
+#' @param readout The readout of the sensor. One of:
 #' {exitation ratiometric, emission ratiometric}
 #' @param lambda_max The lambda values corresponding to the emission in the
 #' maximum state (corresponding to Rmax)

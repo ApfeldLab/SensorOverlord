@@ -19,6 +19,9 @@ setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
 #' @param object A sensor object
 #' @param by The "by" argument for seq.
 #' Specifies intervals between subsequent R values
+#' @param edgeBy A multiplier for the precision of values near the edges
+#' In the range (Rmin, Rmin + by) and (Rmax - by, Rmax), the by argument
+#' will be divided by edgeBy.
 #'
 #' @return A numeric array between Rmin and Rmax
 #'
