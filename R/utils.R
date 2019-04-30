@@ -165,3 +165,46 @@ getDb <- function() {
                   databaseName))
     )
 }
+
+#' Adjusts a spectra, assuming that the actual spectra is not limiting
+#'
+#' @param spectra a sensorSpectra object containing the spectra to be adjusted
+#' @param fractionMax numeric [0->1] describing the preportion of limiting of
+#' the curve corresponding to the Rmax state
+#' @param fractionMin numeric [0->1] describing the preportion of limiting of
+#' the curve corresponding to the Rmin state
+#'
+#' @return a sensorSpectra object containing the adjusted spectra
+#'
+#' @export
+#' @import mongolite
+adjustSpectra <- function(spectra, fractionMax, fractionMin) {
+    adjusted_minimum <- (
+                        (spectra@values_minimum / (1-fractionMin)) -
+                        (spectra@values_maximum / fractionMax)
+                        ) /
+                        (
+                        (fractionMin/(1-fractionMin)) -
+                        ((1-fractionMax)/fractionMax)
+                        )
+
+    adjusted_maximum <- (
+                        (spectra@values_maximum / (1-fractionMax)) -
+                        (spectra@values_minimum / fractionMin)
+                        ) /
+                        (
+                        (fractionMax/(1-fractionMax)) -
+                        ((1-fractionMin)/fractionMin)
+                        )
+
+    return(new("sensorSpectra", lambdas = spectra@lambdas,
+               values_minimum = adjusted_minimum,
+               values_maximum = adjusted_maximum))
+
+
+}
+
+
+
+
+
