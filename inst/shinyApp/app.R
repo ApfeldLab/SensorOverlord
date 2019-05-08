@@ -7,6 +7,9 @@ library(ggalt)
 
 library(mongolite)
 
+### Helper Functions ----------
+
+### Get data from database
 options(mongodb = list(
     "host" = "sensoroverlordcluster-mnopd.mongodb.net",
     "username" = "sensoroverlord",
@@ -34,7 +37,7 @@ getSensorData <- function() {
 sensorData <- getSensorData()
 sensorNames <- sensorData$'Sensor'
 
-# Define UI for application that draws a histogram
+### Main UI ----------
 ui <- dashboardPage(
     dashboardHeader(title = "Sensor Overlord"),
     dashboardSidebar(),
@@ -197,7 +200,7 @@ ui <- dashboardPage(
 
 )
 
-# Define server logic required to draw a histogram
+### Main server ----------
 server <- function(input, output, session) {
     getMinMax <- reactive({
         # Set the precision in R actual value
