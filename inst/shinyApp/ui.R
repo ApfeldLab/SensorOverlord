@@ -1,11 +1,13 @@
-library(shiny)
-library(shinydashboard)
-library(sensorOverlord)
-library(dplyr)
-library(ggplot2)
-library(ggalt)
-library(mongolite)
+require(shiny)
+require(shinydashboard)
+require(sensorOverlord)
+require(dplyr)
+require(ggplot2)
+require(ggalt)
+require(mongolite)
 source("helpers.R")
+
+#' @import shinydashboard
 
 # Define UI for application that draws a histogram
 # Sidebar definition ------------------------------------------------------
