@@ -35,16 +35,18 @@ setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
 setMethod('getR', "Sensor", definition =
               function(object, by = 0.01, edgeBy = 100) {
                   origBy <- by
+                  minimum = min(object@Rmin, object@Rmax)
+                  maximum = max(object@Rmin, object@Rmax)
                   return(
                       c(
-                         seq(from = object@Rmin,
-                           to = object@Rmin + origBy,
+                         seq(from = minimum,
+                           to = minimum + origBy,
                            by = origBy/edgeBy),
-                        seq(from = (object@Rmin + (2 * origBy)),
-                           to = (object@Rmax - (2 * origBy)),
+                        seq(from = (minimum + (2 * origBy)),
+                           to = (maximum - (2 * origBy)),
                            by = origBy),
-                       seq(from = object@Rmax - origBy,
-                           to = object@Rmax,
+                       seq(from = maximum - origBy,
+                           to = maximum,
                            by = origBy/edgeBy))
                   )
               })
