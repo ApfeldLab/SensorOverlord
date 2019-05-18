@@ -1,3 +1,4 @@
+
 ### Get data from database
 options(mongodb = list(
     "host" = "sensoroverlordcluster-mnopd.mongodb.net",
@@ -26,3 +27,20 @@ getSensorData <- function() {
 sensorData <- getSensorData()
 sensorNames <- sensorData$'sensor_name'
 
+
+# Make a specific type of sensor
+makeSpecificSensor <- function(sensor, sensor_type, sensor_midpoint = 0) {
+    if(sensor_type == "redox") {
+        return(new("redoxSensor", sensor, e0 = sensor_midpoint))
+    }
+
+    if(sensor_type == "pH") {
+        return(new("pHSensor", sensor, pKa = sensor_midpoint))
+    }
+
+    else {
+        return(sensor)
+    }
+
+
+}

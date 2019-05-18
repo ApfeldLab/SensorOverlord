@@ -9,31 +9,47 @@ source("helpers.R")
 
 #' @import shinydashboard
 
-# Define UI for application that draws a histogram
+
+welcomeMessage <- "
+
+"
+
 # Sidebar definition ------------------------------------------------------
 sidebar <- dashboardSidebar(
     sidebarMenu(
-        menuItem("Overview", tabName = "overview"),
-        menuItem("Settings", tabName = "settings"))
+        menuItem("Home", tabName = "home"),
+        menuItem("Settings", tabName = "settings"),
+        menuItem("Add a Sensor", tabName = "newSensor"),
+        menuItem("Browse Sensor Database", tabName = "browse"),
+        menuItem("Contribute to Database", tabName = "upload"))
 )
 
 
 
-# body --------------------------------------------------------------------
+# Body definition --------------------------------------------------------------------
 body <- dashboardBody(
     tabItems(
         # Overview Tab ------------------------------------------------------------
-        tabItem(tabName = "overview",
+        tabItem(tabName = "home",
                     # Welcome message
                     h1("Welcome to Sensor Overlord"),
-                    p("Welcome to the app. Please explore! To get started, enter your
-              sensor's characteristics below, along with your microscopy error
-              model and desired accuracy, and I'll give you an estimate of the
-              values that your sensor is well-suited to measure!"),
+                    h3(welcomeMessage),
                     br(),
 
 
 
+
+                    fluidRow(
+                        box(align = 'center', width = 12,
+                        selectInput(
+                            inputId = "sensors",
+                            label = "Select a sensor",
+                            choices = c("Custom (see input tab)", sensorNames),
+                            selected = sensorNames[1],
+                            multiple = FALSE
+                            )
+                        )
+                    ),
 
                     # Input boxes
                     fluidRow(
@@ -70,7 +86,6 @@ body <- dashboardBody(
                                 value = 5
                             ),
 
-
                             # Delta input
                             numericInput(
                                 inputId = "delta",
@@ -81,32 +96,43 @@ body <- dashboardBody(
                                 value = 0.2
                             ),
 
-                            # E0 selection
-                            conditionalPanel(
-                                condition = "input.sensorType == 'redox'",
-                                numericInput(
-                                    inputId = "e0",
-                                    label = "Midpoint Potential",
-                                    min = -Inf,
-                                    max = Inf,
-                                    step = 1,
-                                    value = -250
-
-                                )
-                            ),
-
-                            # pKa selection
-                            conditionalPanel(
-                                condition = "input.sensorType == 'pH'",
-                                numericInput(
-                                    inputId = "pKa",
-                                    label = "pKa",
-                                    min = -Inf,
-                                    max = Inf,
-                                    step = 0.1,
-                                    value = 7.0
-                                )
+                            # Midpoint selection
+                            numericInput(
+                                inputId = "midpoint",
+                                label = "Midpoint Value (E0, pKa, etc)
+                                \n Note: Ignored for 'other' sensor type",
+                                min = -Inf,
+                                max = Inf,
+                                step = 1,
+                                value = 1
                             )
+
+                            # # E0 selection
+                            # conditionalPanel(
+                            #     condition = "input.sensorType == 'redox'",
+                            #     numericInput(
+                            #         inputId = "e0",
+                            #         label = "Midpoint Potential",
+                            #         min = -Inf,
+                            #         max = Inf,
+                            #         step = 1,
+                            #         value = -250
+                            #
+                            #     )
+                            # ),
+#
+#                             # pKa selection
+#                             conditionalPanel(
+#                                 condition = "input.sensorType == 'pH'",
+#                                 numericInput(
+#                                     inputId = "pKa",
+#                                     label = "pKa",
+#                                     min = -Inf,
+#                                     max = Inf,
+#                                     step = 0.1,
+#                                     value = 7.0
+#                                 )
+#                             )
 
                         ),
                         box(
@@ -137,40 +163,9 @@ body <- dashboardBody(
                                 max = Inf,
                                 step = 0.01,
                                 value = 2
-                            ),
-
-                            selectInput(
-                                inputId = "sensors",
-                                label = "Sensors",
-                                choices = c("None", sensorNames),
-                                multiple = FALSE
-                            ),
-
-                            numericInput(
-                                inputId = "rpres",
-                                label = "General R precision (log10: smaller = more computation)",
-                                min = -Inf,
-                                max = Inf,
-                                step = 0.01,
-                                value = -2
-                            ),
-
-                            numericInput(
-                                inputId = "rpres_edge",
-                                label = "Fold-increase of precision
-                        near edges (log10: larger = more computation)",
-                                min = -Inf,
-                                max = Inf,
-                                step = 0.01,
-                                value = 2
                             )
-                        )
-                    ),
 
-                    fluidRow(
-                        box(align="center",
-                            width = 12,
-                            textOutput(outputId = "precision")
+
                         )
                     ),
 
@@ -188,7 +183,53 @@ body <- dashboardBody(
 
         # Settings Tab-----------------------------------------------------------
         tabItem(tabName = "settings",
-                h1("Settings!"))
+                h1("Settings!"),
+
+                # Input boxes
+                fluidRow(
+                    box(
+                        title = "Generating ratiometric intensity values",
+
+                        numericInput(
+                            inputId = "rpres",
+                            label = "Distance between R values (log scale)",
+                            min = -Inf,
+                            max = Inf,
+                            step = 0.01,
+                            value = -2
+                        ),
+
+                        numericInput(
+                            inputId = "rpres_edge",
+                            label = "Fold-increase in distance between R values
+                            near Rmin and Rmax (log scale)",
+                            min = -Inf,
+                            max = Inf,
+                            step = 0.01,
+                            value = 2
+                        )
+                    )
+
+                ),
+
+                fluidRow(
+                    box(align="center",
+                        width = 12,
+                        h3(textOutput(outputId = "numR")),
+                        h3(textOutput(outputId = "precision"))
+                    ),
+
+                    box(align="left",
+                        width = 6,
+                        plotOutput(outputId = 'numRHist')),
+                    box(align="right",
+                        width = 6,
+                        plotOutput(outputId = "precisionHist"))
+                )
+
+
+
+        )
 
     # Close tabItems and dashboardBody ----------------------------------------
     )
@@ -196,11 +237,12 @@ body <- dashboardBody(
 
 
 # Main Page ---------------------------------------------------------------
-dashboardPage(
+dashboardPage(skin = "black",
     # Header
     dashboardHeader(title = "Sensor Overlord"),
     sidebar,
-    body
+    body,
+    title = "Sensor Overlord"
 )
 
 

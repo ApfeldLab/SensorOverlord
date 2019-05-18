@@ -93,6 +93,103 @@ setMethod("getFractionMax", "Sensor", definition =
                           ((R - object@Rmin) + object@delta * (object@Rmax - R))
                   )
               })
+#' Wrapper: Get the function that gets the biochemical property of this sensor
+#'
+#' @param object A sensor-type object
+#' @param ... ...
+#'
+#' @return A function that gets the biochemical property of this sensor
+#'
+#' @export
+#' @docType methods
+setGeneric('getProperty', def = function(object, ...)
+    standardGeneric("getProperty"))
+
+#' Get the fraction of sensors in the state corresponding to "Rmax"
+#'
+#' This method corresponds to finding the "OxD" in a redox sensor
+#'
+#' @param object A sensor object
+#' @param R A single number or numeric vector corresponding to an
+#' R between Rmin and Rmax
+#' @param ... ...
+#'
+#' @return A single number of numeric vector of the fraction of sensors
+#' in the maximum-emission state corresponding to the given R
+#'
+#' @export
+#' @docType methods
+#' @rdname getProperty-methods
+#'
+#' @examples
+#' my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
+#' getFractionMax(my_sensor, R = 1)
+#' getFractionMax(my_sensor, R = 3)
+#' getFractionMax(my_sensor, R = 5)
+setMethod("getProperty", "Sensor", definition =
+              function(object, R) {
+                  return(
+                      (R - object@Rmin) /
+                          ((R - object@Rmin) + object@delta * (object@Rmax - R))
+                  )
+              })
+
+#' Get the redox potential (E) for a redox sensor
+#'
+#' For a given redox sensor at a certain temperature, returns the
+#' redox potential corresponding to a given ratio (R) value
+#'
+#' @param object A redoxSensor object
+#' @param R (Optional, defaults to getR(Object)
+#' A numeric value (can be an array) of ratio values
+#' @param temp The temperature, in Kelvin. Default is 295.15
+#'
+#' @return A numeric array of E values
+#'
+#' @export
+#' @docType methods
+#' @rdname getProperty-redoxSensor
+setMethod("getProperty", "redoxSensor", definition =
+              function(object, R, temp = 295.15) {
+
+                  # Get the object's R, if no R is passed
+                  if(missing(R)) {
+                      R = getR(object)
+                  }
+                  return(object@e0 - (8.315 * temp)/(2 * 96.48104) *
+                             log(
+                                 (object@delta *
+                                      object@Rmax - object@delta * R) /
+                                     (R - object@Rmin)))
+              })
+
+#' Get the pH of a pH sensor
+#'
+#' For a given redox sensor at a certain temperature, returns the
+#' redox potential corresponding to a given ratio (R) value
+#'
+#' @param object A pHSensor object
+#' @param R (Optional, defaults to getR(Object)
+#' A numeric value (can be an array) of ratio values
+#'
+#' @return A numeric array of pH values
+#'
+#' @export
+#' @docType methods
+#' @rdname getProperty-pHSensor
+setMethod("getProperty", "pHSensor", definition =
+              function(object, R) {
+
+                  # Get the object's R, if no R is passed
+                  if(missing(R)) {
+                      R = getR(object)
+                  }
+
+                  return(
+                      object@pKa + log10(object@delta)
+                      + log10((object@Rmax - R) / (R - object@Rmin))
+                  )
+              })
 
 #' Get the redox potential (E) value (generic)
 #'
@@ -104,6 +201,7 @@ setMethod("getFractionMax", "Sensor", definition =
 #' @export
 #' @docType methods
 setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
+
 
 #' Get the redox potential (E) for a redox sensor
 #'
@@ -145,7 +243,7 @@ setMethod("getE", "redoxSensor", definition =
 #' @docType methods
 setGeneric('getpH', def = function(object, ...) standardGeneric("getpH"))
 
-#' Get the redox potential (E) for a redox sensor
+#' Get the pH of a pH sensor
 #'
 #' For a given redox sensor at a certain temperature, returns the
 #' redox potential corresponding to a given ratio (R) value
@@ -317,8 +415,8 @@ setMethod("getErrorTable", "Sensor", definition =
                       R_error <- Error_Model(R_individual)
                       R_error_acc <- c(R_error_acc, R_error)
 
-                      R_lower <- R_individual + R_error
-                      R_upper <- R_individual - R_error
+                      R_lower <- R_individual - R_error
+                      R_upper <- R_individual + R_error
 
                       # Get & appendthe result of the function
                       # applied to the R "actual"
