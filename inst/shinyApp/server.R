@@ -171,10 +171,12 @@ your microscopy errors.")
                       panel.grid.minor=element_blank(),
                       panel.grid.major.y=element_blank(),
                       legend.position="top",
-                      panel.border=element_blank())
+                      panel.border=element_blank()) +
+                theme(aspect.ratio = 1/20)
+
 
             plot(g)
 
-        }, height = 400, width = 800)
+        }, height = 100)
     }
 )

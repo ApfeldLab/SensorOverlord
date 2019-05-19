@@ -11,15 +11,17 @@ source("helpers.R")
 
 
 welcomeMessage <- "
-
+    Welcome to the SensorOverlord home page. Please select a sensor from
+    our database, or go to 'Add a Custom Sensor' to input parameters of
+    your own.
 "
 
 # Sidebar definition ------------------------------------------------------
 sidebar <- dashboardSidebar(
     sidebarMenu(
         menuItem("Home", tabName = "home"),
+        menuItem("Add a Custom Sensor", tabName = "newSensor"),
         menuItem("Settings", tabName = "settings"),
-        menuItem("Add a Sensor", tabName = "newSensor"),
         menuItem("Browse Sensor Database", tabName = "browse"),
         menuItem("Contribute to Database", tabName = "upload"))
 )
@@ -32,113 +34,25 @@ body <- dashboardBody(
         # Overview Tab ------------------------------------------------------------
         tabItem(tabName = "home",
                     # Welcome message
-                    h1("Welcome to Sensor Overlord"),
                     h3(welcomeMessage),
                     br(),
 
-
-
-
                     fluidRow(
-                        box(align = 'center', width = 12,
+                        box(
+                        align = 'left', width = 12,
+                        title = "Choose a sensor and error model",
+
+                        # Select a sensor
                         selectInput(
                             inputId = "sensors",
                             label = "Select a sensor",
-                            choices = c("Custom (see input tab)", sensorNames),
+                            choices = c("Custom (see 'Add a Custom Sensor')", sensorNames),
                             selected = sensorNames[1],
                             multiple = FALSE
-                            )
-                        )
-                    ),
-
-                    # Input boxes
-                    fluidRow(
-
-                        # Sensor characteristics box
-                        box(
-                            title = "Sensor Characteristics",
-
-                            # Type of sensor
-                            radioButtons(
-                                inputId = "sensorType",
-                                label = "Sensor Type",
-                                choiceValues = c("redox", "pH", "other"),
-                                choiceNames = c("Redox", "pH", "Other"),
                             ),
 
-                            # Rmin input
-                            numericInput(
-                                inputId = "Rmin",
-                                label = "Rmin",
-                                min = 0,
-                                max = Inf,
-                                step = 0.01,
-                                value = 1
-                            ),
-
-                            # Rmax input
-                            numericInput(
-                                inputId = "Rmax",
-                                label = "Rmax",
-                                min = 0,
-                                max = Inf,
-                                step = 0.01,
-                                value = 5
-                            ),
-
-                            # Delta input
-                            numericInput(
-                                inputId = "delta",
-                                label = withMathJax("$$ \\delta_{\\lambda 2} $$"),
-                                min = 0,
-                                max = Inf,
-                                step = 0.01,
-                                value = 0.2
-                            ),
-
-                            # Midpoint selection
-                            numericInput(
-                                inputId = "midpoint",
-                                label = "Midpoint Value (E0, pKa, etc)
-                                \n Note: Ignored for 'other' sensor type",
-                                min = -Inf,
-                                max = Inf,
-                                step = 1,
-                                value = 1
-                            )
-
-                            # # E0 selection
-                            # conditionalPanel(
-                            #     condition = "input.sensorType == 'redox'",
-                            #     numericInput(
-                            #         inputId = "e0",
-                            #         label = "Midpoint Potential",
-                            #         min = -Inf,
-                            #         max = Inf,
-                            #         step = 1,
-                            #         value = -250
-                            #
-                            #     )
-                            # ),
-#
-#                             # pKa selection
-#                             conditionalPanel(
-#                                 condition = "input.sensorType == 'pH'",
-#                                 numericInput(
-#                                     inputId = "pKa",
-#                                     label = "pKa",
-#                                     min = -Inf,
-#                                     max = Inf,
-#                                     step = 0.1,
-#                                     value = 7.0
-#                                 )
-#                             )
-
-                        ),
-                        box(
-                            title = "Microscopy Errors and Accuracy",
-
-                            numericInput(
+                        # Input a relative error
+                        numericInput(
                                 inputId = "relErr",
                                 label = "Relative Error",
                                 min = 0,
@@ -147,18 +61,20 @@ body <- dashboardBody(
                                 value = 0.01
                             ),
 
-                            numericInput(
+                        # Input an absolute error
+                        numericInput(
                                 inputId = "absErr",
-                                label = "Absolute Error",
+                                label = "Absolute error",
                                 min = 0,
                                 max = Inf,
                                 step = 0.01,
                                 value = 0
                             ),
 
-                            numericInput(
+                        # Input a desired accuracy
+                        numericInput(
                                 inputId = "acc",
-                                label = "Accuracy",
+                                label = "Desired accuracy",
                                 min = 0,
                                 max = Inf,
                                 step = 0.01,
@@ -169,13 +85,10 @@ body <- dashboardBody(
                         )
                     ),
 
-                    fluidRow(
-                        box(align="center",
-                            width = 12,
-                            plotOutput(outputId = "range")
-
-                        )
-                    )
+                    # Plot the suitable ranges
+                    h3("Suitable range of selected sensor:"),
+                    br(),
+                    plotOutput(outputId = "range")
 
             # Close overview tab
             ),
@@ -229,7 +142,94 @@ body <- dashboardBody(
 
 
 
+        ),
+
+
+        # Custom sensor section ---------------------------------------------------
+        tabItem(tabName = "newSensor",
+                # Sensor characteristics box
+                box(
+                    title = "Sensor Characteristics",
+
+                    # Type of sensor
+                    radioButtons(
+                        inputId = "sensorType",
+                        label = "Sensor Type",
+                        choiceValues = c("redox", "pH", "other"),
+                        choiceNames = c("Redox", "pH", "Other"),
+                    ),
+
+                    # Rmin input
+                    numericInput(
+                        inputId = "Rmin",
+                        label = "Rmin",
+                        min = 0,
+                        max = Inf,
+                        step = 0.01,
+                        value = 1
+                    ),
+
+                    # Rmax input
+                    numericInput(
+                        inputId = "Rmax",
+                        label = "Rmax",
+                        min = 0,
+                        max = Inf,
+                        step = 0.01,
+                        value = 5
+                    ),
+
+                    # Delta input
+                    numericInput(
+                        inputId = "delta",
+                        label = withMathJax("$$ \\delta_{\\lambda 2} $$"),
+                        min = 0,
+                        max = Inf,
+                        step = 0.01,
+                        value = 0.2
+                    ),
+
+                    # Midpoint selection
+                    numericInput(
+                        inputId = "midpoint",
+                        label = "Midpoint Value (E0, pKa, etc)
+                                \n Note: Ignored for 'other' sensor type",
+                        min = -Inf,
+                        max = Inf,
+                        step = 1,
+                        value = 1
+                    )
+
+                    # # E0 selection
+                    # conditionalPanel(
+                    #     condition = "input.sensorType == 'redox'",
+                    #     numericInput(
+                    #         inputId = "e0",
+                    #         label = "Midpoint Potential",
+                    #         min = -Inf,
+                    #         max = Inf,
+                    #         step = 1,
+                    #         value = -250
+                    #
+                    #     )
+                    # ),
+                    #
+                    #                             # pKa selection
+                    #                             conditionalPanel(
+                    #                                 condition = "input.sensorType == 'pH'",
+                    #                                 numericInput(
+                    #                                     inputId = "pKa",
+                    #                                     label = "pKa",
+                    #                                     min = -Inf,
+                    #                                     max = Inf,
+                    #                                     step = 0.1,
+                    #                                     value = 7.0
+                    #                                 )
+                    #                             )
+
+                )
         )
+
 
     # Close tabItems and dashboardBody ----------------------------------------
     )
@@ -237,7 +237,7 @@ body <- dashboardBody(
 
 
 # Main Page ---------------------------------------------------------------
-dashboardPage(skin = "black",
+dashboardPage(skin = "blue",
     # Header
     dashboardHeader(title = "Sensor Overlord"),
     sidebar,
