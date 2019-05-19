@@ -176,13 +176,33 @@ your microscopy errors.")
                       panel.grid.minor=element_blank(),
                       panel.grid.major.y=element_blank(),
                       legend.position="top",
-                      panel.border=element_blank()) +
-                theme(aspect.ratio = 1/20)
+                      panel.border=element_blank(),
+                      text = element_text(size = 20)) +
+                coord_flip()
 
 
             plot(g)
 
-        }, height = 100)
+        })
+
+        # Make a phase plot for the sensor
+        output$phasePlot <- renderPlot({
+            error_table <- getMinMax()[[3]]
+
+            ggplot(error_table, aes(x = FUN_true, y = max_abs_error)) +
+                geom_line() +
+                coord_flip() +
+                theme(
+                    text = element_text(size = 20)
+                ) +
+                ylab("Accuracy") +
+                xlab("True value") +
+                ylim(c(0, input$acc * 4))
+
+
+        })
+
+
 
         # Output a text version of the range we can measure
         output$rangeText <- renderText({

@@ -89,7 +89,16 @@ body <- dashboardBody(
                     h3("Suitable range of selected sensor:"),
                     h3(textOutput("rangeText")),
                     br(),
-                    plotOutput(outputId = "range")
+
+                fluidRow(
+                    box(
+                        plotOutput(outputId = "range")
+                    ),
+
+                    box(
+                        plotOutput(outputId = "phasePlot")
+                    )
+                )
 
             # Close overview tab
             ),
