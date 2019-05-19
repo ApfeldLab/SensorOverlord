@@ -94,58 +94,6 @@ body <- dashboardBody(
             # Close overview tab
             ),
 
-
-        # Settings Tab-----------------------------------------------------------
-        tabItem(tabName = "settings",
-                h1("Settings!"),
-
-                # Input boxes
-                fluidRow(
-                    box(
-                        title = "Generating ratiometric intensity values",
-
-                        numericInput(
-                            inputId = "rpres",
-                            label = "Distance between R values (log scale)",
-                            min = -Inf,
-                            max = Inf,
-                            step = 0.01,
-                            value = -2
-                        ),
-
-                        numericInput(
-                            inputId = "rpres_edge",
-                            label = "Fold-increase in distance between R values
-                            near Rmin and Rmax (log scale)",
-                            min = -Inf,
-                            max = Inf,
-                            step = 0.01,
-                            value = 2
-                        )
-                    )
-
-                ),
-
-                fluidRow(
-                    box(align="center",
-                        width = 12,
-                        h3(textOutput(outputId = "numR")),
-                        h3(textOutput(outputId = "precision"))
-                    ),
-
-                    box(align="left",
-                        width = 6,
-                        plotOutput(outputId = 'numRHist')),
-                    box(align="right",
-                        width = 6,
-                        plotOutput(outputId = "precisionHist"))
-                )
-
-
-
-        ),
-
-
         # Custom sensor section ---------------------------------------------------
         tabItem(tabName = "newSensor",
                 # Sensor characteristics box
@@ -229,6 +177,56 @@ body <- dashboardBody(
                     #                             )
 
                 )
+        ),
+
+        # Settings Tab-----------------------------------------------------------
+        tabItem(tabName = "settings",
+                h1("Settings!"),
+
+                # Input boxes
+                fluidRow(
+                    box(
+                        title = "Generating ratiometric intensity values",
+
+                        numericInput(
+                            inputId = "rpres",
+                            label = "Distance between R values (log scale)",
+                            min = -Inf,
+                            max = Inf,
+                            step = 0.01,
+                            value = -2
+                        ),
+
+                        numericInput(
+                            inputId = "rpres_edge",
+                            label = "Fold-increase in distance between R values
+                            near Rmin and Rmax (log scale)",
+                            min = -Inf,
+                            max = Inf,
+                            step = 0.01,
+                            value = 2
+                        )
+                    )
+
+                ),
+
+                fluidRow(
+                    box(align="center",
+                        width = 12,
+                        h3(textOutput(outputId = "numR")),
+                        h3(textOutput(outputId = "precision"))
+                    ),
+
+                    box(align="left",
+                        width = 6,
+                        plotOutput(outputId = 'numRHist')),
+                    box(align="right",
+                        width = 6,
+                        plotOutput(outputId = "precisionHist"))
+                )
+
+
+
         )
 
 

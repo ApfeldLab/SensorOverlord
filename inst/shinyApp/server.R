@@ -98,10 +98,6 @@ You are trying to be impossibly accurate, given
 your microscopy errors.")
             }
 
-            print(minimum)
-            print(maximum)
-            print(bounds)
-
             # Reactively set the minimum and maximum plot bounds
             scale_factor <- (maximum-minimum)/3
             if(minimum - scale_factor < bounds[1]) {
