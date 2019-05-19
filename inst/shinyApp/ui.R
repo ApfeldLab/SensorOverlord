@@ -87,6 +87,7 @@ body <- dashboardBody(
 
                     # Plot the suitable ranges
                     h3("Suitable range of selected sensor:"),
+                    h3(textOutput("rangeText")),
                     br(),
                     plotOutput(outputId = "range")
 

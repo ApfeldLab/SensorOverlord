@@ -187,5 +187,11 @@ your microscopy errors.")
             plot(g)
 
         }, height = 100)
+
+        # Output a text version of the range we can measure
+        output$rangeText <- renderText({
+            minMax <- getMinMax()[[1]]
+            return(paste(minMax$Minimum, " to ", minMax$Maximum, sep = ""))
+        })
     }
 )
