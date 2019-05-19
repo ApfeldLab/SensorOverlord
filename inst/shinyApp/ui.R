@@ -148,34 +148,6 @@ body <- dashboardBody(
                         step = 1,
                         value = 1
                     )
-
-                    # # E0 selection
-                    # conditionalPanel(
-                    #     condition = "input.sensorType == 'redox'",
-                    #     numericInput(
-                    #         inputId = "e0",
-                    #         label = "Midpoint Potential",
-                    #         min = -Inf,
-                    #         max = Inf,
-                    #         step = 1,
-                    #         value = -250
-                    #
-                    #     )
-                    # ),
-                    #
-                    #                             # pKa selection
-                    #                             conditionalPanel(
-                    #                                 condition = "input.sensorType == 'pH'",
-                    #                                 numericInput(
-                    #                                     inputId = "pKa",
-                    #                                     label = "pKa",
-                    #                                     min = -Inf,
-                    #                                     max = Inf,
-                    #                                     step = 0.1,
-                    #                                     value = 7.0
-                    #                                 )
-                    #                             )
-
                 )
         ),
 
