@@ -15,22 +15,18 @@ shinyServer(
 
         # Get the minimum and maximum X values for the current sensor
         getMinMax <- reactive({
-            # Set the precision in R actual value
+
+            # Set the precision with which to generate R values
             r_precision = 10^(input$rpres)
             r_precision_edge = 10^(input$rpres_edge)
 
-            # Set the types of sensors
-            sensorTypeToObject <- list("redox" = "redoxSensor",
-                                       "pH" = "pHSensor")
-
-            sensorTypeToMidpoint <- list("redox" = "e0",
-                                         "pH" = "pKa")
-
+            # Make a lookup table for the bounds associated with a sensor type
             boundsLookup <- list("redox" = c(-400,-100),
                            "pH" = c(1,14),
                            "other" = c(0,1))
 
-            # Update the sensor, if needed
+            # Create a sensor object from the input sensor, if it's
+            # from the database
             if(input$sensors %in% sensorNames) {
                 index <- match(input$sensors, sensorData$sensor_name)
                 spectra <- spectraMatrixFromValues(
@@ -42,73 +38,84 @@ shinyServer(
                 # Make a sensor from the spectra
                 sensor <-
                     newSensorFromSpectra(spectra,
-                                         lambda_1 = c(420, 440),
-                                         lambda_2 = c(460, 480))
+                                         lambda_1 = c(405, 415),
+                                         lambda_2 = c(465, 475))
 
                 # Create the appropiate sensor
                 sensor_type <- sensorData$sensor_type[[index]]
                 sensor <- makeSpecificSensor(sensor, sensor_type,
                                              sensorData$sensor_midpoint[[index]])
 
+                # Create the appropriate bounds
                 bounds <- boundsLookup[[sensor_type]]
             }
 
-            # Case: custom sensor selected
+            # Create a custom sensor
             else {
+
                 # Make a sensor with custom characteristics
                 sensor <- new("Sensor", Rmin = input$Rmin, Rmax = input$Rmax,
                               delta = input$delta)
 
+                # Create a specific sensor object
                 sensor <- makeSpecificSensor(sensor, input$sensorType,
                                              input$midpoint)
 
+                # Create the appropriate bounds
                 bounds <- boundsLookup[[input$sensorType]]
 
                 }
 
 
-            # Define an error model
+            # Create an error model from input
             error_model <- function(x) {
                 return(x*input$relErr + input$absErr)
             }
 
 
-            # Create the error table
+            # Create the error table for the sensor
             error_df <- getErrorTable(sensor, R = getR(sensor,
                                   by = r_precision, edgeBy = r_precision_edge),
                                   FUN = getProperty, Error_Model = error_model)
 
+            # Filter the error table on the desired accuracy
             error_filter <- subset(error_df, error_df$max_abs_error <= input$acc)
 
+            # Get the minimum and maximum values measureable at the
+            # desired accuracy
             minimum <- ifelse(test = length(error_filter$FUN_true) == 0,
                               yes = NaN, no = min(error_filter$FUN_true))
-
             maximum <- ifelse(test = length(error_filter$FUN_true) == 0,
                               yes = NaN, no = max(error_filter$FUN_true))
 
+            # Create a data frame from the minimum and maximum values
             minMax <- data.frame(Minimum = c(round(minimum, 2)), Maximum = c(round(maximum,2)))
 
+            # If no values are measureable --> throw an error
             if((is.nan(minMax$Minimum) || is.nan(minMax$Maximum))) {
                 stop("No values satisfy the parameters.
 You are trying to be impossibly accurate, given
 your microscopy errors.")
             }
 
-            if(minimum < bounds[1]) {
-                #bounds[2] = bounds[2] - 100 - (bounds[1]-minimum)
-                bounds[1] = minimum - 100
+            print(minimum)
+            print(maximum)
+            print(bounds)
+
+            # Reactively set the minimum and maximum plot bounds
+            scale_factor <- (maximum-minimum)/3
+            if(minimum - scale_factor < bounds[1]) {
+                bounds[1] <- minimum - scale_factor
+            }
+            if(maximum + scale_factor > bounds[2]) {
+                bounds[2] <- maximum + scale_factor
             }
 
-            if(maximum > bounds[2]) {
-                #bounds[1] = bounds[1] + 100 + (maximum - bounds[2])
-                bounds[2] = maximum + 100
-            }
-
-
-
+            # Return the created data in a list
             return(list(minMax, bounds, error_df))
         })
 
+        # Render the number of R values we have generated
         output$numR <- renderText({
             error_df <- getMinMax()[[3]]
             return(paste("With these settings, we have generated [",
@@ -116,18 +123,17 @@ your microscopy errors.")
                          "] ratio intensity values", sep = " "))
         })
 
+        # Render a histogram of the R values we have generated
         output$numRHist <- renderPlot({
             error_df <- getMinMax()[[3]]
             hist(error_df$R, xlab = "R",
                  main = "Distribution of generated R values")
         })
 
+        # Render the maximum values that we can generate with this precision
         output$precision <- renderText({
             error_df <- getMinMax()[[3]]
             Es <- subset(error_df$FUN_true, abs(error_df$FUN_true) < Inf)
-
-
-
             min <- round(min(Es),0)
             max <- round(max(Es),0)
 
@@ -137,6 +143,7 @@ your microscopy errors.")
                          sep = " "))
         })
 
+        # Render a histogram of the values we can generate with this precision
         output$precisionHist <- renderPlot({
             error_df <- getMinMax()[[3]]
             Es <- subset(error_df$FUN_true, abs(error_df$FUN_true) < Inf)
@@ -144,6 +151,8 @@ your microscopy errors.")
                  xlab = "Values (noninfinite)")
         })
 
+        # Output a dumbell plot of the ranges we can measure with
+        # this microscope precision and desired accuracy
         output$range <- renderPlot({
 
             minMax <- getMinMax()[[1]]
