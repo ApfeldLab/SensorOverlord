@@ -96,9 +96,15 @@ body <- dashboardBody(
 
         # Custom sensor section ---------------------------------------------------
         tabItem(tabName = "newSensor",
-                # Sensor characteristics box
+                # Sensor characteristics selection
                 box(
-                    title = "Sensor Characteristics",
+                    title = "Input sensor characteristics",
+
+                    # Upload a file
+                    fileInput(
+                        inputId = "customSpectra",
+                        label = "Upload spectra as .csv"
+                    ),
 
                     # Type of sensor
                     radioButtons(
@@ -148,8 +154,17 @@ body <- dashboardBody(
                         step = 1,
                         value = 1
                     )
-                )
+                ),
+
+                # Sensor characteristics output
+                box(
+                    h3(textOutput("customChars")),
+                    br(),
+                    plotOutput("plotFractionMax_custom"),
+                    plotOutput("plotValue_custom")
+        )
         ),
+
 
         # Settings Tab-----------------------------------------------------------
         tabItem(tabName = "settings",

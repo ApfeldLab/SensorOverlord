@@ -108,7 +108,7 @@ your microscopy errors.")
             }
 
             # Return the created data in a list
-            return(list(minMax, bounds, error_df))
+            return(list(minMax, bounds, error_df, sensor = sensor))
         })
 
         # Render the number of R values we have generated
@@ -189,5 +189,51 @@ your microscopy errors.")
             minMax <- getMinMax()[[1]]
             return(paste(minMax$Minimum, " to ", minMax$Maximum, sep = ""))
         })
+
+        # Output the characteristics of the custom sensor
+        output$customChars <- renderText({
+            # Make a sensor with custom characteristics
+            sensor <- new("Sensor", Rmin = input$Rmin, Rmax = input$Rmax,
+                          delta = input$delta)
+
+            # Create a specific sensor object
+            sensor <- makeSpecificSensor(sensor, input$sensorType,
+                                         input$midpoint)
+            return(paste("Dynamic range: ", round(sensor@Rmax/sensor@Rmin,3)))
+        })
+
+        # Output the graph of R vs FractionMax of the custom sensor
+        output$plotFractionMax_custom <- renderPlot({
+            # Make a sensor with custom characteristics
+            sensor <- new("Sensor", Rmin = input$Rmin, Rmax = input$Rmax,
+                          delta = input$delta)
+
+            # Create a specific sensor object
+            sensor <- makeSpecificSensor(sensor, input$sensorType,
+                                         input$midpoint)
+            return(plotFractionMax(sensor) +
+                       theme(aspect.ratio=1,
+                             text = element_text(size = 20))
+                       )
+        })
+
+       # Output the graph of R vs Value for the custom sensor
+       output$plotValue_custom <- renderPlot({
+           # Make a sensor with custom characteristics
+           sensor <- new("Sensor", Rmin = input$Rmin, Rmax = input$Rmax,
+                         delta = input$delta)
+           # Create a specific sensor object
+           sensor <- makeSpecificSensor(sensor, input$sensorType,
+                                        input$midpoint)
+
+           R_Value <- data.frame(R = getR(sensor), Value = getProperty(sensor))
+
+
+           ggplot(R_Value, aes(x = R, y = Value)) +
+               geom_line() +
+               theme(aspect.ratio = 1,
+                     text = element_text(size = 20))
+
+       })
     }
 )

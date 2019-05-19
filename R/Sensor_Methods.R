@@ -519,6 +519,32 @@ setMethod("plotFractionMax", "redoxSensor", definition =
                   return(plot)
               })
 
+#' Plot the fraction of pH sensors in the max state
+#'
+#' Creates a ggplot object that has the ratio R on the horizontal axis
+#' and the fraction deprotenated on the vertical axis
+#'
+#' @param object An pHSensor object
+#'
+#' @return A ggplot object
+#'
+#' @export
+#' @docType methods
+#' @rdname plotFractionMax-pHSensor
+setMethod("plotFractionMax", "pHSensor", definition =
+              function(object) {
+                  R <- getR(object)
+                  R_deprot <- data.frame(R = R,
+                                         deprot = getFractionMax(object, R))
+
+                  plot <- ggplot(R_deprot) +
+                      geom_line(aes(x = R_deprot$R, y = R_deprot$deprot)) +
+                      xlab("R")  +
+                      ylab("Fraction Deprotenated")
+
+                  return(plot)
+              })
+
 #' Plot the fraction of E of an object
 #'
 #' @param object An object
