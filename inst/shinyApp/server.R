@@ -67,6 +67,8 @@ shinyServer(
                 # Create the appropriate bounds
                 bounds <- boundsLookup[[input$sensorType]]
 
+                # Pass the sensor type
+                sensor_type <- input$sensorType
                 }
 
 
@@ -111,7 +113,7 @@ your microscopy errors.")
             }
 
             # Return the created data in a list
-            return(list(minMax, bounds, error_df, sensor = sensor))
+            return(list(minMax, bounds, error_df, sensor, sensor_type))
         })
 
 
@@ -176,6 +178,27 @@ your microscopy errors.")
         output$rangeText <- renderText({
             minMax <- getMinMax()[[1]]
             return(paste(minMax$Minimum, " to ", minMax$Maximum, sep = ""))
+        })
+
+        # Outputs the characteristics of the current sensor as text
+        output$sensorChars <- renderText({
+            sensor <- getMinMax()[[4]]
+            print(sensor)
+            print(typeof(sensor))
+            main <- paste("Rmin: ", round(sensor@Rmin, 2),
+                         "| Rmax: ", round(sensor@Rmax, 2),
+                         "| delta: ", round(sensor@delta, 2))
+
+            sensor_type <- getMinMax()[[5]]
+
+            midpoint <- switch(sensor_type, 'redox' = round(sensor@e0, 2),
+                               'pH' = round(sensor@pH,2),
+                                'other' = "NA")
+
+            paste(main, "| Midpoint: ", midpoint)
+
+
+
         })
 
         # Custom Sensor Page ---------------------------------------------------

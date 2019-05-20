@@ -87,8 +87,22 @@ body <- dashboardBody(
                     ),
 
                     # Plot the suitable ranges
-                    h3("Suitable range of selected sensor:"),
-                    h3(textOutput("rangeText")),
+                fluidRow(
+                    box(
+                        h3("Suitable range of selected sensor:",
+                           align = "center"),
+                        h3(textOutput("rangeText"),
+                           align = "center")
+                    ),
+
+                    box(
+                        h3("Sensor characteristics:",
+                           align = "center"),
+                        h3(textOutput("sensorChars"),
+                           align = "center")
+                    )
+                ),
+
                     br(),
 
                 fluidRow(
@@ -239,7 +253,7 @@ body <- dashboardBody(
 )
 
 
-# Main Page ---------------------------------------------------------------
+# Putting the page components together ----------------------------------------
 dashboardPage(skin = "blue",
     # Header
     dashboardHeader(title = "Sensor Overlord"),
