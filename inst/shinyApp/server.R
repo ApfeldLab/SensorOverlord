@@ -246,7 +246,8 @@ your microscopy errors.")
            sensor <- makeSpecificSensor(sensor, input$sensorType,
                                         input$midpoint)
 
-           R_Value <- data.frame(R = getR(sensor), Value = getProperty(sensor))
+           R_Value <- data.frame(R = getR(sensor), Value = getProperty(sensor,
+                                                                       getR(sensor)))
 
 
            ggplot(R_Value, aes(x = R, y = Value)) +

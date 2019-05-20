@@ -482,7 +482,7 @@ setGeneric('plotFractionMax', def = function(object, ...) standardGeneric("plotF
 #' @docType methods
 #' @rdname plotFractionMax-Sensor
 setMethod("plotFractionMax", "Sensor", definition =
-              function(object, FUN) {
+              function(object, FUN = getFractionMax) {
                   R <- getR(object)
                   R_Max <- data.frame(R = R, Max = FUN(object, R))
 
