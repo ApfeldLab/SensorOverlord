@@ -21,6 +21,7 @@ sidebar <- dashboardSidebar(
     sidebarMenu(
         menuItem("Home", tabName = "home"),
         menuItem("Add a Custom Sensor", tabName = "newSensor"),
+        menuItem("Full Error Table", tabName = "table"),
         menuItem("Settings", tabName = "settings"),
         menuItem("Browse Sensor Database", tabName = "browse"),
         menuItem("Contribute to Database", tabName = "upload"))
@@ -28,10 +29,10 @@ sidebar <- dashboardSidebar(
 
 
 
-# Body definition --------------------------------------------------------------------
+# Body definition --------------------------------------------------------------
 body <- dashboardBody(
     tabItems(
-        # Overview Tab ------------------------------------------------------------
+        # Home Page ------------------------------------------------------------
         tabItem(tabName = "home",
                     # Welcome message
                     h3(welcomeMessage),
@@ -103,7 +104,7 @@ body <- dashboardBody(
             # Close overview tab
             ),
 
-        # Custom sensor section ---------------------------------------------------
+        # Custom Sensor Page ---------------------------------------------------
         tabItem(tabName = "newSensor",
                 # Sensor characteristics selection
                 box(
@@ -175,7 +176,14 @@ body <- dashboardBody(
         ),
 
 
-        # Settings Tab-----------------------------------------------------------
+
+        # Full Error Table Page-------------------------------------------------
+        tabItem(tabName = "table",
+                h1("Full error table for the selected sensor"),
+                dataTableOutput('fullTable')
+                ),
+
+        # Settings Page --------------------------------------------------------
         tabItem(tabName = "settings",
                 h1("Settings!"),
 

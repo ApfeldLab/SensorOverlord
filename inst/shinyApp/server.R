@@ -13,6 +13,9 @@ source("helpers.R")
 shinyServer(
     function(input, output, session) {
 
+
+        # Global Functions -----------------------------------------------------
+
         # Get the minimum and maximum X values for the current sensor
         getMinMax <- reactive({
 
@@ -111,41 +114,8 @@ your microscopy errors.")
             return(list(minMax, bounds, error_df, sensor = sensor))
         })
 
-        # Render the number of R values we have generated
-        output$numR <- renderText({
-            error_df <- getMinMax()[[3]]
-            return(paste("With these settings, we have generated [",
-                         length(error_df$R),
-                         "] ratio intensity values", sep = " "))
-        })
 
-        # Render a histogram of the R values we have generated
-        output$numRHist <- renderPlot({
-            error_df <- getMinMax()[[3]]
-            hist(error_df$R, xlab = "R",
-                 main = "Distribution of generated R values")
-        })
-
-        # Render the maximum values that we can generate with this precision
-        output$precision <- renderText({
-            error_df <- getMinMax()[[3]]
-            Es <- subset(error_df$FUN_true, abs(error_df$FUN_true) < Inf)
-            min <- round(min(Es),0)
-            max <- round(max(Es),0)
-
-            return(paste("The maximum values this app can generate are [",
-                         min, "] to [", max, "]. To increase this range, adjust the
-                     values in the 'Generating ratiometric intensity values' section.",
-                         sep = " "))
-        })
-
-        # Render a histogram of the values we can generate with this precision
-        output$precisionHist <- renderPlot({
-            error_df <- getMinMax()[[3]]
-            Es <- subset(error_df$FUN_true, abs(error_df$FUN_true) < Inf)
-            hist(Es, main = "Distribution of calculated values",
-                 xlab = "Values (noninfinite)")
-        })
+        # Home Page -------------------------------------------------
 
         # Output a dumbell plot of the ranges we can measure with
         # this microscope precision and desired accuracy
@@ -202,14 +172,13 @@ your microscopy errors.")
 
         })
 
-
-
         # Output a text version of the range we can measure
         output$rangeText <- renderText({
             minMax <- getMinMax()[[1]]
             return(paste(minMax$Minimum, " to ", minMax$Maximum, sep = ""))
         })
 
+        # Custom Sensor Page ---------------------------------------------------
         # Output the characteristics of the custom sensor
         output$customChars <- renderText({
             # Make a sensor with custom characteristics
@@ -234,27 +203,76 @@ your microscopy errors.")
             return(plotFractionMax(sensor) +
                        theme(aspect.ratio=1,
                              text = element_text(size = 20))
-                       )
+            )
         })
 
-       # Output the graph of R vs Value for the custom sensor
-       output$plotValue_custom <- renderPlot({
-           # Make a sensor with custom characteristics
-           sensor <- new("Sensor", Rmin = input$Rmin, Rmax = input$Rmax,
-                         delta = input$delta)
-           # Create a specific sensor object
-           sensor <- makeSpecificSensor(sensor, input$sensorType,
-                                        input$midpoint)
+        # Output the graph of R vs Value for the custom sensor
+        output$plotValue_custom <- renderPlot({
+            # Make a sensor with custom characteristics
+            sensor <- new("Sensor", Rmin = input$Rmin, Rmax = input$Rmax,
+                          delta = input$delta)
+            # Create a specific sensor object
+            sensor <- makeSpecificSensor(sensor, input$sensorType,
+                                         input$midpoint)
 
-           R_Value <- data.frame(R = getR(sensor), Value = getProperty(sensor,
-                                                                       getR(sensor)))
+            R_Value <- data.frame(R = getR(sensor), Value = getProperty(sensor,
+                                                                        getR(sensor)))
 
 
-           ggplot(R_Value, aes(x = R, y = Value)) +
-               geom_line() +
-               theme(aspect.ratio = 1,
-                     text = element_text(size = 20))
+            ggplot(R_Value, aes(x = R, y = Value)) +
+                geom_line() +
+                theme(aspect.ratio = 1,
+                      text = element_text(size = 20))
 
-       })
+        })
+
+        # Full Error Table Page ------------------------------------------------
+        output$fullTable <- renderDataTable({
+            table <- getMinMax()[[3]]
+            table$upper_error <- as.character(table$upper_error)
+            table$lower_error <- as.character(table$lower_error)
+            table$max_abs_error <- as.character(table$max_abs_error)
+            colnames(table) <- c("R", "Error in R",
+                                 "True Value", "Upper Error",
+                                 "Lower Error", "Maximum Error")
+            table
+        }, )
+        # Settings Page -------------------------------------------------------
+
+        # Render the number of R values we have generated
+        output$numR <- renderText({
+            error_df <- getMinMax()[[3]]
+            return(paste("With these settings, we have generated [",
+                         length(error_df$R),
+                         "] ratio intensity values", sep = " "))
+        })
+
+        # Render a histogram of the R values we have generated
+        output$numRHist <- renderPlot({
+            error_df <- getMinMax()[[3]]
+            hist(error_df$R, xlab = "R",
+                 main = "Distribution of generated R values")
+        })
+
+        # Render the maximum values that we can generate with this precision
+        output$precision <- renderText({
+            error_df <- getMinMax()[[3]]
+            Es <- subset(error_df$FUN_true, abs(error_df$FUN_true) < Inf)
+            min <- round(min(Es),0)
+            max <- round(max(Es),0)
+
+            return(paste("The maximum values this app can generate are [",
+                         min, "] to [", max, "]. To increase this range, adjust the
+                     values in the 'Generating ratiometric intensity values' section.",
+                         sep = " "))
+        })
+
+        # Render a histogram of the values we can generate with this precision
+        output$precisionHist <- renderPlot({
+            error_df <- getMinMax()[[3]]
+            Es <- subset(error_df$FUN_true, abs(error_df$FUN_true) < Inf)
+            hist(Es, main = "Distribution of calculated values",
+                 xlab = "Values (noninfinite)")
+        })
     }
 )
