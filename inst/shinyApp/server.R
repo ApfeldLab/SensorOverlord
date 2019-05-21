@@ -9,6 +9,9 @@ source("helpers.R")
 
 #' @import shinydashboard
 
+# Don't sanitize error messages
+options(shiny.sanitize.errors = FALSE)
+
 # Define server logic required to draw a histogram
 shinyServer(
     function(input, output, session) {
