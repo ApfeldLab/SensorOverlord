@@ -3,18 +3,12 @@
 \docType{methods}
 \name{getProperty,redoxSensor-method}
 \alias{getProperty,redoxSensor-method}
-\title{Get the redox potential (E) for a redox sensor}
+\title{Get the redox potential (E) for a redox sensor (wrapper)}
 \usage{
-\S4method{getProperty}{redoxSensor}(object, R = getR(object),
-  temp = 295.15)
+\S4method{getProperty}{redoxSensor}(object)
 }
 \arguments{
 \item{object}{A redoxSensor object}
-
-\item{R}{(Optional, defaults to getR(Object)
-A numeric value (can be an array) of ratio values}
-
-\item{temp}{The temperature, in Kelvin. Default is 295.15}
 }
 \value{
 A numeric array of E values

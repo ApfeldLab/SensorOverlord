@@ -72,7 +72,6 @@ setGeneric('getFractionMax', def = function(object, ...)
 #' @param object A sensor object
 #' @param R A single number or numeric vector corresponding to an
 #' R between Rmin and Rmax
-#' @param ... ...
 #'
 #' @return A single number of numeric vector of the fraction of sensors
 #' in the maximum-emission state corresponding to the given R
@@ -105,14 +104,9 @@ setMethod("getFractionMax", "Sensor", definition =
 setGeneric('getProperty', def = function(object, ...)
     standardGeneric("getProperty"))
 
-#' Get the fraction of sensors in the state corresponding to "Rmax"
-#'
-#' This method corresponds to finding the "OxD" in a redox sensor
+#' Get the fraction of sensors in the state corresponding to "Rmax" (wrapper)
 #'
 #' @param object A sensor object
-#' @param R A single number or numeric vector corresponding to an
-#' R between Rmin and Rmax
-#' @param ... ...
 #'
 #' @return A single number of numeric vector of the fraction of sensors
 #' in the maximum-emission state corresponding to the given R
@@ -127,22 +121,16 @@ setGeneric('getProperty', def = function(object, ...)
 #' getFractionMax(my_sensor, R = 3)
 #' getFractionMax(my_sensor, R = 5)
 setMethod("getProperty", "Sensor", definition =
-              function(object, R = getR(object)) {
-                  return(
-                      (R - object@Rmin) /
-                          ((R - object@Rmin) + object@delta * (object@Rmax - R))
-                  )
+              function(object) {
+                  getFractionMax(object)
               })
 
-#' Get the redox potential (E) for a redox sensor
+#' Get the redox potential (E) for a redox sensor (wrapper)
 #'
 #' For a given redox sensor at a certain temperature, returns the
 #' redox potential corresponding to a given ratio (R) value
 #'
 #' @param object A redoxSensor object
-#' @param R (Optional, defaults to getR(Object)
-#' A numeric value (can be an array) of ratio values
-#' @param temp The temperature, in Kelvin. Default is 295.15
 #'
 #' @return A numeric array of E values
 #'
@@ -150,45 +138,25 @@ setMethod("getProperty", "Sensor", definition =
 #' @docType methods
 #' @rdname getProperty-redoxSensor
 setMethod("getProperty", "redoxSensor", definition =
-              function(object, R = getR(object), temp = 295.15) {
-
-                  # Get the object's R, if no R is passed
-                  if(missing(R)) {
-                      R = getR(object)
-                  }
-                  return(object@e0 - (8.315 * temp)/(2 * 96.48104) *
-                             log(
-                                 (object@delta *
-                                      object@Rmax - object@delta * R) /
-                                     (R - object@Rmin)))
+              function(object) {
+                    getE(object)
               })
 
-#' Get the pH of a pH sensor
+#' Get the pH of a pH sensor (wrapper)
 #'
 #' For a given redox sensor at a certain temperature, returns the
 #' redox potential corresponding to a given ratio (R) value
 #'
 #' @param object A pHSensor object
-#' @param R (Optional, defaults to getR(Object)
-#' A numeric value (can be an array) of ratio values
-#'
+
 #' @return A numeric array of pH values
 #'
 #' @export
 #' @docType methods
 #' @rdname getProperty-pHSensor
 setMethod("getProperty", "pHSensor", definition =
-              function(object, R = getR(object)) {
-
-                  # Get the object's R, if no R is passed
-                  if(missing(R)) {
-                      R = getR(object)
-                  }
-
-                  return(
-                      object@pKa + log10(object@delta)
-                      + log10((object@Rmax - R) / (R - object@Rmin))
-                  )
+              function(object) {
+                    getpH(object)
               })
 
 #' Get the redox potential (E) value (generic)

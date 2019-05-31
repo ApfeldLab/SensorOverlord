@@ -3,15 +3,12 @@
 \docType{methods}
 \name{getProperty,pHSensor-method}
 \alias{getProperty,pHSensor-method}
-\title{Get the pH of a pH sensor}
+\title{Get the pH of a pH sensor (wrapper)}
 \usage{
-\S4method{getProperty}{pHSensor}(object, R = getR(object))
+\S4method{getProperty}{pHSensor}(object)
 }
 \arguments{
 \item{object}{A pHSensor object}
-
-\item{R}{(Optional, defaults to getR(Object)
-A numeric value (can be an array) of ratio values}
 }
 \value{
 A numeric array of pH values

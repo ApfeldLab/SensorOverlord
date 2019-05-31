@@ -12,8 +12,6 @@
 
 \item{R}{A single number or numeric vector corresponding to an
 R between Rmin and Rmax}
-
-\item{...}{...}
 }
 \value{
 A single number of numeric vector of the fraction of sensors

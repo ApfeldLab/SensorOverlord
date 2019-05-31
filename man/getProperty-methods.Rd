@@ -3,24 +3,19 @@
 \docType{methods}
 \name{getProperty,Sensor-method}
 \alias{getProperty,Sensor-method}
-\title{Get the fraction of sensors in the state corresponding to "Rmax"}
+\title{Get the fraction of sensors in the state corresponding to "Rmax" (wrapper)}
 \usage{
-\S4method{getProperty}{Sensor}(object, R = getR(object))
+\S4method{getProperty}{Sensor}(object)
 }
 \arguments{
 \item{object}{A sensor object}
-
-\item{R}{A single number or numeric vector corresponding to an
-R between Rmin and Rmax}
-
-\item{...}{...}
 }
 \value{
 A single number of numeric vector of the fraction of sensors
 in the maximum-emission state corresponding to the given R
 }
 \description{
-This method corresponds to finding the "OxD" in a redox sensor
+Get the fraction of sensors in the state corresponding to "Rmax" (wrapper)
 }
 \examples{
 my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
