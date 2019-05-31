@@ -5,10 +5,12 @@
 \alias{getProperty,redoxSensor-method}
 \title{Get the redox potential (E) for a redox sensor (wrapper)}
 \usage{
-\S4method{getProperty}{redoxSensor}(object)
+\S4method{getProperty}{redoxSensor}(object, ...)
 }
 \arguments{
 \item{object}{A redoxSensor object}
+
+\item{...}{...}
 }
 \value{
 A numeric array of E values

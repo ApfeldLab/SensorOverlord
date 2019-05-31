@@ -107,6 +107,7 @@ setGeneric('getProperty', def = function(object, ...)
 #' Get the fraction of sensors in the state corresponding to "Rmax" (wrapper)
 #'
 #' @param object A sensor object
+#' @param ... ...
 #'
 #' @return A single number of numeric vector of the fraction of sensors
 #' in the maximum-emission state corresponding to the given R
@@ -121,8 +122,8 @@ setGeneric('getProperty', def = function(object, ...)
 #' getFractionMax(my_sensor, R = 3)
 #' getFractionMax(my_sensor, R = 5)
 setMethod("getProperty", "Sensor", definition =
-              function(object) {
-                  getFractionMax(object)
+              function(object, ...) {
+                  getFractionMax(object, ...)
               })
 
 #' Get the redox potential (E) for a redox sensor (wrapper)
@@ -131,6 +132,7 @@ setMethod("getProperty", "Sensor", definition =
 #' redox potential corresponding to a given ratio (R) value
 #'
 #' @param object A redoxSensor object
+#' @param ... ...
 #'
 #' @return A numeric array of E values
 #'
@@ -138,8 +140,8 @@ setMethod("getProperty", "Sensor", definition =
 #' @docType methods
 #' @rdname getProperty-redoxSensor
 setMethod("getProperty", "redoxSensor", definition =
-              function(object) {
-                    getE(object)
+              function(object, ...) {
+                    getE(object, ...)
               })
 
 #' Get the pH of a pH sensor (wrapper)
@@ -148,15 +150,15 @@ setMethod("getProperty", "redoxSensor", definition =
 #' redox potential corresponding to a given ratio (R) value
 #'
 #' @param object A pHSensor object
-
+#' @param ... ...
 #' @return A numeric array of pH values
 #'
 #' @export
 #' @docType methods
 #' @rdname getProperty-pHSensor
 setMethod("getProperty", "pHSensor", definition =
-              function(object) {
-                    getpH(object)
+              function(object, ...) {
+                    getpH(object, ...)
               })
 
 #' Get the redox potential (E) value (generic)
@@ -294,20 +296,26 @@ setGeneric('getAbsError', def = function(object, ...) standardGeneric("getAbsErr
 #' @rdname getAbsError-sensor
 setMethod("getAbsError", "Sensor", definition =
               function(object, R = getR(object), FUN, Error_Model, ...) {
+                  # Initalize the absolute error array
                   answer <- c()
+
                   for (R_individual in R) {
+                      # Apply the individual R value to the error model
+                      # Set an upper and lower R value based on the model
+                      # (ASSUMES: symmetry in error in ratio e.g. that the
+                      # true value of R between (R - error) and (R + error))
                       R_error <- Error_Model(R_individual)
                       R_lower <- R_individual + R_error
                       R_upper <- R_individual - R_error
 
 
                       # Get the absolute difference in running the function between R and the R + error
-                      # You may get an error, in which case the error is infinite
-                      value_error_up <- suppressWarnings(FUN(object, (R_upper), ...) - FUN(object, (R_individual), ...))
+                      # If you get an NA value, your error is infinite
+                      value_error_up <- suppressWarnings(FUN(object, R = R_upper, ...) - FUN(object, R = R_individual, ...))
                       value_error_up <- ifelse(test = is.na(value_error_up), yes = Inf, no = abs(value_error_up))
 
                       # Same thing, but with function between R and R - error
-                      value_error_down <- suppressWarnings(FUN(object, (R_lower), ...) - FUN(object, (R_individual), ...))
+                      value_error_down <- suppressWarnings(FUN(object, R = R_lower, ...) - FUN(object, R = R_individual, ...))
                       value_error_down <- ifelse(test = is.na(value_error_down), yes = Inf, no = abs(value_error_down))
 
                       # Get the maximum error

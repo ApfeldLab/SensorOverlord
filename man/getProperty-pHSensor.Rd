@@ -5,10 +5,12 @@
 \alias{getProperty,pHSensor-method}
 \title{Get the pH of a pH sensor (wrapper)}
 \usage{
-\S4method{getProperty}{pHSensor}(object)
+\S4method{getProperty}{pHSensor}(object, ...)
 }
 \arguments{
 \item{object}{A pHSensor object}
+
+\item{...}{...}
 }
 \value{
 A numeric array of pH values

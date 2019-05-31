@@ -5,10 +5,12 @@
 \alias{getProperty,Sensor-method}
 \title{Get the fraction of sensors in the state corresponding to "Rmax" (wrapper)}
 \usage{
-\S4method{getProperty}{Sensor}(object)
+\S4method{getProperty}{Sensor}(object, ...)
 }
 \arguments{
 \item{object}{A sensor object}
+
+\item{...}{...}
 }
 \value{
 A single number of numeric vector of the fraction of sensors
