@@ -87,7 +87,7 @@ setGeneric('getFractionMax', def = function(object, ...)
 #' getFractionMax(my_sensor, R = 3)
 #' getFractionMax(my_sensor, R = 5)
 setMethod("getFractionMax", "Sensor", definition =
-              function(object, R) {
+              function(object, R = getR(object)) {
                   return(
                       (R - object@Rmin) /
                           ((R - object@Rmin) + object@delta * (object@Rmax - R))
