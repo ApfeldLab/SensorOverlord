@@ -197,8 +197,6 @@ your microscopy errors.")
 
             paste(main, "| Midpoint: ", midpoint)
 
-
-
         })
 
         # Custom Sensor Page ---------------------------------------------------
