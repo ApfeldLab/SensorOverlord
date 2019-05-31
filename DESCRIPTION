@@ -1,11 +1,13 @@
 Package: sensorOverlord
 Type: Package
-Title: What the Package Does (Title Case)
+Title: A Tyrant of Absolute Quantitative Ratiometric Microscopy
 Version: 0.1.0
-Author: Who wrote it
-Maintainer: The package maintainer <yourself@somewhere.net>
-Description: More about what it does (maybe more than one line)
-    Use four spaces when indenting paragraphs within the Description.
+Author: Julian Stanley
+Maintainer: Julian Stanley <stanley.ju@husky.neu.edu>
+Description: "This package provides a few classes and methods that can help you 
+    analyze how the errors in ratiometric microscopy affect the errors in 
+    absolute measurements, assuming that you're using a two-state sensor
+    with known biochemical and biophysical properties."
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
