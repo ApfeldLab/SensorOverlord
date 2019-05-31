@@ -5,8 +5,8 @@
 \alias{getAbsError,Sensor-method}
 \title{Get the error for a given sensor object}
 \usage{
-\S4method{getAbsError}{Sensor}(object, R = getR(object), FUN,
-  Error_Model, ...)
+\S4method{getAbsError}{Sensor}(object, R = getR(object),
+  FUN = getProperty, Error_Model, ...)
 }
 \arguments{
 \item{object}{A sensor object}

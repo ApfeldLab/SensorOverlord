@@ -295,7 +295,7 @@ setGeneric('getAbsError', def = function(object, ...) standardGeneric("getAbsErr
 #' @docType methods
 #' @rdname getAbsError-sensor
 setMethod("getAbsError", "Sensor", definition =
-              function(object, R = getR(object), FUN, Error_Model, ...) {
+              function(object, R = getR(object), FUN = getProperty, Error_Model, ...) {
                   # Initalize the absolute error array
                   answer <- c()
 
@@ -362,58 +362,60 @@ setGeneric('getErrorTable', def = function(object, ...)
 #' @docType methods
 #' @rdname getErrorTable-sensor
 setMethod("getErrorTable", "Sensor", definition =
-              function(object, R = getR(object), FUN, Error_Model, ...) {
-                  max_error_acc <- c()
-                  lower_FUN_acc <-
-                  lower_error_acc <- c()
-                  upper_FUN_acc <- c()
-                  upper_error_acc <- c()
+              function(object, R = getR(object), FUN = getProperty, Error_Model, ...) {
+
+                  # Initalize accumulators of our seven characteristics------
                   R_error_acc <- c()
-                  FUN_acc <- c()
+                  property_true_acc <- c()
+                  property_tooLow_acc <- c()
+                  property_tooHigh_acc <- c()
+                  property_error_lower_acc <- c()
+                  property_error_higher_acc <- c()
+                  property_error_max_acc <- c()
 
                   for (R_individual in R) {
+
                       R_error <- Error_Model(R_individual)
                       R_error_acc <- c(R_error_acc, R_error)
 
+                      # What are your bounds of R, based on the error?
                       R_lower <- R_individual - R_error
                       R_upper <- R_individual + R_error
 
-                      # Get & appendthe result of the function
-                      # applied to the R "actual"
-                      FUN_true <- FUN(object, (R_individual), ...)
-                      FUN_acc <- c(FUN_acc, FUN_true)
+                      # Collect the values of your properties at the true R and the confidence bounds
+                      property_true <- FUN(object, R_individual, ...)
+                      property_true_acc <- c(property_true_acc, property_true)
 
+                      # If our upper_FUN larger than Rmax, you'll get an NA
+                      # So you can convert that NA to Inf
+                      property_tooHigh <- suppressWarnings(FUN(object, R_upper, ...))
+                      property_tooHigh <- ifelse(test = is.na(property_tooHigh),
+                                          yes = Inf, no = property_tooHigh)
+                      property_tooHigh_acc <- c(property_tooHigh_acc, property_tooHigh)
 
-                      # Get & append the absolute difference in running the function between R and the R + error
-                      # You may get an error, in which case the error is infinite
-                      upper_FUN <- suppressWarnings(FUN(object, R_upper, ...))
-                      upper_FUN <- ifelse(test = is.na(upper_FUN),
-                                          yes = Inf, no = upper_FUN)
-                      upper_error <- abs(upper_FUN - FUN_true)
+                      property_tooLow <- suppressWarnings(FUN(object, R_lower, ...))
+                      property_tooLow <- ifelse(test = is.na(property_tooLow),
+                                          yes = Inf, no = property_tooLow)
+                      property_tooLow_acc <- c(property_tooLow_acc, property_tooLow)
 
-                      upper_FUN_acc <- c(upper_FUN_acc, upper_FUN)
-                      upper_error_acc <- c(upper_error_acc, upper_error)
+                      # Take the differences between the properties obtained with the R bounds
+                      # and the property obtain from the true R_individual value
+                      property_error_higher <- abs(property_tooHigh - property_true)
+                      property_error_higher_acc <- c(property_error_higher_acc, property_error_higher)
 
-                      # Same thing, but with function between R and R - error
-                      lower_FUN <- suppressWarnings(FUN(object, R_lower, ...))
-                      lower_FUN <- ifelse(test = is.na(lower_FUN),
-                                          yes = Inf, no = lower_FUN)
-                      lower_error <- abs(lower_FUN - FUN_true)
-
-                      lower_FUN_acc <- c(lower_FUN_acc, lower_FUN)
-                      lower_error_acc <- c(lower_error_acc, lower_error)
+                      property_error_lower <- abs(property_tooLow - property_true)
+                      property_error_lower_acc <- c(property_error_lower_acc, property_error_lower)
 
                       # Get & append the maximum error
-                      max_error <- max(lower_error, upper_error)
-                      max_error_acc <- c(max_error_acc, max_error)
-
+                      property_error_max <- max(property_error_lower, property_error_higher)
+                      property_error_max_acc <- c(property_error_max_acc, property_error_max)
                   }
 
                   return(data.frame(R = R, Error_R = R_error_acc,
-                                    FUN_true = FUN_acc,
-                                    upper_error = upper_error_acc,
-                                    lower_error = lower_error_acc,
-                                    max_abs_error = max_error_acc))
+                                    FUN_true = property_true_acc,
+                                    upper_error = property_error_higher_acc,
+                                    lower_error = property_error_lower_acc,
+                                    max_abs_error = property_error_max_acc))
               })
 
 
