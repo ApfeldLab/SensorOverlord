@@ -5,7 +5,7 @@
 \alias{getE,redoxSensor-method}
 \title{Get the redox potential (E) for a redox sensor}
 \usage{
-\S4method{getE}{redoxSensor}(object, R, temp = 295.15)
+\S4method{getE}{redoxSensor}(object, R = getR(object), temp = 295.15)
 }
 \arguments{
 \item{object}{A redoxSensor object}

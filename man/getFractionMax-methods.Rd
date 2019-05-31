@@ -5,7 +5,7 @@
 \alias{getFractionMax,Sensor-method}
 \title{Get the fraction of sensors in the state corresponding to "Rmax"}
 \usage{
-\S4method{getFractionMax}{Sensor}(object, R)
+\S4method{getFractionMax}{Sensor}(object, R = getR(object))
 }
 \arguments{
 \item{object}{A sensor object}

@@ -5,7 +5,7 @@
 \alias{getE_deriv,redoxSensor-method}
 \title{Get the derivative of the redox potential (dE/dR) for a redox sensor}
 \usage{
-\S4method{getE_deriv}{redoxSensor}(object, R)
+\S4method{getE_deriv}{redoxSensor}(object, R = getR(object))
 }
 \arguments{
 \item{object}{A redoxSensor object}

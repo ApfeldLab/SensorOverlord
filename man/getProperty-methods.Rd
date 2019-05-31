@@ -5,7 +5,7 @@
 \alias{getProperty,Sensor-method}
 \title{Get the fraction of sensors in the state corresponding to "Rmax"}
 \usage{
-\S4method{getProperty}{Sensor}(object, R)
+\S4method{getProperty}{Sensor}(object, R = getR(object))
 }
 \arguments{
 \item{object}{A sensor object}

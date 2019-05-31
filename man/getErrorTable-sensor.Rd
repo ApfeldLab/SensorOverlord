@@ -5,7 +5,8 @@
 \alias{getErrorTable,Sensor-method}
 \title{Get the error table for a given sensor object}
 \usage{
-\S4method{getErrorTable}{Sensor}(object, R, FUN, Error_Model, ...)
+\S4method{getErrorTable}{Sensor}(object, R = getR(object), FUN,
+  Error_Model, ...)
 }
 \arguments{
 \item{object}{A sensor object}

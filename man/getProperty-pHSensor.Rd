@@ -5,7 +5,7 @@
 \alias{getProperty,pHSensor-method}
 \title{Get the pH of a pH sensor}
 \usage{
-\S4method{getProperty}{pHSensor}(object, R)
+\S4method{getProperty}{pHSensor}(object, R = getR(object))
 }
 \arguments{
 \item{object}{A pHSensor object}

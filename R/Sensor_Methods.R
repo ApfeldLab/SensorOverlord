@@ -127,7 +127,7 @@ setGeneric('getProperty', def = function(object, ...)
 #' getFractionMax(my_sensor, R = 3)
 #' getFractionMax(my_sensor, R = 5)
 setMethod("getProperty", "Sensor", definition =
-              function(object, R) {
+              function(object, R = getR(object)) {
                   return(
                       (R - object@Rmin) /
                           ((R - object@Rmin) + object@delta * (object@Rmax - R))
@@ -150,7 +150,7 @@ setMethod("getProperty", "Sensor", definition =
 #' @docType methods
 #' @rdname getProperty-redoxSensor
 setMethod("getProperty", "redoxSensor", definition =
-              function(object, R, temp = 295.15) {
+              function(object, R = getR(object), temp = 295.15) {
 
                   # Get the object's R, if no R is passed
                   if(missing(R)) {
@@ -178,7 +178,7 @@ setMethod("getProperty", "redoxSensor", definition =
 #' @docType methods
 #' @rdname getProperty-pHSensor
 setMethod("getProperty", "pHSensor", definition =
-              function(object, R) {
+              function(object, R = getR(object)) {
 
                   # Get the object's R, if no R is passed
                   if(missing(R)) {
@@ -219,7 +219,7 @@ setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
 #' @docType methods
 #' @rdname getE-redoxSensor
 setMethod("getE", "redoxSensor", definition =
-              function(object, R, temp = 295.15) {
+              function(object, R = getR(object), temp = 295.15) {
 
                   # Get the object's R, if no R is passed
                   if(missing(R)) {
@@ -258,7 +258,7 @@ setGeneric('getpH', def = function(object, ...) standardGeneric("getpH"))
 #' @docType methods
 #' @rdname getpH-pHSensor
 setMethod("getpH", "pHSensor", definition =
-              function(object, R) {
+              function(object, R = getR(object)) {
 
                   # Get the object's R, if no R is passed
                   if(missing(R)) {
@@ -300,7 +300,7 @@ setGeneric('getE_deriv', def = function(object, ...)
 #' @docType methods
 #' @rdname getE_deriv-redoxSensor
 setMethod("getE_deriv", "redoxSensor", definition =
-              function(object, R) {
+              function(object, R = getR(object)) {
 
                   # Get the object's R, if no R is passed
                   if(missing(R)) {
@@ -341,7 +341,7 @@ setGeneric('getAbsError', def = function(object, ...) standardGeneric("getAbsErr
 #' @docType methods
 #' @rdname getAbsError-sensor
 setMethod("getAbsError", "Sensor", definition =
-              function(object, R, FUN, Error_Model, ...) {
+              function(object, R = getR(object), FUN, Error_Model, ...) {
                   answer <- c()
                   for (R_individual in R) {
                       R_error <- Error_Model(R_individual)
@@ -402,7 +402,7 @@ setGeneric('getErrorTable', def = function(object, ...)
 #' @docType methods
 #' @rdname getErrorTable-sensor
 setMethod("getErrorTable", "Sensor", definition =
-              function(object, R, FUN, Error_Model, ...) {
+              function(object, R = getR(object), FUN, Error_Model, ...) {
                   max_error_acc <- c()
                   lower_FUN_acc <-
                   lower_error_acc <- c()
