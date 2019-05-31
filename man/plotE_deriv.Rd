@@ -5,10 +5,12 @@
 \alias{plotE_deriv}
 \title{Plot the fraction of derivative of E of an object}
 \usage{
-plotE_deriv(object)
+plotE_deriv(object, ...)
 }
 \arguments{
 \item{object}{An object}
+
+\item{...}{...}
 }
 \value{
 A ggplot object

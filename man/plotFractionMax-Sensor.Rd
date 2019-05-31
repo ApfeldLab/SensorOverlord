@@ -5,12 +5,15 @@
 \alias{plotFractionMax,Sensor-method}
 \title{Plot the fraction of sensors in the max state}
 \usage{
-\S4method{plotFractionMax}{Sensor}(object, FUN = getFractionMax)
+\S4method{plotFractionMax}{Sensor}(object, FUN = getFractionMax,
+  R = getR(object))
 }
 \arguments{
 \item{object}{An sensor object}
 
 \item{FUN}{A function in the form FUN(Sensor, R) --> Fraction in Max State}
+
+\item{R}{An array of numeric ratio values}
 }
 \value{
 A ggplot object

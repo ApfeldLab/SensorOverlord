@@ -188,11 +188,6 @@ setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
 #' @rdname getE-redoxSensor
 setMethod("getE", "redoxSensor", definition =
               function(object, R = getR(object), temp = 295.15) {
-
-                  # Get the object's R, if no R is passed
-                  if(missing(R)) {
-                      R = getR(object)
-                  }
                       return(object@e0 - (8.315 * temp)/(2 * 96.48104) *
                                  log(
                                      (object@delta *
@@ -227,12 +222,6 @@ setGeneric('getpH', def = function(object, ...) standardGeneric("getpH"))
 #' @rdname getpH-pHSensor
 setMethod("getpH", "pHSensor", definition =
               function(object, R = getR(object)) {
-
-                  # Get the object's R, if no R is passed
-                  if(missing(R)) {
-                      R = getR(object)
-                  }
-
                   return(
                       object@pKa + log10(object@delta)
                       + log10((object@Rmax - R) / (R - object@Rmin))
@@ -269,11 +258,6 @@ setGeneric('getE_deriv', def = function(object, ...)
 #' @rdname getE_deriv-redoxSensor
 setMethod("getE_deriv", "redoxSensor", definition =
               function(object, R = getR(object)) {
-
-                  # Get the object's R, if no R is passed
-                  if(missing(R)) {
-                      R = getR(object)
-                  }
                   return(
                       (-12.71*(object@Rmax - object@Rmin))/
                           ((R - object@Rmin) * (R - object@Rmax))
@@ -443,6 +427,7 @@ setGeneric('plotFractionMax', def = function(object, ...) standardGeneric("plotF
 #'
 #' @param object An sensor object
 #' @param FUN A function in the form FUN(Sensor, R) --> Fraction in Max State
+#' @param R An array of numeric ratio values
 #'
 #' @return A ggplot object
 #'
@@ -450,8 +435,7 @@ setGeneric('plotFractionMax', def = function(object, ...) standardGeneric("plotF
 #' @docType methods
 #' @rdname plotFractionMax-Sensor
 setMethod("plotFractionMax", "Sensor", definition =
-              function(object, FUN = getFractionMax) {
-                  R <- getR(object)
+              function(object, FUN = getFractionMax, R = getR(object)) {
                   R_Max <- data.frame(R = R, Max = FUN(object, R))
 
                   plot <- ggplot(R_Max) +
@@ -468,6 +452,7 @@ setMethod("plotFractionMax", "Sensor", definition =
 #' and the fraction oxidizied on the vertical axis
 #'
 #' @param object An redoxSensor object
+#' @param R An array of numeric ratio values
 #'
 #' @return A ggplot object
 #'
@@ -475,8 +460,7 @@ setMethod("plotFractionMax", "Sensor", definition =
 #' @docType methods
 #' @rdname plotFractionMax-redoxSensor
 setMethod("plotFractionMax", "redoxSensor", definition =
-              function(object) {
-                  R <- getR(object)
+              function(object, R = getR(object)) {
                   R_OXD <- data.frame(R = R, OXD = getFractionMax(object, R))
 
                   plot <- ggplot(R_OXD) +
@@ -493,6 +477,7 @@ setMethod("plotFractionMax", "redoxSensor", definition =
 #' and the fraction deprotenated on the vertical axis
 #'
 #' @param object An pHSensor object
+#' @param R An array of numeric ratio values
 #'
 #' @return A ggplot object
 #'
@@ -500,8 +485,7 @@ setMethod("plotFractionMax", "redoxSensor", definition =
 #' @docType methods
 #' @rdname plotFractionMax-pHSensor
 setMethod("plotFractionMax", "pHSensor", definition =
-              function(object) {
-                  R <- getR(object)
+              function(object, R = getR(object)) {
                   R_deprot <- data.frame(R = R,
                                          deprot = getFractionMax(object, R))
 
@@ -516,12 +500,13 @@ setMethod("plotFractionMax", "pHSensor", definition =
 #' Plot the fraction of E of an object
 #'
 #' @param object An object
+#' @param ... ...
 #'
 #' @return A ggplot object
 #'
 #' @export
 #' @docType methods
-setGeneric('plotE', def = function(object) standardGeneric("plotE"))
+setGeneric('plotE', def = function(object, ...) standardGeneric("plotE"))
 
 #' Plot the fraction of E of a redoxSensor
 #'
@@ -529,6 +514,7 @@ setGeneric('plotE', def = function(object) standardGeneric("plotE"))
 #' and the redox potential (E) on the vertical axis
 #'
 #' @param object An redoxSensor object
+#' @param R An array of numeric ratio values
 #'
 #' @return A ggplot object
 #'
@@ -536,8 +522,7 @@ setGeneric('plotE', def = function(object) standardGeneric("plotE"))
 #' @docType methods
 #' @rdname plotE-redoxSensor
 setMethod("plotE", "redoxSensor", definition =
-              function(object) {
-                  R <- getR(object)
+              function(object, R = getR(object)) {
                   R_E <- data.frame(R = R, E = getE(object, R))
 
                   plot <- ggplot(R_E) +
@@ -551,12 +536,13 @@ setMethod("plotE", "redoxSensor", definition =
 #' Plot the fraction of derivative of E of an object
 #'
 #' @param object An object
+#' @param ... ...
 #'
 #' @return A ggplot object
 #'
 #' @export
 #' @docType methods
-setGeneric('plotE_deriv', def = function(object) standardGeneric("plotE_deriv"))
+setGeneric('plotE_deriv', def = function(object, ...) standardGeneric("plotE_deriv"))
 
 #' Plot the derivative of E of a redoxSensor
 #'
@@ -564,6 +550,7 @@ setGeneric('plotE_deriv', def = function(object) standardGeneric("plotE_deriv"))
 #' and the derivative of redox potential (dE/dR) on the vertical axis
 #'
 #' @param object An redoxSensor object
+#' @param R An array of numeric ratio values
 #'
 #' @return A ggplot object
 #'
@@ -571,9 +558,7 @@ setGeneric('plotE_deriv', def = function(object) standardGeneric("plotE_deriv"))
 #' @docType methods
 #' @rdname plotE_deriv-redoxSensor
 setMethod("plotE_deriv", "redoxSensor", definition =
-              function(object) {
-                  R <- getR(object)
-
+              function(object, R = getR(object)) {
                   # Cut the first and last values of R, since those
                   # have an undefined derivitive
                   R <- R[2:length(R)-1]

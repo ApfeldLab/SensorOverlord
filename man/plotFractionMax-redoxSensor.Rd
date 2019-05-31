@@ -5,10 +5,12 @@
 \alias{plotFractionMax,redoxSensor-method}
 \title{Plot the fraction of redox sensors in the max state}
 \usage{
-\S4method{plotFractionMax}{redoxSensor}(object)
+\S4method{plotFractionMax}{redoxSensor}(object, R = getR(object))
 }
 \arguments{
 \item{object}{An redoxSensor object}
+
+\item{R}{An array of numeric ratio values}
 }
 \value{
 A ggplot object

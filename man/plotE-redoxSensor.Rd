@@ -5,10 +5,12 @@
 \alias{plotE,redoxSensor-method}
 \title{Plot the fraction of E of a redoxSensor}
 \usage{
-\S4method{plotE}{redoxSensor}(object)
+\S4method{plotE}{redoxSensor}(object, R = getR(object))
 }
 \arguments{
 \item{object}{An redoxSensor object}
+
+\item{R}{An array of numeric ratio values}
 }
 \value{
 A ggplot object

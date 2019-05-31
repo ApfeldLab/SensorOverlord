@@ -5,10 +5,12 @@
 \alias{plotFractionMax,pHSensor-method}
 \title{Plot the fraction of pH sensors in the max state}
 \usage{
-\S4method{plotFractionMax}{pHSensor}(object)
+\S4method{plotFractionMax}{pHSensor}(object, R = getR(object))
 }
 \arguments{
 \item{object}{An pHSensor object}
+
+\item{R}{An array of numeric ratio values}
 }
 \value{
 A ggplot object

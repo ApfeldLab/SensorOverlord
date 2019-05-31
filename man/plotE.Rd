@@ -5,10 +5,12 @@
 \alias{plotE}
 \title{Plot the fraction of E of an object}
 \usage{
-plotE(object)
+plotE(object, ...)
 }
 \arguments{
 \item{object}{An object}
+
+\item{...}{...}
 }
 \value{
 A ggplot object
