@@ -1,5 +1,7 @@
 initSensor <- function() {
-    return(new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5))
+    return(new("Sensor", Rmin = runif(1, min = 1, max = 4),
+               Rmax = runif(1, min = 5, max = 10),
+               delta = runif(1, min = 0.01, max = 4)))
 }
 
 test_that("Fraction max on a regular sensor ranges between 0 and 1", {
@@ -32,5 +34,5 @@ test_that("If delta is 1, middle fraction max should be 0.5/50%, but
     sensor@delta = 1
     max_sensor <- getFractionMax(sensor)
 
-    expect_equal(median(max_sensor), 0.5)
+    expect_lt(median(max_sensor) - 0.5, 0.01)
 })
