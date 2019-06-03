@@ -8,22 +8,26 @@ sensor <- initSensor()
 pHSensor <- new("pHSensor", sensor, pKa = 7)
 redoxSensor <- new("redoxSensor", sensor, e0 = -265)
 
+context("test-plots")
 
-# Fraction max plotting
-vdiffr::expect_doppelganger("Fraction Max, Generic",
+test_that("Plots have a known output", {
+    # Fraction max plotting
+    vdiffr::expect_doppelganger("Fraction Max, Generic",
                                 plotFractionMax(object = sensor))
-vdiffr::expect_doppelganger("Fraction Max, pH",
+    vdiffr::expect_doppelganger("Fraction Max, pH",
                                 plotFractionMax(object = pHSensor))
-vdiffr::expect_doppelganger("Fraction Max, redox",
+    vdiffr::expect_doppelganger("Fraction Max, redox",
                                 plotFractionMax(object = redoxSensor))
 
-# Property plotting
-vdiffr::expect_doppelganger("Property, Generic",
-                        plotProperty(object = sensor))
-vdiffr::expect_doppelganger("Property, pH",
-                            plotProperty(object = pHSensor))
-vdiffr::expect_doppelganger("Property, redox",
-                            plotProperty(object = redoxSensor))
+    # Property plotting
+    vdiffr::expect_doppelganger("Property, Generic",
+                                plotProperty(object = sensor))
+    vdiffr::expect_doppelganger("Property, pH",
+                                plotProperty(object = pHSensor))
+    vdiffr::expect_doppelganger("Property, redox",
+                                plotProperty(object = redoxSensor))
+})
+
 
 
 
