@@ -307,11 +307,13 @@ setMethod("getAbsError", "Sensor", definition =
                   # Get the absolute difference in running the function between R and the R + error
                   # If you get an NA value, your error is infinite
                   property_error_higher <- suppressWarnings(FUN(object, R = R_upper, ...) - FUN(object, R = R, ...))
-                  property_error_higher <- ifelse(test = is.na(property_error_higher), yes = Inf, no = abs(property_error_higher))
+                  property_error_higher[is.na(property_error_higher)] <- Inf
+                  property_error_higher <- abs(property_error_higher)
 
                   # Same thing, but with function between R and R - error
                   property_error_lower <- suppressWarnings(FUN(object, R = R_lower, ...) - FUN(object, R = R, ...))
-                  property_error_lower <- ifelse(test = is.na(property_error_lower), yes = Inf, no = abs(property_error_lower))
+                  property_error_lower[is.na(property_error_lower)] <- Inf
+                  property_error_lower <- abs(property_error_lower)
 
                   # Get the maximum error
                   max_error <- pmax(property_error_lower, property_error_higher)
@@ -366,18 +368,18 @@ setMethod("getErrorTable", "Sensor", definition =
                   # If our upper_FUN larger than Rmax, you'll get an NA
                   # So you can convert that NA to Inf
                   property_tooHigh <- suppressWarnings(FUN(object, R_upper, ...))
-                  property_tooHigh <- ifelse(test = is.na(property_tooHigh),
-                                             yes = Inf, no = property_tooHigh)
+                  property_tooHigh[is.nan(property_tooHigh)] <- Inf
 
                   property_tooLow <- suppressWarnings(FUN(object, R_lower, ...))
-                  property_tooLow <- ifelse(test = is.na(property_tooLow),
-                                            yes = Inf, no = property_tooLow)
+                  property_tooLow[is.nan(property_tooLow)] <- Inf
 
                   # Take the differences between the properties obtained with the R bounds
                   # and the property obtain from the true R_individual value
                   property_error_higher <- abs(property_tooHigh - property_true)
+                  property_error_higher[is.na(property_error_higher)] <- Inf
 
                   property_error_lower <- abs(property_tooLow - property_true)
+                  property_error_lower[is.na(property_error_lower)] <- Inf
 
                   # Get & append the maximum error
                   property_error_max <- pmax(property_error_lower, property_error_higher)
