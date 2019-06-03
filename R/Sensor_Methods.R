@@ -296,9 +296,6 @@ setGeneric('getAbsError', def = function(object, ...) standardGeneric("getAbsErr
 #' @rdname getAbsError-sensor
 setMethod("getAbsError", "Sensor", definition =
               function(object, R = getR(object), FUN = getProperty, Error_Model, ...) {
-                  # Initalize the absolute error array
-                  answer <- c()
-
                   # Apply the R value to the error model
                   # Set an upper and lower R value based on the model
                   # (ASSUMES: symmetry in error in ratio e.g. that the
@@ -309,15 +306,15 @@ setMethod("getAbsError", "Sensor", definition =
 
                   # Get the absolute difference in running the function between R and the R + error
                   # If you get an NA value, your error is infinite
-                  value_error_up <- suppressWarnings(FUN(object, R = R_upper, ...) - FUN(object, R = R, ...))
-                  value_error_up <- ifelse(test = is.na(value_error_up), yes = Inf, no = abs(value_error_up))
+                  property_error_higher <- suppressWarnings(FUN(object, R = R_upper, ...) - FUN(object, R = R, ...))
+                  property_error_higher <- ifelse(test = is.na(property_error_higher), yes = Inf, no = abs(property_error_higher))
 
                   # Same thing, but with function between R and R - error
-                  value_error_down <- suppressWarnings(FUN(object, R = R_lower, ...) - FUN(object, R = R, ...))
-                  value_error_down <- ifelse(test = is.na(value_error_down), yes = Inf, no = abs(value_error_down))
+                  property_error_lower <- suppressWarnings(FUN(object, R = R_lower, ...) - FUN(object, R = R, ...))
+                  property_error_lower <- ifelse(test = is.na(property_error_lower), yes = Inf, no = abs(property_error_lower))
 
                   # Get the maximum error
-                  max_error <- max(value_error_down, value_error_up)
+                  max_error <- pmax(property_error_lower, property_error_higher)
 
                   return(max_error)
               })
@@ -383,7 +380,7 @@ setMethod("getErrorTable", "Sensor", definition =
                   property_error_lower <- abs(property_tooLow - property_true)
 
                   # Get & append the maximum error
-                  property_error_max <- max(property_error_lower, property_error_higher)
+                  property_error_max <- pmax(property_error_lower, property_error_higher)
 
                   return(data.frame(R = R, Error_R = R_error,
                                     FUN_true = property_true,
