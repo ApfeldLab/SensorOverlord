@@ -478,7 +478,7 @@ setMethod("plotFractionMax", "pHSensor", definition =
                   return(plot)
               })
 
-#' Plot the fraction of E of an object
+#' Plot the property of an object
 #'
 #' @param object An object
 #' @param ... ...
@@ -487,9 +487,24 @@ setMethod("plotFractionMax", "pHSensor", definition =
 #'
 #' @export
 #' @docType methods
-setGeneric('plotE', def = function(object, ...) standardGeneric("plotE"))
+setGeneric('plotProperty', def = function(object, ...) standardGeneric("plotProperty"))
 
-#' Plot the fraction of E of a redoxSensor
+#' Plot the fraction max of a generic
+#'
+#' @param object An Sensor object
+#' @param R An array of numeric ratio values
+#'
+#' @return A ggplot object
+#'
+#' @export
+#' @docType methods
+#' @rdname plotProperty-Sensor
+setMethod("plotProperty", "Sensor", definition =
+              function(object, ...) {
+                    plotFractionMax(object, ...)
+              })
+
+#' Plot the E of a redoxSensor
 #'
 #' Creates a ggplot object that has the ratio R on the horizontal axis
 #' and the redox potential (E) on the vertical axis
@@ -501,8 +516,8 @@ setGeneric('plotE', def = function(object, ...) standardGeneric("plotE"))
 #'
 #' @export
 #' @docType methods
-#' @rdname plotE-redoxSensor
-setMethod("plotE", "redoxSensor", definition =
+#' @rdname plotProperty-redoxSensor
+setMethod("plotProperty", "redoxSensor", definition =
               function(object, R = getR(object)) {
                   R_E <- data.frame(R = R, E = getE(object, R))
 
@@ -514,42 +529,27 @@ setMethod("plotE", "redoxSensor", definition =
                   return(plot)
               })
 
-#' Plot the fraction of derivative of E of an object
-#'
-#' @param object An object
-#' @param ... ...
-#'
-#' @return A ggplot object
-#'
-#' @export
-#' @docType methods
-setGeneric('plotE_deriv', def = function(object, ...) standardGeneric("plotE_deriv"))
-
-#' Plot the derivative of E of a redoxSensor
+#' Plot the fraction of pH of a pHSensor
 #'
 #' Creates a ggplot object that has the ratio R on the horizontal axis
-#' and the derivative of redox potential (dE/dR) on the vertical axis
+#' and the pH on the vertical axis
 #'
-#' @param object An redoxSensor object
+#' @param object An pHSensor object
 #' @param R An array of numeric ratio values
 #'
 #' @return A ggplot object
 #'
 #' @export
 #' @docType methods
-#' @rdname plotE_deriv-redoxSensor
-setMethod("plotE_deriv", "redoxSensor", definition =
+#' @rdname plotProperty-pHSensor
+setMethod("plotProperty", "pHSensor", definition =
               function(object, R = getR(object)) {
-                  # Cut the first and last values of R, since those
-                  # have an undefined derivitive
-                  R <- R[2:length(R)-1]
+                  R_pH <- data.frame(R = R, pH = getpH(object, R))
 
-                  R_E <- data.frame(R = R, E = getE_deriv(object, R))
-
-                  plot <- ggplot(R_E) +
-                      geom_line(aes(x = R_E$R, y = R_E$E)) +
+                  plot <- ggplot(R_pH) +
+                      geom_line(aes(x = R_pH$R, y = R_pH$pH)) +
                       xlab("R")  +
-                      ylab("dE/dR (mV)")
+                      ylab("pH")
 
                   return(plot)
               })
