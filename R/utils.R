@@ -89,7 +89,7 @@ formatSpectraData <- function(name, type, readout, lambda_max, values_max,
     }
 
     if(length(lambda_min) != length(values_min)) {
-        stop("The lambda and values for the maximum state have
+        stop("The lambda and values for the minimum state have
              different lengths")
     }
 
