@@ -11,7 +11,7 @@ Description: "This package provides a few classes and methods that can help you
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: methods, ggplot2, stats, mongolite
+Imports: methods, ggplot2, stats, mongolite, vdiffr
 RoxygenNote: 6.1.1
 Suggests: 
     testthat
