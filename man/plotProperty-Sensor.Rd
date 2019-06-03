@@ -5,12 +5,12 @@
 \alias{plotProperty,Sensor-method}
 \title{Plot the fraction max of a generic}
 \usage{
-\S4method{plotProperty}{Sensor}(object, R = getR(object))
+\S4method{plotProperty}{Sensor}(object, ...)
 }
 \arguments{
 \item{object}{An Sensor object}
 
-\item{R}{An array of numeric ratio values}
+\item{...}{...}
 }
 \value{
 A ggplot object

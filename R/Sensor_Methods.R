@@ -494,7 +494,7 @@ setGeneric('plotProperty', def = function(object, ...) standardGeneric("plotProp
 #' Plot the fraction max of a generic
 #'
 #' @param object An Sensor object
-#' @param R An array of numeric ratio values
+#' @param ... ...
 #'
 #' @return A ggplot object
 #'
