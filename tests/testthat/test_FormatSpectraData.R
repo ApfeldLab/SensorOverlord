@@ -7,6 +7,14 @@ lambda_min <- 1:10
 values_min <- 1:10
 sensor_midpoint <- 1
 
+test_that("The spectra data table contains 8 entries", {
+    data <- formatSpectraData(
+        name, type, readout, lambda_max,
+        values_max, lambda_min, values_min, sensor_midpoint)
+
+    expect_equal(length(data), 8)
+})
+
 test_that("Length validation works in formatting", {
     expect_error(formatSpectraData(
         name = c("name", "otherName"), type, readout, lambda_max,

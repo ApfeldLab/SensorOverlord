@@ -29,7 +29,20 @@ test_that("Plots have a known output", {
 })
 
 
+test_that("Plotting spectra", {
+    spectra <- spectraMatrixFromValues(
+        lambdas_minimum <- 301:500,
+        values_minimum <- c(seq(1, 100),
+                            seq(301, 400)),
+        lambdas_maximum <- 301:500,
+        values_maximum <- c(seq(301, 400),
+                            seq(1, 100))
+    )
 
+    vdiffr::expect_doppelganger("Plotting spectra",
+                                plotSpectra(spectra))
+
+})
 
 
 
