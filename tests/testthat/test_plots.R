@@ -1,3 +1,6 @@
+#' @export
+#' @import vdiffr
+
 initSensor <- function() {
     return(new("Sensor", Rmin = 1,
                Rmax = 5,
