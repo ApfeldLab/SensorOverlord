@@ -186,8 +186,6 @@ your microscopy errors.")
         # Outputs the characteristics of the current sensor as text
         output$sensorChars <- renderText({
             sensor <- getMinMax()[[4]]
-            print(sensor)
-            print(typeof(sensor))
             main <- paste("Rmin: ", round(sensor@Rmin, 2),
                          "| Rmax: ", round(sensor@Rmax, 2),
                          "| delta: ", round(sensor@delta, 2))
