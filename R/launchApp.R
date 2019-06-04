@@ -1,7 +1,7 @@
 #' A wrapper function to run the included Shiny App
 #' @export
 #' @import shiny
-sensorOverlordApp <- function() {
+launchApp <- function() {
     appDir <- system.file("shinyApp", package = "sensorOverlord")
 
     if (appDir == "") {
