@@ -1,29 +1,11 @@
-source(file.path("utils", "helpers.R"),  local = TRUE)
-
 #Don't sanitize error messages
 options(shiny.sanitize.errors = FALSE)
 
-print("test")
-
 # Global Functions -----------------------------------------------------
-observeEvent(input$midpoint2, {
-    updateNumericInput(session,
-        inputId = "midpoint",
-        value = input$midpoint2
-    )
-})
-
-observeEvent(input$midpoint, {
-    updateNumericInput(session,
-                       inputId = "midpoint2",
-                       value = input$midpoint
-    )
-})
-
 
 # Get the minimum and maximum X values for the current sensor
 getMinMax <- reactive({
-    print("working!")
+
     # Set the precision with which to generate R values
     r_precision = 10^(input$rpres)
     r_precision_edge = 10^(input$rpres_edge)
@@ -32,6 +14,12 @@ getMinMax <- reactive({
     boundsLookup <- list("redox" = c(-400,-100),
                          "pH" = c(1,14),
                          "other" = c(0,1))
+
+    # Make easy-access variables for the wavelength range
+    lambda1_low = input$lambda1 - input$lambda1_size/2
+    lambda1_high = input$lambda1 + input$lambda1_size/2
+    lambda2_low = input$lambda2 - input$lambda2_size/2
+    lambda2_high = input$lambda2 + input$lambda2_size/2
 
     # Create a sensor object from the input sensor, if it's
     # from the database
@@ -46,8 +34,8 @@ getMinMax <- reactive({
         # Make a sensor from the spectra
         sensor <-
             newSensorFromSpectra(spectra,
-                                 lambda_1 = c(405, 415),
-                                 lambda_2 = c(465, 475))
+                                 lambda_1 = c(lambda1_low, lambda1_high),
+                                 lambda_2 = c(lambda2_low, lambda2_high))
 
         # Create the appropiate sensor
         sensor_type <- sensorData$sensor_type[[index]]
@@ -61,19 +49,50 @@ getMinMax <- reactive({
     # Create a custom sensor
     else {
 
-        # Make a sensor with custom characteristics
-        sensor <- new("Sensor", Rmin = input$Rmin, Rmax = input$Rmax,
-                      delta = input$delta)
+        inFile <- input$customSpectra
 
-        # Create a specific sensor object
-        sensor <- makeSpecificSensor(sensor, input$sensorType,
-                                     input$midpoint)
+        # If there's no input file, the user must want custom characteristics
+        if (is.null(inFile)) {
+            # Make a sensor with custom characteristics
+            sensor <- new("Sensor", Rmin = input$Rmin, Rmax = input$Rmax,
+                          delta = input$delta)
 
-        # Create the appropriate bounds
-        bounds <- boundsLookup[[input$sensorType]]
+            # Create a specific sensor object
+            sensor <- makeSpecificSensor(sensor, input$sensorType,
+                                         input$midpoint)
 
-        # Pass the sensor type
-        sensor_type <- input$sensorType
+            # Create the appropriate bounds
+            bounds <- boundsLookup[[input$sensorType]]
+
+            # Pass the sensor type
+            sensor_type <- input$sensorType
+        }
+
+        # If there is an input file, we should parse it to create a sensor
+        else {
+            spectra <- read.csv(inFile$datapath, header = FALSE)
+            spectra <- sensorOverlord::spectraMatrixFromValues(
+                lambdas_minimum = spectra$V1,
+                values_minimum = spectra$V2,
+                lambdas_maximum = spectra$V3,
+                values_maximum = spectra$V4
+            )
+
+            # Make a sensor from the spectra
+            sensor <-
+                newSensorFromSpectra(spectra,
+                                     lambda_1 = c(lambda1_low, lambda1_high),
+                                     lambda_2 = c(lambda2_low, lambda2_high))
+
+            # Create the appropiate sensor
+            sensor_type <- input$sensorType
+            sensor <- makeSpecificSensor(sensor, sensor_type,
+                                         input$midpoint)
+
+            # Create the appropriate bounds
+            bounds <- boundsLookup[[sensor_type]]
+        }
+
     }
 
 
@@ -188,7 +207,8 @@ output$phasePlot <- renderPlotly({
 # Output a text version of the range we can measure
 output$rangeText <- renderText({
     minMax <- getMinMax()[[1]]
-    return(paste(minMax$Minimum, " to ", minMax$Maximum, sep = ""))
+    return(paste(minMax$Minimum, " to ", minMax$Maximum, " (A total range of ",
+                 minMax$Maximum - minMax$Minimum, ").", sep = ""))
 })
 
 # Outputs the characteristics of the current sensor as text
@@ -211,7 +231,6 @@ output$sensorChars <- renderText({
 # Custom Sensor Page ---------------------------------------------------
 # Output the characteristics of the custom sensor
 output$customChars <-output$customChars2 <- renderText({
-    print(input)
     # Make a sensor with custom characteristics
     sensor <- new("Sensor", Rmin = input$Rmin, Rmax = input$Rmax,
                   delta = input$delta)

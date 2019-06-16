@@ -22,6 +22,7 @@ ui <- navbarPage(
 
 server <- function(input, output, session) {
     source(file.path("server", "server_01_welcome.R"), local = TRUE)$value
+    source(file.path("server", "server_02_custom.R"), local = TRUE)$value
 }
 
 shinyApp(ui = ui, server = server)

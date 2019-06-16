@@ -56,20 +56,61 @@ sidebarLayout(
                          max = Inf,
                          step = 0.01,
                          value = 2
+                     ),
+
+                     # Input the first wavelength
+                     numericInput(
+                         inputId = "lambda1",
+                         label = "First Wavelength",
+                         min = 0,
+                         max = 1000,
+                         step = 1,
+                         value = 405
+                     ),
+
+                     # Input the second wavelength
+                     numericInput(
+                         inputId = "lambda2",
+                         label = "Second Wavelength",
+                         min = 0,
+                         max = 1000,
+                         step = 1,
+                         value = 470
+                     ),
+
+                     # Input the band size of the first wavelength
+                     numericInput(
+                         inputId = "lambda1_size",
+                         label = "Band Size (1st Wavelength)",
+                         min = 1,
+                         max = 100,
+                         step = 1,
+                         value = 10
+                     ),
+
+                     # Input the band size of the second wavelength
+                     numericInput(
+                         inputId = "lambda2_size",
+                         label = "Band Size (2nd Wavelength)",
+                         min = 1,
+                         max = 100,
+                         step = 1,
+                         value = 10
                      )
                  )
          )
          ),
 mainPanel(
     fluidRow(
-        box(
+        box(height = 1000,
             h3("Range of suited values:"),
-            plotlyOutput(outputId = "range")
+            textOutput(outputId = "rangeText"),
+            plotlyOutput(outputId = "range", height = "500%", width = "100%")
         ),
 
-        box(
+        box(height = 1000,
             h3("Phase plot:"),
-            plotlyOutput(outputId = "phasePlot")
+            plotlyOutput(outputId = "phasePlot", height = "500%", width = "100%")
         )
     )
 )
