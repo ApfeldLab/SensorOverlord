@@ -200,6 +200,4 @@ adjustSpectra <- function(spectra, fractionMax, fractionMin) {
     return(new("sensorSpectra", lambdas = spectra@lambdas,
                values_minimum = adjusted_minimum,
                values_maximum = adjusted_maximum))
-
-
 }

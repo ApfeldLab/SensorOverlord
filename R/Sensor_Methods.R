@@ -266,6 +266,46 @@ setMethod("getE_deriv", "redoxSensor", definition =
                          )
               })
 
+#' Get the error, given a ratio value (generic)
+#'
+#' @param object An object
+#' @param ... ...
+#'
+#' @return A numeric error
+#'
+#' @export
+setGeneric('getAbsError-R', def = function(object, ...)
+    standardGeneric("getAbsError-R"))
+
+#' Get the error for a given sensor object at a given R
+#'
+#' Each R will have a certain error, defined by the Error_Model parameter
+#' That error in R will propagate when applied to the FUN function parameter
+#' This method returns that error
+#'
+#' @param object A sensor object
+#' @param R A single numeric ratio value
+#' @param Error_Model A function in the form Error_Model(R) --> Error in R
+#' @param ... Extra parameters applied to the FUN function
+#'
+#' @return A numeric error
+#'
+#' @export
+#' @rdname getAbsError-E-R-sensor
+setMethod("getAbsError-R", "redoxSensor", definition =
+              function(object, R, Error_Model, ...) {
+                  R_error = Error_Model(R)
+                  return(-1 * (8.315 * 295.15)/(2 * 96.48104) *
+                             log(
+                                 ((object@Rmax-R + R_error) * (R - object@Rmin)) /
+                                     ((R + R_error - object@Rmin) * (object@Rmax - R))
+                             )
+                  )
+              })
+
+
+
+
 #' Get the error (generic)
 #'
 #' @param object An object
