@@ -8,7 +8,7 @@
 \S4method{getAbsError-R}{redoxSensor}(object, R, Error_Model, ...)
 }
 \arguments{
-\item{object}{A sensor object}
+\item{object}{A redox sensor object}
 
 \item{R}{A single numeric ratio value}
 

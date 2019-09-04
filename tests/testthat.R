@@ -1,5 +1,8 @@
 library(testthat)
 library(sensorOverlord)
 
-test_check("sensorOverlord")
+if (Sys.getenv("USER") != "travis") {
+    test_check("sensorOverlord")
+}
+
 
