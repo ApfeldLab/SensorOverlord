@@ -1,6 +1,8 @@
 #' @export
 #' @import vdiffr
 
+testthat::skip_on_travis()
+
 initSensor <- function() {
     return(new("Sensor", Rmin = 1,
                Rmax = 5,

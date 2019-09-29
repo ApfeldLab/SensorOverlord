@@ -287,11 +287,9 @@ setGeneric('getAbsError-R', def = function(object, ...)
 #' @param R A single numeric ratio value
 #' @param Error_Model A function in the form Error_Model(R) --> Error in R
 #' @param ... Extra parameters applied to the FUN function
-#'
+#' @rdname getAbsError-R-redoxSensor
 #' @return A numeric error
 #'
-#' @export
-#' @rdname getAbsError-R-sensor
 setMethod("getAbsError-R", "redoxSensor", definition =
               function(object, R, Error_Model, ...) {
                   R_error = Error_Model(R)
@@ -302,9 +300,6 @@ setMethod("getAbsError-R", "redoxSensor", definition =
                              )
                   )
               })
-
-
-
 
 #' Get the error (generic)
 #'
