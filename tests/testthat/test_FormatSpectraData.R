@@ -93,6 +93,8 @@ test_that("Type validation works in formatting", {
 
 context("test-formatspectradata")
 
+testthat::skip_on_travis()
+
 test_that("A spectra can be adjusted properly, based on visual inspection", {
     spectra <- spectraMatrixFromValues(
         lambdas_minimum <- 301:500,
