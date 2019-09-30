@@ -31,5 +31,3 @@ Error_E <- function(E, Rmin, Rmax, delta, e0, error_R, temp = 295.15) {
 
 
 
-
-
