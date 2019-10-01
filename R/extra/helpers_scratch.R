@@ -9,7 +9,7 @@ R_of_E <- function(E, Rmin, Rmax, delta, e0, temp = 295.15) {
     return(
 
         (
-            Rmin * exp(((e0 - E) * 2 * 96.48104)/(8.315*temp)) + Rmax
+            Rmin * exp(((e0 - E) * 2 * 96.48104)/(8.315*temp)) + delta*Rmax
         )
      /
         (
