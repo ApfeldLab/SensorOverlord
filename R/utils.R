@@ -180,24 +180,37 @@ getDb <- function() {
 #' @import mongolite
 adjustSpectra <- function(spectra, fractionMax, fractionMin) {
     adjusted_minimum <- (
-        (spectra@values_minimum / (1-fractionMin)) -
-            (spectra@values_maximum / fractionMax)
+        (spectra@values_maximum / fractionMax) -
+            (spectra@values_minimum / fractionMin)
     ) /
         (
-            (fractionMin/(1-fractionMin)) -
-                ((1-fractionMax)/fractionMax)
+            ((1-fractionMax)/fractionMax) -
+                ((1-fractionMin)/fractionMin)
         )
 
     adjusted_maximum <- (
         (spectra@values_maximum / (1-fractionMax)) -
-            (spectra@values_minimum / fractionMin)
+            (spectra@values_minimum / (1 - fractionMin))
     ) /
         (
             (fractionMax/(1-fractionMax)) -
-                ((1-fractionMin)/fractionMin)
+                ((fractionMin/(1-fractionMin)))
         )
 
     return(new("sensorSpectra", lambdas = spectra@lambdas,
                values_minimum = adjusted_minimum,
                values_maximum = adjusted_maximum))
+}
+
+#' What is the fraction deprotenated of a certain pH, given the pKa?
+#'
+#' @param pH The pH
+#' @param pKa The pKa
+#'
+#' @export
+fraction_deprot <- function(pH, pKa) {
+    return(
+        (10^(pH - pKa)) /
+            (1 + 10^(pH - pKa))
+    )
 }
