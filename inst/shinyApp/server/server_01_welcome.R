@@ -193,7 +193,6 @@ output$phasePlot <- renderPlotly({
 
     ggplot(error_table, aes(x = FUN_true, y = max_abs_error)) +
         geom_line() +
-        coord_flip() +
         theme(
             text = element_text(size = 16)
         ) +
