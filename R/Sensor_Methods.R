@@ -10,7 +10,11 @@
 #'
 #' @family getR-methods
 #' @export
-setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
+setGeneric(
+    'getR',
+    def = function(object, ...)
+        standardGeneric("getR")
+)
 
 #' Method to get an array of R values from a sensor
 #'
@@ -32,24 +36,33 @@ setGeneric('getR', def = function(object, ...) standardGeneric("getR"))
 #' @examples
 #' my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
 #' getR(my_sensor, by = 0.1)
-setMethod('getR', "Sensor", definition =
-              function(object, by = 0.01, edgeBy = 100) {
-                  origBy <- by
-                  minimum = min(object@Rmin, object@Rmax)
-                  maximum = max(object@Rmin, object@Rmax)
-                  return(
-                      c(
-                         seq(from = minimum,
-                           to = minimum + origBy,
-                           by = origBy/edgeBy),
-                        seq(from = (minimum + (2 * origBy)),
-                           to = (maximum - (2 * origBy)),
-                           by = origBy),
-                       seq(from = maximum - origBy,
-                           to = maximum,
-                           by = origBy/edgeBy))
-                  )
-              })
+setMethod(
+    'getR',
+    "Sensor",
+    definition =
+        function(object, by = 0.01, edgeBy = 100) {
+            origBy <- by
+            minimum = min(object@Rmin, object@Rmax)
+            maximum = max(object@Rmin, object@Rmax)
+            return(c(
+                seq(
+                    from = minimum,
+                    to = minimum + origBy,
+                    by = origBy / edgeBy
+                ),
+                seq(
+                    from = (minimum + (2 * origBy)),
+                    to = (maximum - (2 * origBy)),
+                    by = origBy
+                ),
+                seq(
+                    from = maximum - origBy,
+                    to = maximum,
+                    by = origBy / edgeBy
+                )
+            ))
+        }
+)
 
 
 #' Generic for the getFractionMax method
@@ -62,8 +75,11 @@ setMethod('getR', "Sensor", definition =
 #' @return A generic function for getFractionMax
 #'
 #' @export
-setGeneric('getFractionMax', def = function(object, ...)
-    standardGeneric("getFractionMax"))
+setGeneric(
+    'getFractionMax',
+    def = function(object, ...)
+        standardGeneric("getFractionMax")
+)
 
 #' Get the fraction of sensors in the state corresponding to "Rmax"
 #'
@@ -85,13 +101,15 @@ setGeneric('getFractionMax', def = function(object, ...)
 #' getFractionMax(my_sensor, R = 1)
 #' getFractionMax(my_sensor, R = 3)
 #' getFractionMax(my_sensor, R = 5)
-setMethod("getFractionMax", "Sensor", definition =
-              function(object, R = getR(object)) {
-                  return(
-                      (R - object@Rmin) /
-                          ((R - object@Rmin) + object@delta * (object@Rmax - R))
-                  )
-              })
+setMethod(
+    "getFractionMax",
+    "Sensor",
+    definition =
+        function(object, R = getR(object)) {
+            return((R - object@Rmin) /
+                       ((R - object@Rmin) + object@delta * (object@Rmax - R)))
+        }
+)
 #' Wrapper: Get the function that gets the biochemical property of this sensor
 #'
 #' @param object A sensor-type object
@@ -101,8 +119,11 @@ setMethod("getFractionMax", "Sensor", definition =
 #'
 #' @export
 #' @docType methods
-setGeneric('getProperty', def = function(object, ...)
-    standardGeneric("getProperty"))
+setGeneric(
+    'getProperty',
+    def = function(object, ...)
+        standardGeneric("getProperty")
+)
 
 #' Get the fraction of sensors in the state corresponding to "Rmax" (wrapper)
 #'
@@ -121,10 +142,14 @@ setGeneric('getProperty', def = function(object, ...)
 #' getFractionMax(my_sensor, R = 1)
 #' getFractionMax(my_sensor, R = 3)
 #' getFractionMax(my_sensor, R = 5)
-setMethod("getProperty", "Sensor", definition =
-              function(object, ...) {
-                  getFractionMax(object, ...)
-              })
+setMethod(
+    "getProperty",
+    "Sensor",
+    definition =
+        function(object, ...) {
+            getFractionMax(object, ...)
+        }
+)
 
 #' Get the redox potential (E) for a redox sensor (wrapper)
 #'
@@ -139,10 +164,14 @@ setMethod("getProperty", "Sensor", definition =
 #' @export
 #' @docType methods
 #' @rdname getProperty-redoxSensor
-setMethod("getProperty", "redoxSensor", definition =
-              function(object, ...) {
-                    getE(object, ...)
-              })
+setMethod(
+    "getProperty",
+    "redoxSensor",
+    definition =
+        function(object, ...) {
+            getE(object, ...)
+        }
+)
 
 #' Get the pH of a pH sensor (wrapper)
 #'
@@ -156,10 +185,14 @@ setMethod("getProperty", "redoxSensor", definition =
 #' @export
 #' @docType methods
 #' @rdname getProperty-pHSensor
-setMethod("getProperty", "pHSensor", definition =
-              function(object, ...) {
-                    getpH(object, ...)
-              })
+setMethod(
+    "getProperty",
+    "pHSensor",
+    definition =
+        function(object, ...) {
+            getpH(object, ...)
+        }
+)
 
 #' Get the redox potential (E) value (generic)
 #'
@@ -170,7 +203,11 @@ setMethod("getProperty", "pHSensor", definition =
 #'
 #' @export
 #' @docType methods
-setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
+setGeneric(
+    'getE',
+    def = function(object, ...)
+        standardGeneric("getE")
+)
 
 
 #' Get the redox potential (E) for a redox sensor
@@ -188,14 +225,21 @@ setGeneric('getE', def = function(object, ...) standardGeneric("getE"))
 #' @export
 #' @docType methods
 #' @rdname getE-redoxSensor
-setMethod("getE", "redoxSensor", definition =
-              function(object, R = getR(object), temp = 295.15) {
-                      return(object@e0 - (8.315 * temp)/(2 * 96.48104) *
-                                 log(
-                                     (object@delta *
-                                          object@Rmax - object@delta * R) /
-                                         (R - object@Rmin)))
-              })
+setMethod(
+    "getE",
+    "redoxSensor",
+    definition =
+        function(object,
+                 R = getR(object),
+                 temp = 295.15) {
+            return(object@e0 - (8.315 * temp) / (2 * 96.48104) *
+                       log(
+                           (object@delta *
+                                object@Rmax - object@delta * R) /
+                               (R - object@Rmin)
+                       ))
+        }
+)
 
 #' Get the pH value (generic)
 #'
@@ -206,7 +250,11 @@ setMethod("getE", "redoxSensor", definition =
 #'
 #' @export
 #' @docType methods
-setGeneric('getpH', def = function(object, ...) standardGeneric("getpH"))
+setGeneric(
+    'getpH',
+    def = function(object, ...)
+        standardGeneric("getpH")
+)
 
 #' Get the pH of a pH sensor
 #'
@@ -222,13 +270,15 @@ setGeneric('getpH', def = function(object, ...) standardGeneric("getpH"))
 #' @export
 #' @docType methods
 #' @rdname getpH-pHSensor
-setMethod("getpH", "pHSensor", definition =
-              function(object, R = getR(object)) {
-                  return(
-                      object@pKa + log10(object@delta)
-                      + log10((object@Rmax - R) / (R - object@Rmin))
-                         )
-              })
+setMethod(
+    "getpH",
+    "pHSensor",
+    definition =
+        function(object, R = getR(object)) {
+            return(object@pKa + log10(object@delta)
+                   + log10((object@Rmax - R) / (R - object@Rmin)))
+        }
+)
 
 
 
@@ -241,8 +291,11 @@ setMethod("getpH", "pHSensor", definition =
 #'
 #' @export
 #' @docType methods
-setGeneric('getE_deriv', def = function(object, ...)
-    standardGeneric("getE_deriv"))
+setGeneric(
+    'getE_deriv',
+    def = function(object, ...)
+        standardGeneric("getE_deriv")
+)
 
 #' Get the derivative of the redox potential (dE/dR) for a redox sensor
 #'
@@ -258,13 +311,15 @@ setGeneric('getE_deriv', def = function(object, ...)
 #' @export
 #' @docType methods
 #' @rdname getE_deriv-redoxSensor
-setMethod("getE_deriv", "redoxSensor", definition =
-              function(object, R = getR(object)) {
-                  return(
-                      (-12.71*(object@Rmax - object@Rmin))/
-                          ((R - object@Rmin) * (R - object@Rmax))
-                         )
-              })
+setMethod(
+    "getE_deriv",
+    "redoxSensor",
+    definition =
+        function(object, R = getR(object)) {
+            return((-12.71 * (object@Rmax - object@Rmin)) /
+                       ((R - object@Rmin) * (R - object@Rmax)))
+        }
+)
 
 #' Get the error, given a ratio value (generic)
 #'
@@ -274,8 +329,11 @@ setMethod("getE_deriv", "redoxSensor", definition =
 #' @return A numeric error
 #'
 #' @export
-setGeneric('getAbsError-R', def = function(object, ...)
-    standardGeneric("getAbsError-R"))
+setGeneric(
+    'getAbsError-R',
+    def = function(object, ...)
+        standardGeneric("getAbsError-R")
+)
 
 #' Get the error for a given sensor object at a given R
 #'
@@ -290,16 +348,19 @@ setGeneric('getAbsError-R', def = function(object, ...)
 #' @rdname getAbsError-R-redoxSensor
 #' @return A numeric error
 #'
-setMethod("getAbsError-R", "redoxSensor", definition =
-              function(object, R, Error_Model, ...) {
-                  R_error = Error_Model(R)
-                  return(-1 * (8.315 * 295.15)/(2 * 96.48104) *
-                             log(
-                                 ((object@Rmax-R + R_error) * (R - object@Rmin)) /
-                                     ((R + R_error - object@Rmin) * (object@Rmax - R))
-                             )
-                  )
-              })
+setMethod(
+    "getAbsError-R",
+    "redoxSensor",
+    definition =
+        function(object, R, Error_Model, ...) {
+            R_error = Error_Model(R)
+            return(-1 * (8.315 * 295.15) / (2 * 96.48104) *
+                       log(((object@Rmax - R + R_error) * (R - object@Rmin)
+                       ) /
+                           ((R + R_error - object@Rmin) * (object@Rmax - R)
+                           )))
+        }
+)
 
 #' Get the error (generic)
 #'
@@ -310,7 +371,11 @@ setMethod("getAbsError-R", "redoxSensor", definition =
 #'
 #' @export
 #' @docType methods
-setGeneric('getAbsError', def = function(object, ...) standardGeneric("getAbsError"))
+setGeneric(
+    'getAbsError',
+    def = function(object, ...)
+        standardGeneric("getAbsError")
+)
 
 #' Get the error for a given sensor object
 #'
@@ -329,32 +394,46 @@ setGeneric('getAbsError', def = function(object, ...) standardGeneric("getAbsErr
 #' @export
 #' @docType methods
 #' @rdname getAbsError-sensor
-setMethod("getAbsError", "Sensor", definition =
-              function(object, R = getR(object), FUN = getProperty, Error_Model, ...) {
-                  # Apply the R value to the error model
-                  # Set an upper and lower R value based on the model
-                  # (ASSUMES: symmetry in error in ratio e.g. that the
-                  # true value of R between (R - error) and (R + error))
-                  R_error <- Error_Model(R)
-                  R_lower <- R + R_error
-                  R_upper <- R - R_error
+setMethod(
+    "getAbsError",
+    "Sensor",
+    definition =
+        function(object,
+                 R = getR(object),
+                 FUN = getProperty,
+                 Error_Model,
+                 ...) {
+            # Apply the R value to the error model
+            # Set an upper and lower R value based on the model
+            # (ASSUMES: symmetry in error in ratio e.g. that the
+            # true value of R between (R - error) and (R + error))
+            R_error <- Error_Model(R)
+            R_lower <- R + R_error
+            R_upper <- R - R_error
 
-                  # Get the absolute difference in running the function between R and the R + error
-                  # If you get an NA value, your error is infinite
-                  property_error_higher <- suppressWarnings(FUN(object, R = R_upper, ...) - FUN(object, R = R, ...))
-                  property_error_higher[is.na(property_error_higher)] <- Inf
-                  property_error_higher <- abs(property_error_higher)
+            # Get the absolute difference in running the function between R and the R + error
+            # If you get an NA value, your error is infinite
+            property_error_higher <-
+                suppressWarnings(FUN(object, R = R_upper, ...) - FUN(object, R = R, ...))
+            property_error_higher[is.na(property_error_higher)] <-
+                Inf
+            property_error_higher <-
+                abs(property_error_higher)
 
-                  # Same thing, but with function between R and R - error
-                  property_error_lower <- suppressWarnings(FUN(object, R = R_lower, ...) - FUN(object, R = R, ...))
-                  property_error_lower[is.na(property_error_lower)] <- Inf
-                  property_error_lower <- abs(property_error_lower)
+            # Same thing, but with function between R and R - error
+            property_error_lower <-
+                suppressWarnings(FUN(object, R = R_lower, ...) - FUN(object, R = R, ...))
+            property_error_lower[is.na(property_error_lower)] <-
+                Inf
+            property_error_lower <- abs(property_error_lower)
 
-                  # Get the maximum error
-                  max_error <- pmax(property_error_lower, property_error_higher)
+            # Get the maximum error
+            max_error <-
+                pmax(property_error_lower, property_error_higher)
 
-                  return(max_error)
-              })
+            return(max_error)
+        }
+)
 
 #' Get a table of the errors (generic)
 #'
@@ -365,8 +444,11 @@ setMethod("getAbsError", "Sensor", definition =
 #'
 #' @export
 #' @docType methods
-setGeneric('getErrorTable', def = function(object, ...)
-    standardGeneric("getErrorTable"))
+setGeneric(
+    'getErrorTable',
+    def = function(object, ...)
+        standardGeneric("getErrorTable")
+)
 
 #' Get the error table for a given sensor object
 #'
@@ -388,43 +470,62 @@ setGeneric('getErrorTable', def = function(object, ...)
 #' @export
 #' @docType methods
 #' @rdname getErrorTable-sensor
-setMethod("getErrorTable", "Sensor", definition =
-              function(object, R = getR(object), FUN = getProperty, Error_Model, ...) {
+setMethod(
+    "getErrorTable",
+    "Sensor",
+    definition =
+        function(object,
+                 R = getR(object),
+                 FUN = getProperty,
+                 Error_Model,
+                 ...) {
+            R_error <- Error_Model(R)
 
-                  R_error <- Error_Model(R)
+            # What are your bounds of R, based on the error?
+            R_lower <- R - R_error
+            R_upper <- R + R_error
 
-                  # What are your bounds of R, based on the error?
-                  R_lower <- R - R_error
-                  R_upper <- R + R_error
+            # Collect the values of your properties at the true R and the confidence bounds
+            property_true <- FUN(object, R, ...)
 
-                  # Collect the values of your properties at the true R and the confidence bounds
-                  property_true <- FUN(object, R, ...)
+            # If our upper_FUN larger than Rmax, you'll get an NA
+            # So you can convert that NA to Inf
+            property_tooHigh <-
+                suppressWarnings(FUN(object, R_upper, ...))
+            property_tooHigh[is.nan(property_tooHigh)] <- Inf
 
-                  # If our upper_FUN larger than Rmax, you'll get an NA
-                  # So you can convert that NA to Inf
-                  property_tooHigh <- suppressWarnings(FUN(object, R_upper, ...))
-                  property_tooHigh[is.nan(property_tooHigh)] <- Inf
+            property_tooLow <-
+                suppressWarnings(FUN(object, R_lower, ...))
+            property_tooLow[is.nan(property_tooLow)] <- Inf
 
-                  property_tooLow <- suppressWarnings(FUN(object, R_lower, ...))
-                  property_tooLow[is.nan(property_tooLow)] <- Inf
+            # Take the differences between the properties obtained with the R bounds
+            # and the property obtain from the true R_individual value
+            property_error_higher <-
+                abs(property_tooHigh - property_true)
+            property_error_higher[is.na(property_error_higher)] <-
+                Inf
 
-                  # Take the differences between the properties obtained with the R bounds
-                  # and the property obtain from the true R_individual value
-                  property_error_higher <- abs(property_tooHigh - property_true)
-                  property_error_higher[is.na(property_error_higher)] <- Inf
+            property_error_lower <-
+                abs(property_tooLow - property_true)
+            property_error_lower[is.na(property_error_lower)] <-
+                Inf
 
-                  property_error_lower <- abs(property_tooLow - property_true)
-                  property_error_lower[is.na(property_error_lower)] <- Inf
+            # Get & append the maximum error
+            property_error_max <-
+                pmax(property_error_lower, property_error_higher)
 
-                  # Get & append the maximum error
-                  property_error_max <- pmax(property_error_lower, property_error_higher)
-
-                  return(data.frame(R = R, Error_R = R_error,
-                                    FUN_true = property_true,
-                                    upper_error = property_error_higher,
-                                    lower_error = property_error_lower,
-                                    max_abs_error = property_error_max))
-              })
+            return(
+                data.frame(
+                    R = R,
+                    Error_R = R_error,
+                    FUN_true = property_true,
+                    upper_error = property_error_higher,
+                    lower_error = property_error_lower,
+                    max_abs_error = property_error_max
+                )
+            )
+        }
+)
 
 
 #' Plot the fraction of objects in the max state (generic)
@@ -436,7 +537,11 @@ setMethod("getErrorTable", "Sensor", definition =
 #'
 #' @export
 #' @docType methods
-setGeneric('plotFractionMax', def = function(object, ...) standardGeneric("plotFractionMax"))
+setGeneric(
+    'plotFractionMax',
+    def = function(object, ...)
+        standardGeneric("plotFractionMax")
+)
 
 #' Plot the fraction of sensors in the max state
 #'
@@ -452,17 +557,23 @@ setGeneric('plotFractionMax', def = function(object, ...) standardGeneric("plotF
 #' @export
 #' @docType methods
 #' @rdname plotFractionMax-Sensor
-setMethod("plotFractionMax", "Sensor", definition =
-              function(object, FUN = getFractionMax, R = getR(object)) {
-                  R_Max <- data.frame(R = R, Max = FUN(object, R))
+setMethod(
+    "plotFractionMax",
+    "Sensor",
+    definition =
+        function(object,
+                 FUN = getFractionMax,
+                 R = getR(object)) {
+            R_Max <- data.frame(R = R, Max = FUN(object, R))
 
-                  plot <- ggplot(R_Max) +
-                      geom_line(aes(x = R_Max$R, y = R_Max$Max)) +
-                      xlab("R")  +
-                      ylab("Fraction in Max State")
+            plot <- ggplot(R_Max) +
+                geom_line(aes(x = R_Max$R, y = R_Max$Max)) +
+                xlab("R")  +
+                ylab("Fraction in Max State")
 
-                  return(plot)
-              })
+            return(plot)
+        }
+)
 
 #' Plot the fraction of redox sensors in the max state
 #'
@@ -477,17 +588,21 @@ setMethod("plotFractionMax", "Sensor", definition =
 #' @export
 #' @docType methods
 #' @rdname plotFractionMax-redoxSensor
-setMethod("plotFractionMax", "redoxSensor", definition =
-              function(object, R = getR(object)) {
-                  R_OXD <- data.frame(R = R, OXD = getFractionMax(object, R))
+setMethod(
+    "plotFractionMax",
+    "redoxSensor",
+    definition =
+        function(object, R = getR(object)) {
+            R_OXD <- data.frame(R = R, OXD = getFractionMax(object, R))
 
-                  plot <- ggplot(R_OXD) +
-                      geom_line(aes(x = R_OXD$R, y = R_OXD$OXD)) +
-                      xlab("R")  +
-                      ylab("Fraction Oxidized (OXD)")
+            plot <- ggplot(R_OXD) +
+                geom_line(aes(x = R_OXD$R, y = R_OXD$OXD)) +
+                xlab("R")  +
+                ylab("Fraction Oxidized (OXD)")
 
-                  return(plot)
-              })
+            return(plot)
+        }
+)
 
 #' Plot the fraction of pH sensors in the max state
 #'
@@ -502,18 +617,22 @@ setMethod("plotFractionMax", "redoxSensor", definition =
 #' @export
 #' @docType methods
 #' @rdname plotFractionMax-pHSensor
-setMethod("plotFractionMax", "pHSensor", definition =
-              function(object, R = getR(object)) {
-                  R_deprot <- data.frame(R = R,
-                                         deprot = getFractionMax(object, R))
+setMethod(
+    "plotFractionMax",
+    "pHSensor",
+    definition =
+        function(object, R = getR(object)) {
+            R_deprot <- data.frame(R = R,
+                                   deprot = getFractionMax(object, R))
 
-                  plot <- ggplot(R_deprot) +
-                      geom_line(aes(x = R_deprot$R, y = R_deprot$deprot)) +
-                      xlab("R")  +
-                      ylab("Fraction Deprotenated")
+            plot <- ggplot(R_deprot) +
+                geom_line(aes(x = R_deprot$R, y = R_deprot$deprot)) +
+                xlab("R")  +
+                ylab("Fraction Deprotenated")
 
-                  return(plot)
-              })
+            return(plot)
+        }
+)
 
 #' Plot the property of an object
 #'
@@ -524,7 +643,11 @@ setMethod("plotFractionMax", "pHSensor", definition =
 #'
 #' @export
 #' @docType methods
-setGeneric('plotProperty', def = function(object, ...) standardGeneric("plotProperty"))
+setGeneric(
+    'plotProperty',
+    def = function(object, ...)
+        standardGeneric("plotProperty")
+)
 
 #' Plot the fraction max of a generic
 #'
@@ -536,10 +659,14 @@ setGeneric('plotProperty', def = function(object, ...) standardGeneric("plotProp
 #' @export
 #' @docType methods
 #' @rdname plotProperty-Sensor
-setMethod("plotProperty", "Sensor", definition =
-              function(object, ...) {
-                    plotFractionMax(object, ...)
-              })
+setMethod(
+    "plotProperty",
+    "Sensor",
+    definition =
+        function(object, ...) {
+            plotFractionMax(object, ...)
+        }
+)
 
 #' Plot the E of a redoxSensor
 #'
@@ -554,17 +681,21 @@ setMethod("plotProperty", "Sensor", definition =
 #' @export
 #' @docType methods
 #' @rdname plotProperty-redoxSensor
-setMethod("plotProperty", "redoxSensor", definition =
-              function(object, R = getR(object)) {
-                  R_E <- data.frame(R = R, E = getE(object, R))
+setMethod(
+    "plotProperty",
+    "redoxSensor",
+    definition =
+        function(object, R = getR(object)) {
+            R_E <- data.frame(R = R, E = getE(object, R))
 
-                  plot <- ggplot(R_E) +
-                      geom_line(aes(x = R_E$R, y = R_E$E)) +
-                      xlab("R")  +
-                      ylab("E_GSH (mV)")
+            plot <- ggplot(R_E) +
+                geom_line(aes(x = R_E$R, y = R_E$E)) +
+                xlab("R")  +
+                ylab("E_GSH (mV)")
 
-                  return(plot)
-              })
+            return(plot)
+        }
+)
 
 #' Plot the fraction of pH of a pHSensor
 #'
@@ -579,14 +710,18 @@ setMethod("plotProperty", "redoxSensor", definition =
 #' @export
 #' @docType methods
 #' @rdname plotProperty-pHSensor
-setMethod("plotProperty", "pHSensor", definition =
-              function(object, R = getR(object)) {
-                  R_pH <- data.frame(R = R, pH = getpH(object, R))
+setMethod(
+    "plotProperty",
+    "pHSensor",
+    definition =
+        function(object, R = getR(object)) {
+            R_pH <- data.frame(R = R, pH = getpH(object, R))
 
-                  plot <- ggplot(R_pH) +
-                      geom_line(aes(x = R_pH$R, y = R_pH$pH)) +
-                      xlab("R")  +
-                      ylab("pH")
+            plot <- ggplot(R_pH) +
+                geom_line(aes(x = R_pH$R, y = R_pH$pH)) +
+                xlab("R")  +
+                ylab("pH")
 
-                  return(plot)
-              })
+            return(plot)
+        }
+)

@@ -60,84 +60,98 @@ rescaleToRange <- function(new_xs, old_xs, y) {
 #' @return A list object suitable to be pushed to the mongo database
 #'
 #' @export
-formatSpectraData <- function(name, type, readout, lambda_max, values_max,
-                              lambda_min, values_min, sensor_midpoint) {
+formatSpectraData <-
+    function(name,
+             type,
+             readout,
+             lambda_max,
+             values_max,
+             lambda_min,
+             values_min,
+             sensor_midpoint) {
+        # Data validation -------
 
-    # Data validation -------
+        # Validating lengths
+        if (length(name) != 1) {
+            stop("Length of the name argument is not 1")
+        }
 
-    # Validating lengths
-    if(length(name) != 1) {
-        stop("Length of the name argument is not 1")
-    }
+        if (length(type) != 1) {
+            stop("Length of the type argument is not 1")
+        }
 
-    if(length(type) != 1) {
-        stop("Length of the type argument is not 1")
-    }
+        if (length(readout) != 1) {
+            stop("Length of the readout argument is not 1")
+        }
 
-    if(length(readout) != 1) {
-        stop("Length of the readout argument is not 1")
-    }
-
-    if(length(sensor_midpoint) != 1) {
-        stop("Length of the sensor_midpoint argument is not 1")
-    }
+        if (length(sensor_midpoint) != 1) {
+            stop("Length of the sensor_midpoint argument is not 1")
+        }
 
 
-    if(length(lambda_max) != length(values_max)) {
-        stop("The lambda and values for the maximum state have
+        if (length(lambda_max) != length(values_max)) {
+            stop("The lambda and values for the maximum state have
              different lengths")
-    }
+        }
 
-    if(length(lambda_min) != length(values_min)) {
-        stop("The lambda and values for the minimum state have
+        if (length(lambda_min) != length(values_min)) {
+            stop("The lambda and values for the minimum state have
              different lengths")
-    }
+        }
 
-    # Validating types
-    supported_types <- c("redox", "pH", "ATP")
-    supported_readouts <- c("excitation ratiometric", "emission ratiometric")
+        # Validating types
+        supported_types <- c("redox", "pH", "ATP")
+        supported_readouts <-
+            c("excitation ratiometric", "emission ratiometric")
 
-    if(typeof(name) != "character") {
-        stop("The name argument must be a character type")
-    }
+        if (typeof(name) != "character") {
+            stop("The name argument must be a character type")
+        }
 
-    if(typeof(type) != "character") {
-        stop("The type argument must be a character type")
-    }
+        if (typeof(type) != "character") {
+            stop("The type argument must be a character type")
+        }
 
-    if(typeof(readout) != "character") {
-        stop("The readout argument must be a character type")
-    }
+        if (typeof(readout) != "character") {
+            stop("The readout argument must be a character type")
+        }
 
-    if(!is.numeric(lambda_max)) {
-        stop("lambda_max must be numeric")
-    }
+        if (!is.numeric(lambda_max)) {
+            stop("lambda_max must be numeric")
+        }
 
-    if(!is.numeric(values_max)) {
-        stop("values_max must be numeric")
-    }
+        if (!is.numeric(values_max)) {
+            stop("values_max must be numeric")
+        }
 
-    if(!is.numeric(lambda_min)) {
-        stop("lambda_min must be numeric")
-    }
+        if (!is.numeric(lambda_min)) {
+            stop("lambda_min must be numeric")
+        }
 
-    if(!is.numeric(values_min)) {
-        stop("values_min must be numeric")
-    }
+        if (!is.numeric(values_min)) {
+            stop("values_min must be numeric")
+        }
 
-    if(!is.numeric(sensor_midpoint)) {
-        stop("sensor_midpoint must be numeric")
-    }
+        if (!is.numeric(sensor_midpoint)) {
+            stop("sensor_midpoint must be numeric")
+        }
 
-    # ---------
+        # ---------
 
-    # Create the final list
-    return(list(sensor_name = name, sensor_type = type,
+        # Create the final list
+        return(
+            list(
+                sensor_name = name,
+                sensor_type = type,
                 sensor_readout = readout,
-                lambda_max = lambda_max, values_max = values_max,
-                lambda_min = lambda_min, values_min = values_min,
-                sensor_midpoint = sensor_midpoint))
-}
+                lambda_max = lambda_max,
+                values_max = values_max,
+                lambda_min = lambda_min,
+                values_min = values_min,
+                sensor_midpoint = sensor_midpoint
+            )
+        )
+    }
 
 #' Returns the sensor database
 #'
@@ -146,24 +160,27 @@ formatSpectraData <- function(name, type, readout, lambda_max, values_max,
 #' @export
 #' @import mongolite
 getDb <- function() {
-    options(mongodb = list(
-        "host" = "sensoroverlordcluster-mnopd.mongodb.net",
-        "username" = "sensoroverlord",
-        "password" = "test"
-    ))
+    options(
+        mongodb = list(
+            "host" = "sensoroverlordcluster-mnopd.mongodb.net",
+            "username" = "sensoroverlord",
+            "password" = "test"
+        )
+    )
 
     databaseName <- "sensordb"
     collectionName <- "responses"
 
-    return(
-        mongo(collection = collectionName,
-              url = sprintf(
-                  "mongodb+srv://%s:%s@%s/%s",
-                  options()$mongodb$username,
-                  options()$mongodb$password,
-                  options()$mongodb$host,
-                  databaseName))
-    )
+    return(mongo(
+        collection = collectionName,
+        url = sprintf(
+            "mongodb+srv://%s:%s@%s/%s",
+            options()$mongodb$username,
+            options()$mongodb$password,
+            options()$mongodb$host,
+            databaseName
+        )
+    ))
 }
 
 #' Adjusts a spectra, assuming that the actual spectra is not limiting
@@ -179,38 +196,35 @@ getDb <- function() {
 #' @export
 #' @import mongolite
 adjustSpectra <- function(spectra, fractionMax, fractionMin) {
-    adjusted_minimum <- (
-        (spectra@values_maximum / fractionMax) -
-            (spectra@values_minimum / fractionMin)
-    ) /
-        (
-            ((1-fractionMax)/fractionMax) -
-                ((1-fractionMin)/fractionMin)
-        )
+    adjusted_minimum <- ((spectra@values_maximum / fractionMax) -
+                             (spectra@values_minimum / fractionMin)) /
+        (((1 - fractionMax) / fractionMax) -
+             ((1 - fractionMin) / fractionMin))
 
-    adjusted_maximum <- (
-        (spectra@values_maximum / (1-fractionMax)) -
-            (spectra@values_minimum / (1 - fractionMin))
-    ) /
-        (
-            (fractionMax/(1-fractionMax)) -
-                ((fractionMin/(1-fractionMin)))
-        )
+    adjusted_maximum <- ((spectra@values_maximum / (1 - fractionMax)) -
+                             (spectra@values_minimum / (1 - fractionMin))) /
+        ((fractionMax / (1 - fractionMax)) -
+             ((fractionMin / (1 - fractionMin))))
 
-    return(new("sensorSpectra", lambdas = spectra@lambdas,
-               values_minimum = adjusted_minimum,
-               values_maximum = adjusted_maximum))
+    return(
+        new(
+            "sensorSpectra",
+            lambdas = spectra@lambdas,
+            values_minimum = adjusted_minimum,
+            values_maximum = adjusted_maximum
+        )
+    )
 }
 
 #' What is the fraction deprotenated of a certain pH, given the pKa?
+#' Note: this generalizes to any ligand-binding sensor type, given a pKa/pKd
+#' and a pLigand
 #'
 #' @param pH The pH
 #' @param pKa The pKa
 #'
 #' @export
 fraction_deprot <- function(pH, pKa) {
-    return(
-        (10^(pH - pKa)) /
-            (1 + 10^(pH - pKa))
-    )
+    return((10 ^ (pH - pKa)) /
+               (1 + 10 ^ (pH - pKa)))
 }

@@ -11,14 +11,14 @@
 #' @import methods
 setClass("Sensor",
          slots =
-             list(Rmin = "numeric", Rmax = "numeric", delta = "numeric")
-)
+             list(Rmin = "numeric", Rmax = "numeric", delta = "numeric"))
 
 setValidity("Sensor",
             function(object) {
                 if (object@Rmin >= object@Rmax)
                     "Rmin must be smaller than Rmax"
-                if ((object@Rmin < 0) | (object@Rmax < 0) | (object@delta) < 0)
+                if ((object@Rmin < 0) |
+                    (object@Rmax < 0) | (object@delta) < 0)
                     "All parameters must be positive"
                 else
                     TRUE
@@ -37,8 +37,7 @@ setValidity("Sensor",
 setClass("redoxSensor",
          slots =
              list(e0 = "numeric"),
-         contains = "Sensor"
-)
+         contains = "Sensor")
 
 #' An S4 class to represent a 2-state redox sensor
 #'
@@ -53,6 +52,3 @@ setClass("pHSensor",
          slots =
              list(pKa = "numeric"),
          contains = "Sensor")
-
-
-
