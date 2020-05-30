@@ -5,8 +5,7 @@
 \alias{plotFractionMax,Sensor-method}
 \title{Plot the fraction of sensors in the max state}
 \usage{
-\S4method{plotFractionMax}{Sensor}(object, FUN = getFractionMax,
-  R = getR(object))
+\S4method{plotFractionMax}{Sensor}(object, FUN = getFractionMax, R = getR(object))
 }
 \arguments{
 \item{object}{An sensor object}

@@ -19,6 +19,7 @@ This is just a simple method that generates a
 range of values between Rmin and Rmax
 }
 \seealso{
-Other getR-methods: \code{\link{getR,Sensor-method}}
+Other getR-methods: 
+\code{\link{getR,Sensor-method}}
 }
 \concept{getR-methods}

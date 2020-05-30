@@ -4,8 +4,12 @@
 \alias{spectraMatrixFromValues}
 \title{A function to make a sensorSpectra from a set of 4 vectors}
 \usage{
-spectraMatrixFromValues(lambdas_minimum, values_minimum, lambdas_maximum,
-  values_maximum)
+spectraMatrixFromValues(
+  lambdas_minimum,
+  values_minimum,
+  lambdas_maximum,
+  values_maximum
+)
 }
 \arguments{
 \item{lambdas_minimum}{Lambdas of the values corresponding to the Rmin state}

@@ -4,7 +4,7 @@
 \alias{getAbsError-R}
 \title{Get the error, given a ratio value (generic)}
 \usage{
-"getAbsError-R"(object, ...)
+`getAbsError-R`(object, ...)
 }
 \arguments{
 \item{object}{An object}

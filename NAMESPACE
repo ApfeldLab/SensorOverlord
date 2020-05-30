@@ -3,6 +3,7 @@
 export("getAbsError-R")
 export(adjustSpectra)
 export(formatSpectraData)
+export(fraction_deprot)
 export(getAbsError)
 export(getDb)
 export(getE)
