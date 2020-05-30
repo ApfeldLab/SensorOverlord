@@ -11,7 +11,7 @@
 
 \item{R}{A single numeric ratio value}
 
-\item{Error_Model}{A function in the form Error_Model(R) --> Error in R}
+\item{Error_Model}{A function in the form Error_Model(R) to Error in R}
 
 \item{...}{Extra parameters applied to the FUN function}
 }

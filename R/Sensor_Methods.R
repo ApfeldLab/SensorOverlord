@@ -343,7 +343,7 @@ setGeneric(
 #'
 #' @param object A redox sensor object
 #' @param R A single numeric ratio value
-#' @param Error_Model A function in the form Error_Model(R) --> Error in R
+#' @param Error_Model A function in the form Error_Model(R) to Error in R
 #' @param ... Extra parameters applied to the FUN function
 #' @rdname getAbsError-R-redoxSensor
 #' @return A numeric error
