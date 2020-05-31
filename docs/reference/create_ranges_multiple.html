@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot the fraction of objects in the max state (generic) — plotFractionMax • sensorOverlord</title>
+<title>Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
+e.g. minimum and maximum measureable value at different error thresholds for each sensor. — create_ranges_multiple • sensorOverlord</title>
 
 
 <!-- jquery -->
@@ -39,8 +40,10 @@
 
 
 
-<meta property="og:title" content="Plot the fraction of objects in the max state (generic) — plotFractionMax" />
-<meta property="og:description" content="Plot the fraction of objects in the max state (generic)" />
+<meta property="og:title" content="Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
+e.g. minimum and maximum measureable value at different error thresholds for each sensor. — create_ranges_multiple" />
+<meta property="og:description" content="Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
+e.g. minimum and maximum measureable value at different error thresholds for each sensor." />
 
 
 
@@ -103,34 +106,62 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot the fraction of objects in the max state (generic)</h1>
+    <h1>Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
+e.g. minimum and maximum measureable value at different error thresholds for each sensor.</h1>
     
-    <div class="hidden name"><code>plotFractionMax.Rd</code></div>
+    <div class="hidden name"><code>create_ranges_multiple.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot the fraction of objects in the max state (generic)</p>
+    <p>Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
+e.g. minimum and maximum measureable value at different error thresholds for each sensor.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotFractionMax</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>create_ranges_multiple</span>(<span class='no'>error_df</span>, <span class='kw'>thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>1</span>, <span class='fl'>1.5</span>, <span class='fl'>2</span>, <span class='fl'>2.5</span>))</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>An object</p></td>
+      <th>error_df</th>
+      <td><p>A dataframe of errors at least these columns:
+'Name': this sensor name
+'E': the redox potential (mV),
+'Error': the error in this redox potential (mV)
+'Inaccuracy': The inaccuracy of the measurements (relative to R).</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>...</p></td>
+      <th>thresholds</th>
+      <td><p>A vector of error thresholds (e.g. c(0.5, 1) for 0.5mV and 1mV)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A ggplot object</p>
+    <p>A dataframe of suited ranges with these columns:
+'Sensor_Name': the name of the sensor
+'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
+'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
+'Inaccuracy': the inaccuracy associated with this row (relative)
+'error_thresh': the error threshold associated with this row (mV)</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>error_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_error_df_redox_multiple.html'>create_error_df_redox_multiple</a></span>(
+<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.02</span>), -<span class='fl'>400</span>, -<span class='fl'>200</span>,
+<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+  <span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>0.97</span>,
+  <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>4.12</span>,
+  <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.23</span>,
+  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"roGFP2"</span>,
+  <span class='kw'>e0</span> <span class='kw'>=</span> -<span class='fl'>299</span>
+)
+)
+<span class='fu'>create_ranges_multiple</span>(<span class='no'>error_df</span>)</div><div class='output co'>#&gt;   Sensor_Name Minimum Maximum Inaccuracy error_thresh
+#&gt; 1 roGFP2_0.02      NA      NA       0.02          0.5
+#&gt; 2 roGFP2_0.02 -304.11 -274.38       0.02          1.0
+#&gt; 3 roGFP2_0.02 -312.56 -266.09       0.02          1.5
+#&gt; 4 roGFP2_0.02 -317.29 -261.39       0.02          2.0
+#&gt; 5 roGFP2_0.02 -320.59 -258.11       0.02          2.5</div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

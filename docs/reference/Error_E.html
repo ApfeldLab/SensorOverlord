@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot the fraction of objects in the max state (generic) — plotFractionMax • sensorOverlord</title>
+<title>What is the error in redox potential at a given redox potential (mV),
+given some parameters of R and the error in R? — Error_E • sensorOverlord</title>
 
 
 <!-- jquery -->
@@ -39,8 +40,10 @@
 
 
 
-<meta property="og:title" content="Plot the fraction of objects in the max state (generic) — plotFractionMax" />
-<meta property="og:description" content="Plot the fraction of objects in the max state (generic)" />
+<meta property="og:title" content="What is the error in redox potential at a given redox potential (mV),
+given some parameters of R and the error in R? — Error_E" />
+<meta property="og:description" content="What is the error in redox potential at a given redox potential (mV),
+given some parameters of R and the error in R?" />
 
 
 
@@ -103,34 +106,72 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot the fraction of objects in the max state (generic)</h1>
+    <h1>What is the error in redox potential at a given redox potential (mV),
+given some parameters of R and the error in R?</h1>
     
-    <div class="hidden name"><code>plotFractionMax.Rd</code></div>
+    <div class="hidden name"><code>Error_E.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot the fraction of objects in the max state (generic)</p>
+    <p>What is the error in redox potential at a given redox potential (mV),
+given some parameters of R and the error in R?</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotFractionMax</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>Error_E</span>(<span class='no'>E</span>, <span class='no'>Rmin</span>, <span class='no'>Rmax</span>, <span class='no'>delta</span>, <span class='no'>e0</span>, <span class='no'>error_R</span>, <span class='kw'>temp</span> <span class='kw'>=</span> <span class='fl'>295.15</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>An object</p></td>
+      <th>E</th>
+      <td><p>the redox potential</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>...</p></td>
+      <th>Rmin</th>
+      <td><p>the minimum possible ratiometric fluorescence</p></td>
+    </tr>
+    <tr>
+      <th>Rmax</th>
+      <td><p>the maximum possible ratiometric fluorescence</p></td>
+    </tr>
+    <tr>
+      <th>delta</th>
+      <td><p>the ratiometric fluorescence in the first wavelength</p></td>
+    </tr>
+    <tr>
+      <th>e0</th>
+      <td><p>the sensor's midpoint potential</p></td>
+    </tr>
+    <tr>
+      <th>error_R</th>
+      <td><p>a function that, given an R, returns the error in that R</p></td>
+    </tr>
+    <tr>
+      <th>temp</th>
+      <td><p>the temperature at which measurements were made</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A ggplot object</p>
+    <p>A list with (1) 'E', the given redox potential,
+(2) 'larger_E', the largest possible E, at the given error
+(3) 'smaller_E', the smallest possible E, at the given error
+(4) 'max_error' the largest possible difference between the observed and expected E</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='fu'>Error_E</span>(<span class='kw'>E</span> <span class='kw'>=</span> -<span class='fl'>275</span>, <span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>e0</span> <span class='kw'>=</span> -<span class='fl'>275</span>, <span class='kw'>error_R</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fl'>0.02</span> * <span class='no'>x</span>)</div><div class='output co'>#&gt; $E
+#&gt; [1] -275
+#&gt; 
+#&gt; $larger_E
+#&gt; [1] -274.2516
+#&gt; 
+#&gt; $smaller_E
+#&gt; [1] -275.7789
+#&gt; 
+#&gt; $max_error
+#&gt; [1] 0.778922
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
