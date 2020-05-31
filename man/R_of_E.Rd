@@ -29,6 +29,8 @@ What was the recorded fluorescence ratio at a certain redox potential?
 R_of_E(E = -254.5305, Rmin = 1, Rmax = 5, delta = 0.2, e0 = -275)
 
 # This is self-consistent with the E() function.
-R_of_E(E = E(R = 3, Rmin = 1, Rmax = 5, delta = 0.2, e0 = -275),
-Rmin = 1, Rmax = 5, delta = 0.2, e0 = -275)
+R_of_E(
+  E = E(R = 3, Rmin = 1, Rmax = 5, delta = 0.2, e0 = -275),
+  Rmin = 1, Rmax = 5, delta = 0.2, e0 = -275
+)
 }

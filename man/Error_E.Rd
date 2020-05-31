@@ -33,5 +33,5 @@ What is the error in redox potential at a given redox potential (mV),
 given some parameters of R and the error in R?
 }
 \examples{
-Error_E(E = -275, Rmin = 1, Rmax = 5, delta = 0.2, e0 = -275, error_R = function(x) 0.02*x)
+Error_E(E = -275, Rmin = 1, Rmax = 5, delta = 0.2, e0 = -275, error_R = function(x) 0.02 * x)
 }
