@@ -567,7 +567,7 @@ setMethod(
             R_Max <- data.frame(R = R, Max = FUN(object, R))
 
             plot <- ggplot(R_Max) +
-                geom_line(aes(x = R_Max$R, y = R_Max$Max)) +
+            geom_line(aes(x = R, y = Max)) +
                 xlab("R")  +
                 ylab("Fraction in Max State")
 
@@ -596,7 +596,7 @@ setMethod(
             R_OXD <- data.frame(R = R, OXD = getFractionMax(object, R))
 
             plot <- ggplot(R_OXD) +
-                geom_line(aes(x = R_OXD$R, y = R_OXD$OXD)) +
+                geom_line(aes(x = R, y = OXD)) +
                 xlab("R")  +
                 ylab("Fraction Oxidized (OXD)")
 
@@ -626,7 +626,7 @@ setMethod(
                                    deprot = getFractionMax(object, R))
 
             plot <- ggplot(R_deprot) +
-                geom_line(aes(x = R_deprot$R, y = R_deprot$deprot)) +
+                geom_line(aes(x = R, y = deprot)) +
                 xlab("R")  +
                 ylab("Fraction Deprotenated")
 
@@ -689,7 +689,7 @@ setMethod(
             R_E <- data.frame(R = R, E = getE(object, R))
 
             plot <- ggplot(R_E) +
-                geom_line(aes(x = R_E$R, y = R_E$E)) +
+                geom_line(aes(x = R, y = E)) +
                 xlab("R")  +
                 ylab("E_GSH (mV)")
 
@@ -718,10 +718,74 @@ setMethod(
             R_pH <- data.frame(R = R, pH = getpH(object, R))
 
             plot <- ggplot(R_pH) +
-                geom_line(aes(x = R_pH$R, y = R_pH$pH)) +
+                geom_line(aes(x = R, y = pH)) +
                 xlab("R")  +
                 ylab("pH")
 
             return(plot)
+        }
+)
+
+#' Find the error df of an object
+#'
+#' @param object An object
+#' @param ... ...
+#'
+#' @return A ggplot object
+#'
+#' @export
+#' @docType methods
+setGeneric(
+    'error_df',
+    def = function(object, ...)
+        standardGeneric("error_df")
+)
+
+#' Finds the error df of this redox sensor at given inaccuracies
+#'
+#' Adding this method on 31 May 2020, hoping this style will depreciate
+#' getErrorTable in the future.
+#'
+#' @param object A redoxSensor object
+#' @param inaccuracies (optional, default: c(0.02)) A vector of inaccuracies
+#' (e.g. 0.02 for 2\% error), always relative
+#' @param Emin (optional, default: -400)  The minimum redox potential, in mV,
+#' for which to record error
+#' @param Emax (optional, default: -200) The maximum redox potential, in mV,
+#' for which to record error
+#' @param temp (optional, default: 295.15) the temperature (in Kelvin) at which measurements were made
+#' @param by (optional, default: 0.01) The granularity of the error table--e.g.,
+#'  by = 0.01 would record 275 and 275.01, etc.
+#' @param name (optional, default: "Sensor") A name for this sensor
+#' @return A dataframe of errors with columns:
+#' 'Name': this sensor name
+#' 'E': the redox potential (mV),
+#' 'Rmin': the minimum possible ratiometric fluorescence for this sensor
+#' 'Rmax': the maximum possible ratiometric fluorescence for this sensor
+#' 'Error': the error in this redox potential (mV)
+#' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
+#' @examples
+#' my_sensor <- new("redoxSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2), e0 = -250)
+#' error_df(my_sensor,
+#' inaccuracies = c(0.01, 0.02), Emin = -300, Emax = -200,
+#' )
+#' @export
+#' @docType methods
+setMethod(
+    "error_df",
+    "redoxSensor",
+    definition =
+        function(object, inaccuracies = c(0.02), Emin = -400, Emax = -200,
+                 temp = 295.15, by = 0.01, name = "Sensor") {
+            create_error_df_redox_multiple(
+                inaccuracies = inaccuracies, Emin = Emin, Emax = Emax,
+                param_df = data.frame(
+                    Rmin = object@Rmin,
+                    Rmax = object@Rmax,
+                    delta = object@delta,
+                    name = name,
+                    e0 = object@e0
+                )
+            )
         }
 )

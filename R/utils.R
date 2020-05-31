@@ -329,7 +329,7 @@ Error_E <- function(E, Rmin, Rmax, delta, e0, error_R, temp = 295.15) {
 #' @examples
 #' create_error_df_redox(c(0.01, 0.02), -300, -200, 1, 5, 0.2, -275)
 #' @export
-create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e0, temp = -295.15, by = 0.01) {
+create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e0, temp = 295.15, by = 0.01) {
   error_df_full <- data.frame(E = c(), Error = c(), Inaccuracy = c())
   for (inaccuracy in inaccuracies) {
     error <- Error_E(
@@ -349,6 +349,7 @@ create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e
   error_df_full
 }
 
+#' Creates an error df at multiple inaccuracies, with multiple Rmin/Rmax/delta/e0 parameters
 #' @param inaccuracies A vector of inaccuracies (e.g. 0.02 for 2\% error), always relative
 #' @param Emin The minimum redox potential, in mV, for which to record error
 #' @param Emax The maximum redox potential, in mV, for which to record error
@@ -361,12 +362,12 @@ create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e
 #' @param temp (optional, default: 295.15) the temperature (in Kelvin) at which measurements were made
 #' @param by (optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.
 #' @return A dataframe of errors with columns:
+#' 'Name': this sensor name
 #' 'E': the redox potential (mV),
 #' 'Rmin': the minimum possible ratiometric fluorescence for this sensor
 #' 'Rmax': the maximum possible ratiometric fluorescence for this sensor
 #' 'Error': the error in this redox potential (mV)
 #' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
-#' Creates an error df at multiple inaccuracies, with multiple Rmin/Rmax/delta/e0 parameters
 #' @examples
 #' create_error_df_redox_multiple(
 #' c(0.01, 0.02), -300, -200,
@@ -379,7 +380,7 @@ create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e
 #' )
 #' )
 #' @export
-create_error_df_redox_multiple <- function(inaccuracies, Emin, Emax, param_df, temp = -295.15, by = 0.01) {
+create_error_df_redox_multiple <- function(inaccuracies, Emin, Emax, param_df, temp = 295.15, by = 0.01) {
   error_df_full <- data.frame(E = c(), Rmin = c(), Rmax = c(),
                               Name = c(), Error = c(), Inaccuracy = c())
   # Loop through each sensor in the param_df
@@ -390,7 +391,7 @@ create_error_df_redox_multiple <- function(inaccuracies, Emin, Emax, param_df, t
             E = seq(Emin, Emax, by = by),
             Rmin = sensor_params[,"Rmin"], Rmax = sensor_params[,"Rmax"],
             delta = sensor_params[,"delta"], e0 = sensor_params[,"e0"],
-            error_R = function(x) inaccuracy * x, temp = temp
+            error_R = function(x) inaccuracy * x
         )
         error_df_full <- rbind(
             error_df_full,
@@ -400,10 +401,57 @@ create_error_df_redox_multiple <- function(inaccuracies, Emin, Emax, param_df, t
                 Rmax = as.character(rep(sensor_params[,"Rmax"], length(error$E))),
                 Name = as.character(rep(sensor_params[,"name"], length(error$E))),
                 Error = error$max_error,
-                Inaccuracy = as.character(rep(inaccuracy, length(error$E)))
+                Inaccuracy = as.character(rep(inaccuracy, length(error$E))),
+                stringsAsFactors = FALSE
             )
         )
     }
   }
   error_df_full
 }
+
+#' Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
+#' e.g. minimum and maximum measureable value at different error thresholds for each sensor.
+#' @param error_df A dataframe of errors at least these columns:
+#' 'Name': this sensor name
+#' 'E': the redox potential (mV),
+#' 'Error': the error in this redox potential (mV)
+#' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
+#' @param thresholds A vector of error thresholds (e.g. c(0.5, 1) for 0.5mV and 1mV)
+#' @examples
+#' @import dplyr
+#' @export
+create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)) {
+  ranges_df <- data.frame("Sensor_Name" = c(), "Minimum" = c(),
+                          "Inaccuracy" = c(), "Maximum" = c(),
+                          "error_thresh" = c())
+  names <- unique(error_df[,"Name"])
+  inaccuracies <- unique(error_df[,"Inaccuracy"])
+  for(inaccuracy in inaccuracies) {
+    error_df_inaccuracy <- error_df %>% dplyr::filter(Inaccuracy == inaccuracy)
+    for(name in names) {
+      sensor_error <- error_df_inaccuracy %>% dplyr::filter(Name == name)
+      for(thresh in thresholds) {
+        within_threshold <- sensor_error %>%
+          dplyr::filter(Error <= thresh)
+        maximum_value <- suppressWarnings(max(within_threshold[,"E"]))
+        minimum_value <- suppressWarnings(min(within_threshold[,"E"]))
+        new_df <- data.frame(
+          "Sensor_Name" = names,
+          "Minimum" = if(is.finite(minimum_value)) minimum_value else "NA",
+          "Maximum" = if(is.finite(maximum_value)) maximum_value else "NA",
+          "Inaccuracy" = inaccuracy,
+          "error_thresh" = thresh,
+          stringsAsFactors = FALSE
+        )
+        ranges_df <- rbind(
+          ranges_df,
+          new_df
+        )
+      }
+    }
+  }
+  ranges_df
+
+}
+

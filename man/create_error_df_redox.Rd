@@ -12,7 +12,7 @@ create_error_df_redox(
   Rmax,
   delta,
   e0,
-  temp = -295.15,
+  temp = 295.15,
   by = 0.01
 )
 }
