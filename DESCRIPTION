@@ -20,9 +20,7 @@ Imports:
     shiny,
     dplyr,
     RColorBrewer,
-    cowplot,
-    ggalt
-Remotes: hrbrmstr/ggalt
+    cowplot
 RoxygenNote: 7.1.0
 Suggests: 
     testthat

@@ -497,7 +497,6 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import cowplot
-#' @import ggalt
 #' @export
 plot_ranges_redox <- function(ranges, ylim = c(-350, -150), by = 20) {
   ranges$Inaccuracy <- as.numeric(ranges$Inaccuracy)
