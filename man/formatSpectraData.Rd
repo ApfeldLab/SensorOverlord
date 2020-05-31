@@ -4,8 +4,16 @@
 \alias{formatSpectraData}
 \title{Formats sensor information into a dataframe suitable for input into database}
 \usage{
-formatSpectraData(name, type, readout, lambda_max, values_max, lambda_min,
-  values_min, sensor_midpoint)
+formatSpectraData(
+  name,
+  type,
+  readout,
+  lambda_max,
+  values_max,
+  lambda_min,
+  values_min,
+  sensor_midpoint
+)
 }
 \arguments{
 \item{name}{Character string. The name of the sensor}

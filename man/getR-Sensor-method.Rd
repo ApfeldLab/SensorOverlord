@@ -28,6 +28,7 @@ my_sensor <- new("Sensor", Rmin = 1, Rmax = 5, delta = 0.5)
 getR(my_sensor, by = 0.1)
 }
 \seealso{
-Other getR-methods: \code{\link{getR}}
+Other getR-methods: 
+\code{\link{getR}()}
 }
 \concept{getR-methods}

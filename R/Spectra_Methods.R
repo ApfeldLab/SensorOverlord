@@ -33,9 +33,9 @@ setMethod('plotSpectra', "sensorSpectra", definition =
 
                 plot <- ggplot(spectraData) +
                     geom_line(stat = "smooth", method = "auto",
-                              aes(x = spectraData$lambda, y = spectraData$min, color = "#3C51C6")) +
+                              aes(x = lambda, y = min, color = "#3C51C6")) +
                     geom_line(stat = "smooth", method = "auto",
-                              aes(x = spectraData$lambda, y = spectraData$max, color = "#B40426")) +
+                              aes(x = lambda, y = max, color = "#B40426")) +
                     scale_color_manual(name = "Sensor State", labels = c(minimum_name, maximum_name),
                                        values = c("#3C51C6", "#B40426")) +
                     xlab(expression(lambda (nm)))  +

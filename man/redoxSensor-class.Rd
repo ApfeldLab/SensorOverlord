@@ -10,14 +10,10 @@ An S4 class to represent a 2-state redox sensor
 \section{Slots}{
 
 \describe{
-\item{\code{Rmin}}{To represent the ratio emission value R in the reduced state}
-
-\item{\code{Rmax}}{to represent the ratio emission value R in the oxidized state}
-
-\item{\code{delta}}{To represent the ratio between emission
- in the oxidized and reduced
-states in the second wavelength of the ratio.}
-
 \item{\code{e0}}{The midpoint potential of the redox sensor}
 }}
 
+\examples{
+testSensor <- new("redoxSensor",
+                    new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2), e0 = -275)
+}

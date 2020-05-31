@@ -5,8 +5,11 @@
 \alias{plotSpectra,sensorSpectra-method}
 \title{Create a plot (ggplot object) for a sensorSpetra object}
 \usage{
-\S4method{plotSpectra}{sensorSpectra}(object,
-  minimum_name = "Minimum State", maximum_name = "Maximum State")
+\S4method{plotSpectra}{sensorSpectra}(
+  object,
+  minimum_name = "Minimum State",
+  maximum_name = "Maximum State"
+)
 }
 \arguments{
 \item{object}{A sensorSpectra object}
