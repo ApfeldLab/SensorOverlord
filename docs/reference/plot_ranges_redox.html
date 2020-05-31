@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot the fraction of objects in the max state (generic) — plotFractionMax • sensorOverlord</title>
+<title>Takes in a ranges_df dataframe and makes a plot! — plot_ranges_redox • sensorOverlord</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Plot the fraction of objects in the max state (generic) — plotFractionMax" />
-<meta property="og:description" content="Plot the fraction of objects in the max state (generic)" />
+<meta property="og:title" content="Takes in a ranges_df dataframe and makes a plot! — plot_ranges_redox" />
+<meta property="og:description" content="Takes in a ranges_df dataframe and makes a plot!" />
 
 
 
@@ -103,27 +103,36 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot the fraction of objects in the max state (generic)</h1>
+    <h1>Takes in a ranges_df dataframe and makes a plot!</h1>
     
-    <div class="hidden name"><code>plotFractionMax.Rd</code></div>
+    <div class="hidden name"><code>plot_ranges_redox.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot the fraction of objects in the max state (generic)</p>
+    <p>Takes in a ranges_df dataframe and makes a plot!</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotFractionMax</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>plot_ranges_redox</span>(<span class='no'>ranges</span>, <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>350</span>, -<span class='fl'>150</span>), <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>object</th>
-      <td><p>An object</p></td>
+      <th>ranges</th>
+      <td><p>A dataframe of ranges with at least these columns:
+'Sensor_Name': the name of the sensor
+'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
+'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
+'Inaccuracy': the inaccuracy associated with this row (relative)
+'error_thresh': the error threshold associated with this row (mV)</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>...</p></td>
+      <th>ylim</th>
+      <td><p>The limits of the ranges plot</p></td>
+    </tr>
+    <tr>
+      <th>by</th>
+      <td><p>the 'by' argument of the limits axis tick marks</p></td>
     </tr>
     </table>
 
@@ -131,6 +140,19 @@
 
     <p>A ggplot object</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>error_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_error_df_redox_multiple.html'>create_error_df_redox_multiple</a></span>(
+<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.02</span>, <span class='fl'>0.04</span>), -<span class='fl'>400</span>, -<span class='fl'>200</span>,
+<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+  <span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>0.97</span>,
+  <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>4.12</span>,
+  <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.23</span>,
+  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"roGFP2"</span>,
+  <span class='kw'>e0</span> <span class='kw'>=</span> -<span class='fl'>299</span>
+)
+)
+<span class='no'>ranges_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_ranges_multiple.html'>create_ranges_multiple</a></span>(<span class='no'>error_df</span>)
+<span class='fu'>plot_ranges_redox</span>(<span class='no'>ranges_df</span>)</div><div class='img'><img src='plot_ranges_redox-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

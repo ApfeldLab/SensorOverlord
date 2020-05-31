@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot the fraction of objects in the max state (generic) — plotFractionMax • sensorOverlord</title>
+<title>Make a plot of the suited ranges for this sensor — rangePlot,redoxSensor-method • sensorOverlord</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Plot the fraction of objects in the max state (generic) — plotFractionMax" />
-<meta property="og:description" content="Plot the fraction of objects in the max state (generic)" />
+<meta property="og:title" content="Make a plot of the suited ranges for this sensor — rangePlot,redoxSensor-method" />
+<meta property="og:description" content="Make a plot of the suited ranges for this sensor" />
 
 
 
@@ -103,34 +103,51 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot the fraction of objects in the max state (generic)</h1>
+    <h1>Make a plot of the suited ranges for this sensor</h1>
     
-    <div class="hidden name"><code>plotFractionMax.Rd</code></div>
+    <div class="hidden name"><code>rangePlot-redoxSensor-method.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot the fraction of objects in the max state (generic)</p>
+    <p>Make a plot of the suited ranges for this sensor</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotFractionMax</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='co'># S4 method for redoxSensor</span>
+<span class='fu'><a href='rangePlot.html'>rangePlot</a></span>(<span class='no'>object</span>, <span class='kw'>ranges</span> <span class='kw'>=</span> <span class='fu'><a href='ranges_df.html'>ranges_df</a></span>(<span class='no'>object</span>), <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(-<span class='fl'>350</span>, -<span class='fl'>150</span>), <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>20</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>An object</p></td>
+      <td><p>A redoxSensor object</p></td>
     </tr>
     <tr>
-      <th>...</th>
-      <td><p>...</p></td>
+      <th>ranges</th>
+      <td><p>(optional, default = ranges_df(object)) A ranges dataframe)</p></td>
+    </tr>
+    <tr>
+      <th>ylim</th>
+      <td><p>The limits of the ranges plot</p></td>
+    </tr>
+    <tr>
+      <th>by</th>
+      <td><p>the 'by' argument of the limits axis tick marks</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A ggplot object</p>
+    <p>A dataframe of suited ranges with these columns:
+'Sensor_Name': the name of the sensor
+'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
+'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
+'Inaccuracy': the inaccuracy associated with this row (relative)
+'error_thresh': the error threshold associated with this row (mV)</p>
 
+    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
+    <pre class="examples"><div class='input'><span class='no'>my_sensor</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"redoxSensor"</span>, <span class='fu'>new</span>(<span class='st'>"Sensor"</span>, <span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.2</span>), <span class='kw'>e0</span> <span class='kw'>=</span> -<span class='fl'>250</span>)
+<span class='fu'><a href='rangePlot.html'>rangePlot</a></span>(<span class='no'>my_sensor</span>)</div><div class='img'><img src='rangePlot-redoxSensor-method-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

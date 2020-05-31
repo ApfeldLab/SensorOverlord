@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Plot the fraction of objects in the max state (generic) — plotFractionMax • sensorOverlord</title>
+<title>Get the error for a given sensor object at a given R — getAbsError-R,redoxSensor-method • sensorOverlord</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,10 @@
 
 
 
-<meta property="og:title" content="Plot the fraction of objects in the max state (generic) — plotFractionMax" />
-<meta property="og:description" content="Plot the fraction of objects in the max state (generic)" />
+<meta property="og:title" content="Get the error for a given sensor object at a given R — getAbsError-R,redoxSensor-method" />
+<meta property="og:description" content="Each R will have a certain error, defined by the Error_Model parameter
+That error in R will propagate when applied to the FUN function parameter
+This method returns that error" />
 
 
 
@@ -103,33 +105,44 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Plot the fraction of objects in the max state (generic)</h1>
+    <h1>Get the error for a given sensor object at a given R</h1>
     
-    <div class="hidden name"><code>plotFractionMax.Rd</code></div>
+    <div class="hidden name"><code>getAbsError-R-redoxSensor.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Plot the fraction of objects in the max state (generic)</p>
+    <p>Each R will have a certain error, defined by the Error_Model parameter
+That error in R will propagate when applied to the FUN function parameter
+This method returns that error</p>
     </div>
 
-    <pre class="usage"><span class='fu'>plotFractionMax</span>(<span class='no'>object</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='co'># S4 method for redoxSensor</span>
+<span class='no'>getAbsError</span>-<span class='fu'>R</span>(<span class='no'>object</span>, <span class='no'>R</span>, <span class='no'>Error_Model</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
       <th>object</th>
-      <td><p>An object</p></td>
+      <td><p>A redox sensor object</p></td>
+    </tr>
+    <tr>
+      <th>R</th>
+      <td><p>A single numeric ratio value</p></td>
+    </tr>
+    <tr>
+      <th>Error_Model</th>
+      <td><p>A function in the form Error_Model(R) to Error in R</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>...</p></td>
+      <td><p>Extra parameters applied to the FUN function</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A ggplot object</p>
+    <p>A numeric error</p>
 
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
