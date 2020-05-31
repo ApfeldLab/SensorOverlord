@@ -864,3 +864,44 @@ setMethod(
       )
     }
 )
+
+#' Make a rangeplot for this object
+#'
+#' @param object An object
+#' @param ... ...
+#'
+#' @return A ggplot object
+#'
+#' @export
+#' @docType methods
+setGeneric(
+    "rangePlot",
+    def = function(object, ...) {
+        standardGeneric("rangePlot")
+    }
+)
+
+#' Make a plot of the suited ranges for this sensor
+#'
+#'
+#' @param object A redoxSensor object
+#' @param ranges (optional, default = ranges_df(object)) A ranges dataframe)
+#' @return A dataframe of suited ranges with these columns:
+#' 'Sensor_Name': the name of the sensor
+#' 'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
+#' 'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
+#' 'Inaccuracy': the inaccuracy associated with this row (relative)
+#' 'error_thresh': the error threshold associated with this row (mV)
+#' @examples
+#' my_sensor <- new("redoxSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2), e0 = -250)
+#' ranges_df(my_sensor)
+#' @export
+#' @docType methods
+setMethod(
+    "rangePlot",
+    "redoxSensor",
+    definition =
+        function(object, ranges = ranges_df(object)) {
+            ranges <- ranges_df(object)
+        }
+)

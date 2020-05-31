@@ -454,7 +454,7 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
         maximum_value <- suppressWarnings(max(within_threshold[,"E"]))
         minimum_value <- suppressWarnings(min(within_threshold[,"E"]))
         new_df <- data.frame(
-          "Sensor_Name" = names,
+          "Sensor_Name" = paste0(name, "_", as.character(inaccuracy)),
           "Minimum" = if(is.finite(minimum_value)) minimum_value else "NA",
           "Maximum" = if(is.finite(maximum_value)) maximum_value else "NA",
           "Inaccuracy" = inaccuracy,
@@ -469,6 +469,50 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
     }
   }
   ranges_df
+}
 
+#' Takes in a ranges_df dataframe and makes a plot!
+#' @param ranges_df A dataframe of ranges with at least these columns:
+#' 'Sensor_Name': the name of the sensor
+#' 'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
+#' 'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
+#' 'Inaccuracy': the inaccuracy associated with this row (relative)
+#' 'error_thresh': the error threshold associated with this row (mV)
+#' @return A ggplot object
+#' @examples
+#' error_df <- create_error_df_redox_multiple(
+#' c(0.02, 0.04), -400, -200,
+#' data.frame(
+#'   Rmin = 0.97,
+#'   Rmax = 4.12,
+#'   delta = 0.23,
+#'   name = "roGFP2",
+#'   e0 = -299
+#' )
+#' )
+#' ranges_df <- create_ranges_multiple(error_df)
+#' plot_ranges_redox(ranges_df)
+#' @import ggplot2
+#' @import RColorBrewer
+#' @import cowplot
+#' @import ggalt
+#' @export
+plot_ranges_redox <- function(ranges, ylim = c(-350, -150), by = 20) {
+  ranges$Inaccuracy <- as.numeric(ranges$Inaccuracy)
+  suppressWarnings(ranges$Minimum <- as.numeric(ranges$Minimum))
+  suppressWarnings(ranges$Maximum <- as.numeric(ranges$Maximum))
+  ranges <- ranges[complete.cases(ranges), ]
+  ggplot() +
+    geom_linerange(data = ranges %>% arrange(-error_thresh),
+                    mapping=aes(x = Sensor_Name, ymin = Minimum,
+                                ymax = Maximum, lwd = 1, color = error_thresh),
+                   size = 10) +
+    scale_y_continuous(breaks = seq(ylim[1], ylim[2], by = by)) +
+    scale_color_continuous(high = "lightgreen", low = "forestgreen") +
+    xlab("") +
+    ylab("Glutathione Redox Potential (mV)") +
+    theme_classic() +
+    theme(aspect.ratio = 1) +
+    coord_flip(ylim = c(-350, -150))
 }
 
