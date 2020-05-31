@@ -7,6 +7,7 @@ library(ggalt)
 library(mongolite)
 library(shinyjs)
 library(plotly)
+library(shinycssloaders)
 source(file.path("utils", "helpers.R"),  local = TRUE)
 
 ui <- navbarPage(

@@ -105,12 +105,12 @@ mainPanel(
         box(height = 1000,
             h3("Range of suited values:"),
             textOutput(outputId = "rangeText"),
-            plotlyOutput(outputId = "range", height = "500%", width = "100%")
+            plotlyOutput(outputId = "range", height = "500%", width = "100%") %>% withSpinner(type = 6)
         ),
 
         box(height = 1000,
             h3("Phase plot:"),
-            plotlyOutput(outputId = "phasePlot", height = "500%", width = "100%")
+            plotlyOutput(outputId = "phasePlot", height = "500%", width = "100%") %>% withSpinner(type = 6)
         )
     )
 )
