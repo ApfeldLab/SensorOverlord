@@ -11,7 +11,18 @@ Description: "This package provides a few classes and methods that can help you
 License: GPL-3
 Encoding: UTF-8
 LazyData: true
-Imports: methods, ggplot2, stats, mongolite, vdiffr, shiny, dplyr 
+Imports: 
+    methods,
+    ggplot2,
+    stats,
+    mongolite,
+    vdiffr,
+    shiny,
+    dplyr,
+    RColorBrewer,
+    cowplot,
+    ggalt
+Remotes: hrbrmstr/ggalt
 RoxygenNote: 7.1.0
 Suggests: 
     testthat

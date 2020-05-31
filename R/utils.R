@@ -472,12 +472,14 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
 }
 
 #' Takes in a ranges_df dataframe and makes a plot!
-#' @param ranges_df A dataframe of ranges with at least these columns:
+#' @param ranges A dataframe of ranges with at least these columns:
 #' 'Sensor_Name': the name of the sensor
 #' 'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
 #' 'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
 #' 'Inaccuracy': the inaccuracy associated with this row (relative)
 #' 'error_thresh': the error threshold associated with this row (mV)
+#' @param ylim The limits of the ranges plot
+#' @param by the 'by' argument of the limits axis tick marks
 #' @return A ggplot object
 #' @examples
 #' error_df <- create_error_df_redox_multiple(

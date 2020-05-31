@@ -892,16 +892,18 @@ setGeneric(
 #' 'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
 #' 'Inaccuracy': the inaccuracy associated with this row (relative)
 #' 'error_thresh': the error threshold associated with this row (mV)
+#' @param ylim The limits of the ranges plot
+#' @param by the 'by' argument of the limits axis tick marks
 #' @examples
 #' my_sensor <- new("redoxSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2), e0 = -250)
-#' ranges_df(my_sensor)
+#' rangePlot(my_sensor)
 #' @export
 #' @docType methods
 setMethod(
     "rangePlot",
     "redoxSensor",
     definition =
-        function(object, ranges = ranges_df(object)) {
-            ranges <- ranges_df(object)
+        function(object, ranges = ranges_df(object), ylim = c(-350, -150), by = 20) {
+            plot_ranges_redox(ranges, ylim = ylim, by = by)
         }
 )

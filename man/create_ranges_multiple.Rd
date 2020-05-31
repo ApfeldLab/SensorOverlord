@@ -16,7 +16,28 @@ create_ranges_multiple(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5))
 
 \item{thresholds}{A vector of error thresholds (e.g. c(0.5, 1) for 0.5mV and 1mV)}
 }
+\value{
+A dataframe of suited ranges with these columns:
+'Sensor_Name': the name of the sensor
+'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
+'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
+'Inaccuracy': the inaccuracy associated with this row (relative)
+'error_thresh': the error threshold associated with this row (mV)
+}
 \description{
 Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
 e.g. minimum and maximum measureable value at different error thresholds for each sensor.
+}
+\examples{
+error_df <- create_error_df_redox_multiple(
+c(0.02), -400, -200,
+data.frame(
+  Rmin = 0.97,
+  Rmax = 4.12,
+  delta = 0.23,
+  name = "roGFP2",
+  e0 = -299
+)
+)
+create_ranges_multiple(error_df)
 }
