@@ -1,7 +1,7 @@
 # SensorOverlord
 
 **Build:**
-[![Build Status](https://travis-ci.org/ApfeldLab/SensorOverlord.svg?branch=master&status=passed)](https://travis-ci.org/github/ApfeldLab/SensorOverlord)
+[![Build Status](https://travis-ci.com/ApfeldLab/SensorOverlord.svg?branch=master&status=passed)](https://travis-ci.com/github/ApfeldLab/SensorOverlord)
 [![codecov](https://codecov.io/gh/apfeldlab/sensoroverlord/branch/master/graph/badge.svg)](https://codecov.io/gh/apfeldlab/sensoroverlord)
 
 **Documentation:**
