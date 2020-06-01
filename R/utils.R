@@ -230,7 +230,7 @@ fraction_deprot <- function(pH, pKa) {
 }
 
 
-
+## Biophysical parameters ------------------------------------------------------
 
 #' What is the redox potential (mV), given R/Rmin/Rmax/delta/midpoint/temperature?
 #'
@@ -248,6 +248,40 @@ E <- function(R, Rmin, Rmax, delta, e0, temp = 295.15) {
   return(e0 - (8.315 * temp) / (2 * 96.48104) *
     log((delta * (Rmax - R)) / (R - Rmin)))
 }
+
+#' Finds pH, given R, Rmin, and Rmax
+#' @param R the ratiometric fluorescence
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param pKa the sensor's pKa
+#' @param ... unused
+#' @returns the pH, numeric
+#' @examples
+#' pH(R = 2, Rmin = 1, Rmax = 5, delta = 0.2, pKa = 7)
+#' @export
+pH <- function(R, Rmin, Rmax, delta, pKa, ...) {
+  return(pKa + log10(delta)
+         + log10((Rmax - R) / (R - Rmin)))
+}
+
+#' Finds pLigand, given R, Rmin, and Rmax
+#' @param R the ratiometric fluorescence
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param pKd the sensor's pKd
+#' @param ... not used
+#' @returns the pLigand, numeric
+#' @examples
+#' pLigand(R = 2, Rmin = 1, Rmax = 5, delta = 0.2, pKd = 7)
+#' @export
+pLigand <- function(R, Rmin, Rmax, delta, pKd, ...) {
+  # Same as pH
+  return(pH(R = R, Rmin = Rmin, Rmax = Rmax, delta = delta, pKa = pKd))
+}
+
+# Inverse biophysical parameters -----------------------------------------------
 
 #' What was the recorded fluorescence ratio at a certain redox potential?
 #'
@@ -279,6 +313,95 @@ R_of_E <- function(E, Rmin, Rmax, delta, e0, temp = 295.15) {
   )
 }
 
+#' Finds R, given a pH
+#' @param pH the sensor's pH
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param pKa the sensor's pKa
+#' @param ...  Not used
+#' @returns the ratiometric fluoresence at this pH
+#' @examples
+#' R_of_pH(pH = 3, Rmin = 1, Rmax = 5, delta = 0.2, pKa = 7)
+#' @export
+R_of_pH <- function(pH, Rmin, Rmax, delta, pKa, ...) {
+  A <- 10^(pH - pKa) / delta
+  (Rmax + A*Rmin) / (A + 1)
+}
+
+#' Finds R, given a pLigand
+#' @param pLigand the sensor's pLigand
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param pKd the sensor's pKd
+#' @returns the ratiometric fluoresence at this pH
+#' @examples
+#' R_of_pLigand(pLigand = 2, Rmin = 1, Rmax = 5, delta = 0.2, pKd = 7)
+#' @export
+R_of_pLigand <- function(pLigand, Rmin, Rmax, delta, pKd, ...) {
+  R_of_pH(pH = pLigand, Rmin = Rmin, Rmax = Rmax, delta = delta,
+          pKa = pKd)
+}
+
+# Errors (one output)-----------------------------------------------------------
+
+#' A general function for calculating the error in some parameter
+#'
+#' @param param The parameter over which we are calculating error
+#' @param param_name The name of the parameter over which we are calculating error
+#' @param R_of_param A function that maps from param --> R
+#' NOTE: R_of_param must have arguments in the correct ordrer. They should be:
+#' \itemize{
+#' \item{"param"}
+#' \item{"Rmin"}
+#' \item{"Rmax"}
+#' \item{"delta"}
+#' \item{"midpoint"}
+#' \item{"temperature, in kelvin"}
+#' }
+#' @param param_of_R A function that maps from R --> param
+#' NOTE: param_of_R must have arguments in the correct order. They should be:
+#' #' \itemize{
+#' \item{"R"}
+#' \item{"Rmin"}
+#' \item{"Rmax"}
+#' \item{"delta"}
+#' \item{"midpoint"}
+#' \item{"temperature, in kelvin"}
+#' }
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param midpoint the sensor's midpoint (e.g. e0 for redox, pKa for pH, pKd for other ligand)
+#' @param error_R a function that, given an R, returns the error in that R
+#' @param temp the temperature at which measurements were made
+#' @return A list with (1) 'E', the given redox potential,
+#' (2) 'larger_E', the largest possible E, at the given error
+#' (3) 'smaller_E', the smallest possible E, at the given error
+#' (4) 'max_error' the largest possible difference between the observed and expected E
+#'
+#' @examples
+#' Error_general(param = -275, param_name = "E", R_of_param = R_of_E, param_of_R = sensorOverlord::E,
+#' Rmin = 1, Rmax = 5, delta = 0.2, midpoint = -275, error_R = function(x) 0.02 * x)
+#' @export
+Error_general <- function(param, param_name, R_of_param, param_of_R,
+                          Rmin, Rmax, delta, midpoint, error_R, temp = 295.15) {
+  R <- R_of_param(param, Rmin, Rmax, delta, midpoint, temp)
+  larger_param <- suppressWarnings(param_of_R(R + error_R(R),
+                                              Rmin, Rmax, delta, midpoint, temp))
+  larger_param[is.nan(larger_param)] <- Inf
+  smaller_param <- suppressWarnings(param_of_R(R - error_R(R),
+                                               Rmin, Rmax, delta, midpoint, temp))
+  smaller_param[is.nan(smaller_param)] <- Inf
+  return_list <- list()
+  return_list[[param_name]] = param
+  return_list[[paste0("larger_", param_name)]] = larger_param
+  return_list[[paste0("smaller_", param_name)]] = smaller_param
+  return_list$max_error = pmax(abs(param - larger_param), abs(param - smaller_param))
+  return_list
+}
+
 #' What is the error in redox potential at a given redox potential (mV),
 #' given some parameters of R and the error in R?
 #'
@@ -298,20 +421,113 @@ R_of_E <- function(E, Rmin, Rmax, delta, e0, temp = 295.15) {
 #' Error_E(E = -275, Rmin = 1, Rmax = 5, delta = 0.2, e0 = -275, error_R = function(x) 0.02 * x)
 #' @export
 Error_E <- function(E, Rmin, Rmax, delta, e0, error_R, temp = 295.15) {
-  R <- R_of_E(E, Rmin, Rmax, delta, e0, temp)
-  larger_E <- suppressWarnings(E(R + error_R(R), Rmin, Rmax, delta, e0, temp))
-  larger_E[is.nan(larger_E)] <- Inf
-  smaller_E <- suppressWarnings(E(R - error_R(R), Rmin, Rmax, delta, e0, temp))
-  smaller_E[is.nan(smaller_E)] <- Inf
-  return(list(
-    E = E,
-    larger_E = larger_E,
-    smaller_E = smaller_E,
-    max_error = pmax(abs(E - larger_E), abs(E - smaller_E))
-  ))
+  Error_general(param = E, param_name = "E",
+                R_of_param = R_of_E, param_of_R = sensorOverlord::E,
+                Rmin = Rmin, Rmax = Rmax, delta = delta,
+                midpoint = e0, error_R = error_R, temp = temp)
 }
 
+#' What is the error in pH at a given pH,
+#' given some parameters of R and the error in R?
+#'
+#' @param pH the pH
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param pKa the sensor's midpoint/pKa
+#' @param error_R a function that, given an R, returns the error in that R
+#' @return A list with (1) 'pH', the given pH,
+#' (2) 'larger_pH', the largest possible E, at the given error
+#' (3) 'smaller_pH', the smallest possible E, at the given error
+#' (4) 'max_error' the largest possible difference between the observed and expected E
+#'
+#' @examples
+#' Error_pH(pH = 7.3, Rmin = 1, Rmax = 5, delta = 0.2, pKa = 8, error_R = function(x) 0.02 * x)
+#' @export
+Error_pH <- function(pH, Rmin, Rmax, delta, pKa, error_R) {
+  Error_general(param = pH, param_name = "pH",
+                R_of_param = R_of_pH, param_of_R = sensorOverlord::pH,
+                Rmin = Rmin, Rmax = Rmax, delta = delta,
+                midpoint = pKa, error_R = error_R)
+}
+
+#' What is the error in pLigand at a given pLigand,
+#' given some parameters of R and the error in R?
+#'
+#' @param pLigand the pLigand
+#' @param ligand_name the name of the ligand
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param pKd the sensor's midpoint/pKd
+#' @param error_R a function that, given an R, returns the error in that R
+#' @param temp the temperature at which measurements were made
+#' @return A list with (1) 'pH', the given pH,
+#' (2) 'larger_pH', the largest possible E, at the given error
+#' (3) 'smaller_pH', the smallest possible E, at the given error
+#' (4) 'max_error' the largest possible difference between the observed and expected E
+#'
+#' @examples
+#' Error_pLigand(pLigand = 7.3, ligand_name = "pNADPH",
+#' Rmin = 1, Rmax = 5, delta = 0.2, pKd = 8, error_R = function(x) 0.02 * x)
+#' @export
+Error_pLigand <- function(pLigand, ligand_name, Rmin, Rmax, delta, pKd, error_R) {
+  Error_general(param = pLigand, param_name = ligand_name,
+                R_of_param = R_of_pLigand, param_of_R = sensorOverlord::pLigand,
+                Rmin = Rmin, Rmax = Rmax, delta = delta,
+                midpoint = pKd, error_R = error_R)
+}
+
+# Error dataframes--------------------------------------------------------------
+
 #' Creates a dataframe of errors at given inaccuracies
+#'
+#' @param inaccuracies A vector of inaccuracies (e.g. 0.02 for 2\% error), always relative
+#' @param param_name The name of the parameter
+#' @param param_error_fun The function that finds the error in this parameter
+#' @param param_min The minimum param for which to record error
+#' @param param_max The maximum param in mV, for which to record error
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param midpoint the sensor's midpoint
+#' @param temp (optional, default: 295.15) the temperature (in Kelvin) at which measurements were made
+#' @param by (optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.
+#' @return A dataframe of errors with columns:
+#' param: the value of the param
+#' 'Error': the error in this param
+#' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
+#' @examples
+#' create_error_df_general(c(0.01, 0.02), "E", Error_E, -300, -200, 1, 5, 0.2, -275)
+#' @export
+create_error_df_general <- function(inaccuracies, param_name,
+                                    param_error_fun,
+                                    param_min, param_max, Rmin, Rmax, delta, midpoint, temp = 295.15, by = 0.01) {
+  error_df_full <- data.frame()
+  error_df_full[[param_name]] = c()
+  error_df_full$Error = c()
+  error_df_full$Inaccuracy = c()
+
+  for (inaccuracy in inaccuracies) {
+    error <- param_error_fun(
+      seq(param_min, param_max, by = by),
+      Rmin, Rmax, delta, midpoint,
+      error_R = function(x) inaccuracy * x, temp = temp
+    )
+    new_df <- list()
+    new_df[[param_name]] = error[[param_name]]
+    new_df$Error = error$max_error
+    new_df$Inaccuracy = as.character(rep(inaccuracy, length(error$max_error)))
+
+    error_df_full <- rbind(
+      error_df_full,
+      data.frame(new_df, stringsAsFactors = FALSE)
+    )
+  }
+  error_df_full
+}
+
+#' Creates a dataframe of errors in redox potential at given inaccuracies
 #'
 #' @param inaccuracies A vector of inaccuracies (e.g. 0.02 for 2\% error), always relative
 #' @param Emin The minimum redox potential, in mV, for which to record error
@@ -330,24 +546,13 @@ Error_E <- function(E, Rmin, Rmax, delta, e0, error_R, temp = 295.15) {
 #' create_error_df_redox(c(0.01, 0.02), -300, -200, 1, 5, 0.2, -275)
 #' @export
 create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e0, temp = 295.15, by = 0.01) {
-  error_df_full <- data.frame(E = c(), Error = c(), Inaccuracy = c())
-  for (inaccuracy in inaccuracies) {
-    error <- Error_E(
-      E = seq(Emin, Emax, by = by),
-      Rmin = Rmin, Rmax = Rmax, delta = delta, e0 = e0,
-      error_R = function(x) inaccuracy * x, temp = temp
-    )
-    error_df_full <- rbind(
-      error_df_full,
-      data.frame(
-        E = error$E,
-        Error = error$max_error,
-        Inaccuracy = as.character(rep(inaccuracy, length(error$E)))
-      )
-    )
-  }
-  error_df_full
+  create_error_df_general(inaccuracies = inaccuracies, param_name = "E",
+                          param_error_fun = Error_E, param_min = Emin, param_max = Emax,
+                          Rmin = Rmin, Rmax = Rmax, delta = delta,
+                          midpoint = e0, temp = temp, by = by)
 }
+
+# Error dataframes at multiple inaccuracies ------------------------------------
 
 #' Creates an error df at multiple inaccuracies, with multiple Rmin/Rmax/delta/e0 parameters
 #' @param inaccuracies A vector of inaccuracies (e.g. 0.02 for 2\% error), always relative
@@ -386,26 +591,22 @@ create_error_df_redox_multiple <- function(inaccuracies, Emin, Emax, param_df, t
   # Loop through each sensor in the param_df
   for(n in 1:nrow(param_df)) {
     sensor_params <- param_df[n, ]
-    for(inaccuracy in inaccuracies) {
-        error <- Error_E(
-            E = seq(Emin, Emax, by = by),
-            Rmin = sensor_params[,"Rmin"], Rmax = sensor_params[,"Rmax"],
-            delta = sensor_params[,"delta"], e0 = sensor_params[,"e0"],
-            error_R = function(x) inaccuracy * x
-        )
-        error_df_full <- rbind(
-            error_df_full,
-            data.frame(
-                E = error$E,
-                Rmin = as.character(rep(sensor_params[,"Rmin"], length(error$E))),
-                Rmax = as.character(rep(sensor_params[,"Rmax"], length(error$E))),
-                Name = as.character(rep(sensor_params[,"name"], length(error$E))),
-                Error = error$max_error,
-                Inaccuracy = as.character(rep(inaccuracy, length(error$E))),
-                stringsAsFactors = FALSE
-            )
-        )
-    }
+
+    new_error <- create_error_df_redox(inaccuracies, Emin = Emin, Emax = Emax,
+                          Rmin = sensor_params[,"Rmin"], Rmax = sensor_params[,"Rmax"],
+                          delta = sensor_params[,"delta"], e0 = sensor_params[,"e0"],
+                          temp = temp, by = by)
+
+    new_error$Rmin = as.character(rep(sensor_params[,"Rmin"], length(new_error$E)))
+    new_error$Rmax = as.character(rep(sensor_params[,"Rmax"], length(new_error$E)))
+    new_error$Name = as.character(rep(sensor_params[,"name"], length(new_error$E)))
+    new_error %>%  mutate_if(is.factor, as.character) -> new_error
+
+    error_df_full <- rbind(
+      error_df_full,
+      new_error
+    )
+
   }
   error_df_full
 }
@@ -516,4 +717,6 @@ plot_ranges_redox <- function(ranges, ylim = c(-350, -150), by = 20) {
     theme(aspect.ratio = 1) +
     coord_flip(ylim = c(-350, -150))
 }
+
+
 

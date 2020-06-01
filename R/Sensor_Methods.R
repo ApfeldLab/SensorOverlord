@@ -280,8 +280,8 @@ setMethod(
   "pHSensor",
   definition =
     function(object, R = getR(object)) {
-      return(object@pKa + log10(object@delta)
-        + log10((object@Rmax - R) / (R - object@Rmin)))
+      pH(R = R, Rmin = object@Rmin, Rmax = object@Rmax, delta = object@delta,
+         pKa = object@pKa)
     }
 )
 
