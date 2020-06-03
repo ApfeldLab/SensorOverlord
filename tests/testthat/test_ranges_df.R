@@ -18,3 +18,11 @@ test_that("error_df works for redox sensors", {
 
 
 })
+
+
+test_that("Multiple inaccuracies are not excluded from a ranges df", {
+  my_sensor <- new("Sensor", Rmin = 0.852, Rmax = 6.65, delta = 0.171)
+  my_redox_sensor <- new("redoxSensor", my_sensor, e0 = -265)
+  ranges <- ranges_df(my_redox_sensor, inaccuracies = c(0.018, 0.028, 0.018), thresholds=c(1))
+  expect_equal(nrow(ranges), 3)
+})
