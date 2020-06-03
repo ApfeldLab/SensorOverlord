@@ -552,6 +552,9 @@ create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e
                           midpoint = e0, temp = temp, by = by)
 }
 
+# TODO next May 31, 2020: Finish up this section by writing create_error_df_pH
+# and the equivalent for pLigand
+
 # Error dataframes at multiple inaccuracies ------------------------------------
 
 #' Creates an error df at multiple inaccuracies, with multiple Rmin/Rmax/delta/e0 parameters
@@ -610,6 +613,11 @@ create_error_df_redox_multiple <- function(inaccuracies, Emin, Emax, param_df, t
   }
   error_df_full
 }
+
+# TODO second May 31, 2020: Finish up this section by writing create_error_df_pH_multiple
+# and the equivalent for pLigand
+
+# Range dataframes -------------------------------------------------------------
 
 #' Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
 #' e.g. minimum and maximum measureable value at different error thresholds for each sensor.
@@ -671,6 +679,8 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
   }
   ranges_df
 }
+
+# Range plotting functions! ----------------------------------------------------
 
 #' Takes in a ranges_df dataframe and makes a plot!
 #' @param ranges A dataframe of ranges with at least these columns:
