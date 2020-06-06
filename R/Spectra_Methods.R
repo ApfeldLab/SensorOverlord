@@ -6,9 +6,7 @@
 
 #' @return A ggplot object
 #'
-#' @export
-#' @docType methods
-#' @rdname plotSpectra-generic
+#' @noRd
 #'
 #' @import ggplot2
 setGeneric('plotSpectra', def = function(object, ...) standardGeneric("plotSpectra"))
@@ -25,8 +23,6 @@ setGeneric('plotSpectra', def = function(object, ...) standardGeneric("plotSpect
 #' @return A ggplot object
 #'
 #' @export
-#' @docType methods
-#' @rdname plotSpectra-sensorSpectra
 setMethod('plotSpectra', "sensorSpectra", definition =
               function(object, minimum_name = "Minimum State", maximum_name = "Maximum State") {
                 spectraData <- data.frame(lambda = object@lambdas, min = object@values_minimum, max = object@values_maximum)
