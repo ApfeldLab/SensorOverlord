@@ -590,6 +590,7 @@ create_error_df_pH <- function(inaccuracies, pHmin, pHmax, Rmin, Rmax, delta, pK
 #' @param delta the ratiometric fluorescence in the first wavelength
 #' @param pKd the sensor's midpoint/pKd
 #' @param by (optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.
+#' @param ligand_name The name of this ligand
 #' @return A dataframe of errors with columns:
 #' 'pLigand': the pLigand,
 #' 'Error': the error in this pLigand
@@ -664,8 +665,120 @@ create_error_df_redox_multiple <- function(inaccuracies, Emin, Emax, param_df, t
   error_df_full
 }
 
-# TODO second May 31, 2020: Finish up this section by writing create_error_df_pH_multiple
-# and the equivalent for pLigand
+#' Creates an error df at multiple inaccuracies, with multiple Rmin/Rmax/delta/pKa parameters
+#' @param inaccuracies A vector of inaccuracies (e.g. 0.02 for 2\% error), always relative
+#' @param pHmin The minimum pH for which to record error
+#' @param pHmax The maximum pH for which to record error
+#' @param param_df A dataframe containing a list of sensor parameters, with these columns:
+#' 'name': An identifier for this sensor
+#' 'Rmin': the minimum possible ratiometric fluorescence for this sensor
+#' 'Rmax': the maximum possible ratiometric fluorescence for this sensor
+#' 'delta': the ratiometric fluorescence in the first wavelength for this sensor
+#' 'pKa': this sensor's midpoint/pKa
+#' @param by (optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.
+#' @return A dataframe of errors with columns:
+#' 'Name': this sensor name
+#' 'pH': the pH
+#' 'Rmin': the minimum possible ratiometric fluorescence for this sensor
+#' 'Rmax': the maximum possible ratiometric fluorescence for this sensor
+#' 'Error': the error in this pH
+#' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
+#' @examples
+#' create_error_df_pH_multiple(
+#' c(0.01, 0.02), 2, 10,
+#' data.frame(
+#'     "Rmin" = c(1, 2),
+#'     "Rmax" = c(5, 6),
+#'     "delta" = c(0.2, 1.2),
+#'     "name" = c("normal", "plusOne"),
+#'     "pKa" = c(7, 8)
+#' )
+#' )
+#' @export
+create_error_df_pH_multiple <- function(inaccuracies, pHmin, pHmax, param_df, by = 0.01) {
+  error_df_full <- data.frame(pH = c(), Rmin = c(), Rmax = c(),
+                              Name = c(), Error = c(), Inaccuracy = c())
+  # Loop through each sensor in the param_df
+  for(n in 1:nrow(param_df)) {
+    sensor_params <- param_df[n, ]
+
+    new_error <- create_error_df_pH(inaccuracies, pHmin = pHmin, pHmax = pHmax,
+                                       Rmin = sensor_params[,"Rmin"], Rmax = sensor_params[,"Rmax"],
+                                       delta = sensor_params[,"delta"], pKa = sensor_params[,"pKa"],
+                                       by = by)
+
+    new_error$Rmin = as.character(rep(sensor_params[,"Rmin"], length(new_error$E)))
+    new_error$Rmax = as.character(rep(sensor_params[,"Rmax"], length(new_error$E)))
+    new_error$Name = as.character(rep(sensor_params[,"name"], length(new_error$E)))
+    new_error %>%  mutate_if(is.factor, as.character) -> new_error
+
+    error_df_full <- rbind(
+      error_df_full,
+      new_error
+    )
+
+  }
+  error_df_full
+}
+
+#' Creates an error df at multiple inaccuracies, with multiple Rmin/Rmax/delta/pKd parameters
+#' @param inaccuracies A vector of inaccuracies (e.g. 0.02 for 2\% error), always relative
+#' @param pLigand_min The minimum pH for which to record error
+#' @param pLigand_max The maximum pH for which to record error
+#' @param param_df A dataframe containing a list of sensor parameters, with these columns:
+#' 'name': An identifier for this sensor
+#' 'Rmin': the minimum possible ratiometric fluorescence for this sensor
+#' 'Rmax': the maximum possible ratiometric fluorescence for this sensor
+#' 'delta': the ratiometric fluorescence in the first wavelength for this sensor
+#' 'pKd': this sensor's midpoint/pKd
+#' @param by (optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.
+#' @param type
+#' @param ligand_name the name of this ligand
+#' @return A dataframe of errors with columns:
+#' 'Name': this sensor name
+#' '(ligand_name)': the pLigand
+#' 'Rmin': the minimum possible ratiometric fluorescence for this sensor
+#' 'Rmax': the maximum possible ratiometric fluorescence for this sensor
+#' 'Error': the error in this pLigand
+#' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
+#' @examples
+#' create_error_df_pLigand_multiple(
+#' c(0.01, 0.02), 2, 10,
+#' data.frame(
+#'     "Rmin" = c(1, 2),
+#'     "Rmax" = c(5, 6),
+#'     "delta" = c(0.2, 1.2),
+#'     "name" = c("normal", "plusOne"),
+#'     "pKd" = c(7, 8)
+#' ),
+#' ligand_name = "NADPH"
+#' )
+#' @export
+create_error_df_pLigand_multiple <- function(inaccuracies, pLigand_min, pLigand_max, param_df, by = 0.01, ligand_name) {
+  error_df_full <- data.frame(ligand_name = c(), Rmin = c(), Rmax = c(),
+                              Name = c(), Error = c(), Inaccuracy = c())
+  # Loop through each sensor in the param_df
+  for(n in 1:nrow(param_df)) {
+    sensor_params <- param_df[n, ]
+
+    new_error <- create_error_df_pLigand(inaccuracies, pLigand_min = pLigand_min, pLigand_max = pLigand_max,
+                                    Rmin = sensor_params[,"Rmin"], Rmax = sensor_params[,"Rmax"],
+                                    delta = sensor_params[,"delta"], pKd = sensor_params[,"pKd"],
+                                    by = by, ligand_name = ligand_name)
+
+    new_error$Rmin = as.character(rep(sensor_params[,"Rmin"], length(new_error$E)))
+    new_error$Rmax = as.character(rep(sensor_params[,"Rmax"], length(new_error$E)))
+    new_error$Name = as.character(rep(sensor_params[,"name"], length(new_error$E)))
+    new_error %>%  mutate_if(is.factor, as.character) -> new_error
+
+    error_df_full <- rbind(
+      error_df_full,
+      new_error
+    )
+
+  }
+  error_df_full
+}
 
 # Range dataframes -------------------------------------------------------------
 

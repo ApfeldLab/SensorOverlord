@@ -20,7 +20,8 @@ Imports:
     shiny,
     dplyr,
     RColorBrewer,
-    cowplot
+    cowplot,
+    dplyr
 RoxygenNote: 7.1.0
 Suggests: 
     testthat
