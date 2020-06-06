@@ -765,6 +765,53 @@ setMethod(
     }
 )
 
+#' Finds the error df of this pH sensor at given inaccuracies
+#'
+#' Adding this method on 31 May 2020, hoping this style will depreciate
+#' getErrorTable in the future.
+#'
+#' @param object A redoxSensor object
+#' @param inaccuracies (optional, default: c(0.02)) A vector of inaccuracies
+#' (e.g. 0.02 for 2\% error), always relative
+#' @param pHmin (optional, default: 1)  The minimum pH
+#' for which to record error
+#' @param pHmax (optional, default: 14) The maximum pH
+#' for which to record error
+#' @param by (optional, default: 0.001) The granularity of the error table--e.g.,
+#'  by = 0.01 would record 7 and 7.01, etc.
+#' @param name (optional, default: "Sensor") A name for this sensor
+#' @return A dataframe of errors with columns:
+#' 'Name': this sensor name
+#' 'pH': the pH,
+#' 'Rmin': the minimum possible ratiometric fluorescence for this sensor
+#' 'Rmax': the maximum possible ratiometric fluorescence for this sensor
+#' 'Error': the error in this redox potential
+#' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
+#' @examples
+#' my_sensor <- new("pHSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2), pKa = 7)
+#' error_df(my_sensor,
+#'   inaccuracies = c(0.01, 0.02), pHmin = 1, pHmax = 14,
+#' )
+#' @export
+setMethod(
+  "error_df",
+  "pHSensor",
+  definition =
+    function(object, inaccuracies = c(0.01), pHmin = 1, pHmax = 14,
+             by = 0.001, name = "Sensor") {
+      create_error_df_pH_multiple(
+        inaccuracies = inaccuracies, pHmin = pHmin, pHmax = pHmax,
+        param_df = data.frame(
+          Rmin = object@Rmin,
+          Rmax = object@Rmax,
+          delta = object@delta,
+          name = name,
+          pKa = object@pKa
+        )
+      )
+    }
+)
+
 #' Find the ranges df of an object
 #'
 #' @param object An object
@@ -824,6 +871,49 @@ setMethod(
     }
 )
 
+#' Finds the ranges df of this pH sensor at given inaccuracies
+#'
+#' Adding this method on 31 May 2020, hoping this style will depreciate
+#' getErrorTable in the future.
+#'
+#' @param object A pHSensor object
+#' @param inaccuracies (optional, default: c(0.02)) A vector of inaccuracies
+#' (e.g. 0.02 for 2\% error), always relative
+#' @param pHmin (optional, default: 1)  The minimum pH
+#' for which to record error
+#' @param pHmax (optional, default: 14) The maximum pH
+#' for which to record error
+#' @param by (optional, default: 0.001) The granularity of the error table--e.g.,
+#'  by = 0.01 would record 7 and 7.01, etc.
+#' @param name (optional, default: "Sensor") A name for this sensor
+#' @param thresholds A vector of error thresholds (e.g. c(0.5, 1) for 0.5 and 1)
+#' @return A dataframe of suited ranges with these columns:
+#' 'Sensor_Name': the name of the sensor
+#' 'Minimum': the minimum pH measurable at the given inaccuracy
+#' 'Maximum': the maximum pH measurable at the given inaccuracy
+#' 'Inaccuracy': the inaccuracy associated with this row (relative)
+#' 'error_thresh': the error threshold associated with this row
+#' @examples
+#' my_sensor <- new("pHSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2), pKa = 7)
+#' ranges_df(my_sensor)
+#' @export
+setMethod(
+  "ranges_df",
+  "pHSensor",
+  definition =
+    function(object, inaccuracies = c(0.02), pHmin = 1, pHmax = 14,
+             by = 0.001, name = "Sensor", thresholds = c(0.01, 0.05, 0.1, 0.15, 0.2)) {
+      create_ranges_multiple(
+        error_df = error_df(object,
+                            inaccuracies = inaccuracies,
+                            pHmin = pHmin, pHmax = pHmax,
+                            by = by, name = name
+        ),
+        thresholds = thresholds, parameter = "pH"
+      )
+    }
+)
+
 #' Make a rangeplot for this object
 #'
 #' @param object An object
@@ -863,4 +953,30 @@ setMethod(
         function(object, ranges = ranges_df(object), ylim = c(-350, -150), by = 20) {
             plot_ranges_redox(ranges, ylim = ylim, by = by)
         }
+)
+
+#' Make a plot of the suited ranges for this pHSensor
+#'
+#'
+#' @param object A pHSensor object
+#' @param ranges (optional, default = ranges_df(object)) A ranges dataframe)
+#' @return A dataframe of suited ranges with these columns:
+#' 'Sensor_Name': the name of the sensor
+#' 'Minimum': the minimum pH measurable at the given inaccuracy
+#' 'Maximum': the maximum pH measurable at the given inaccuracy
+#' 'Inaccuracy': the inaccuracy associated with this row (relative)
+#' 'error_thresh': the error threshold associated with this row (mV)
+#' @param ylim The limits of the ranges plot
+#' @param by the 'by' argument of the limits axis tick marks
+#' @examples
+#' my_sensor <- new("pHSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2), pKa = 7)
+#' rangePlot(my_sensor)
+#' @export
+setMethod(
+  "rangePlot",
+  "pHSensor",
+  definition =
+    function(object, ranges = ranges_df(object), ylim = c(1, 14), by = 1) {
+      plot_ranges_pH(ranges, ylim = ylim, by = by)
+    }
 )

@@ -32,6 +32,8 @@ create_error_df_pLigand(
 \item{pKd}{the sensor's midpoint/pKd}
 
 \item{by}{(optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.}
+
+\item{ligand_name}{The name of this ligand}
 }
 \value{
 A dataframe of errors with columns:

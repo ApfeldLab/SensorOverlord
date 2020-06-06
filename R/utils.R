@@ -732,7 +732,6 @@ create_error_df_pH_multiple <- function(inaccuracies, pHmin, pHmax, param_df, by
 #' 'delta': the ratiometric fluorescence in the first wavelength for this sensor
 #' 'pKd': this sensor's midpoint/pKd
 #' @param by (optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.
-#' @param type
 #' @param ligand_name the name of this ligand
 #' @return A dataframe of errors with columns:
 #' 'Name': this sensor name
@@ -856,7 +855,6 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
 #' @param ylim The limits of the ranges plot
 #' @param by the 'by' argument of the limits axis tick marks
 #' @return A ggplot object
-#' @examples
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import cowplot
