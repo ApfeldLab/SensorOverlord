@@ -191,7 +191,7 @@ output$phasePlot <- renderPlotly({
     error_table <- getMinMax()[[3]]
     error_table <- error_table[Reduce(`&`, lapply(error_table, is.finite)),]
 
-    ggplot(error_table, aes(x = FUN_true, y = max_abs_error)) +
+    plot <- ggplot(error_table, aes(x = FUN_true, y = max_abs_error)) +
         geom_line() +
         theme(
             text = element_text(size = 16)
@@ -199,6 +199,8 @@ output$phasePlot <- renderPlotly({
         ylab("Accuracy") +
         xlab("True values") +
         ylim(c(0, input$acc * 4))
+
+    ggplotly()
 
 
 })

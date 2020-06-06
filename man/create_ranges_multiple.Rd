@@ -5,7 +5,11 @@
 \title{Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
 e.g. minimum and maximum measureable value at different error thresholds for each sensor.}
 \usage{
-create_ranges_multiple(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5))
+create_ranges_multiple(
+  error_df,
+  thresholds = c(0.5, 1, 1.5, 2, 2.5),
+  parameter = "E"
+)
 }
 \arguments{
 \item{error_df}{A dataframe of errors at least these columns:
@@ -15,6 +19,8 @@ create_ranges_multiple(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5))
 'Inaccuracy': The inaccuracy of the measurements (relative to R).}
 
 \item{thresholds}{A vector of error thresholds (e.g. c(0.5, 1) for 0.5mV and 1mV)}
+
+\item{parameter}{the biochemical value being measured}
 }
 \value{
 A dataframe of suited ranges with these columns:

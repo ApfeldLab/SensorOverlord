@@ -2,7 +2,7 @@
 % Please edit documentation in R/utils.R
 \name{create_error_df_redox}
 \alias{create_error_df_redox}
-\title{Creates a dataframe of errors at given inaccuracies}
+\title{Creates a dataframe of errors in redox potential at given inaccuracies}
 \usage{
 create_error_df_redox(
   inaccuracies,
@@ -42,7 +42,7 @@ A dataframe of errors with columns:
 'Inaccuracy': The inaccuracy of the measurements (relative to R).
 }
 \description{
-Creates a dataframe of errors at given inaccuracies
+Creates a dataframe of errors in redox potential at given inaccuracies
 }
 \examples{
 create_error_df_redox(c(0.01, 0.02), -300, -200, 1, 5, 0.2, -275)

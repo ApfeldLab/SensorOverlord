@@ -1,0 +1,55 @@
+reference:
+- title: "Sensor Methods"
+  desc: >
+        Functions defined on particular sensor objects
+- contents:
+    - ends_with("Sensor-method")
+
+- title: "Spectra Methods"
+  desc: >
+        Functions defined on particular spectra objects
+- contents:
+    - ends_with("Spectra-method")
+
+- title: "Biochemical values"
+  desc: >
+        Utils functions for finding biochemical values
+- contents:
+    - "E"
+    - "pH"
+    - "pLigand"
+
+- title: "Errors"
+  desc: >
+        Functions for finding errors in biochemical values
+- contents:
+    - starts_with("Error")
+- contents:
+    - "E"
+    - "pH"
+    - "pLigand"
+    -  starts_with("create_error")
+
+- title: "Ranges"
+  desc: >
+        Functions for finding ranges of suitable biochemical values
+- contents:
+    - contains("ranges")
+
+- title: "Plots"
+  desc: >
+        Plotting functions
+- contents:
+    - contains("plot")
+
+- title: "Errors"
+  desc: >
+        Utils functions for finding errors in biochemical values
+- contents:
+    - starts_with("Error")
+
+- title: "All Functions"
+  desc: >
+        A comprehensive list of all package functions
+- contents:
+    - matches("*")

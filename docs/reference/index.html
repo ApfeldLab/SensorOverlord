@@ -116,8 +116,422 @@
     <tbody>
       <tr>
         <th colspan="2">
-          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All functions</h2>
-          <p class="section-desc"></p>
+          <h2 id="section-sensor-methods" class="hasAnchor"><a href="#section-sensor-methods" class="anchor"></a>Sensor Methods</h2>
+          <p class="section-desc"><p>Functions defined on particular sensor objects</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="error_df-redoxSensor-method.html">error_df(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Finds the error df of this redox sensor at given inaccuracies</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getAbsError-R-redoxSensor-method.html">`getAbsError-R`(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the error for a given sensor object at a given R</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getAbsError-Sensor-method.html">getAbsError(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the error for a given sensor object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getE-redoxSensor-method.html">getE(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the redox potential (E) for a redox sensor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getE_deriv-redoxSensor-method.html">getE_deriv(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the derivative of the redox potential (dE/dR) for a redox sensor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getErrorTable-Sensor-method.html">getErrorTable(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the error table for a given sensor object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getFractionMax-Sensor-method.html">getFractionMax(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the fraction of sensors in the state corresponding to "Rmax"</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getProperty-Sensor-method.html">getProperty(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the fraction of sensors in the state corresponding to "Rmax" (wrapper)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getProperty-pHSensor-method.html">getProperty(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the pH of a pH sensor (wrapper)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getProperty-redoxSensor-method.html">getProperty(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the redox potential (E) for a redox sensor (wrapper)</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getR-Sensor-method.html">getR(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Method to get an array of R values from a sensor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="getpH-pHSensor-method.html">getpH(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Get the pH of a pH sensor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotFractionMax-Sensor-method.html">plotFractionMax(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction of sensors in the max state</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotFractionMax-pHSensor-method.html">plotFractionMax(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction of pH sensors in the max state</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotFractionMax-redoxSensor-method.html">plotFractionMax(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction of redox sensors in the max state</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotProperty-Sensor-method.html">plotProperty(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction max of a generic</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotProperty-pHSensor-method.html">plotProperty(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction of pH of a pHSensor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotProperty-redoxSensor-method.html">plotProperty(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the E of a redoxSensor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="rangePlot-redoxSensor-method.html">rangePlot(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Make a plot of the suited ranges for this sensor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ranges_df-redoxSensor-method.html">ranges_df(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Finds the ranges df of this redox sensor at given inaccuracies</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-spectra-methods" class="hasAnchor"><a href="#section-spectra-methods" class="anchor"></a>Spectra Methods</h2>
+          <p class="section-desc"><p>Functions defined on particular spectra objects</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="plotSpectra-sensorSpectra-method.html">plotSpectra(<i>&lt;sensorSpectra&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Create a plot (ggplot object) for a sensorSpetra object</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-biochemical-values" class="hasAnchor"><a href="#section-biochemical-values" class="anchor"></a>Biochemical values</h2>
+          <p class="section-desc"><p>Utils functions for finding biochemical values</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="E.html">E()</a></code> </p>
+        </td>
+        <td><p>What is the redox potential (mV), given R/Rmin/Rmax/delta/midpoint/temperature?</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pH.html">pH()</a></code> </p>
+        </td>
+        <td><p>Finds pH, given R, Rmin, and Rmax</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pLigand.html">pLigand()</a></code> </p>
+        </td>
+        <td><p>Finds pLigand, given R, Rmin, and Rmax</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-errors" class="hasAnchor"><a href="#section-errors" class="anchor"></a>Errors</h2>
+          <p class="section-desc"><p>Functions for finding errors in biochemical values</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="Error_E.html">Error_E()</a></code> </p>
+        </td>
+        <td><p>What is the error in redox potential at a given redox potential (mV),
+given some parameters of R and the error in R?</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Error_general.html">Error_general()</a></code> </p>
+        </td>
+        <td><p>A general function for calculating the error in some parameter</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Error_pH.html">Error_pH()</a></code> </p>
+        </td>
+        <td><p>What is the error in pH at a given pH,
+given some parameters of R and the error in R?</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Error_pLigand.html">Error_pLigand()</a></code> </p>
+        </td>
+        <td><p>What is the error in pLigand at a given pLigand,
+given some parameters of R and the error in R?</p></td>
+      </tr>
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="E.html">E()</a></code> </p>
+        </td>
+        <td><p>What is the redox potential (mV), given R/Rmin/Rmax/delta/midpoint/temperature?</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pH.html">pH()</a></code> </p>
+        </td>
+        <td><p>Finds pH, given R, Rmin, and Rmax</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="pLigand.html">pLigand()</a></code> </p>
+        </td>
+        <td><p>Finds pLigand, given R, Rmin, and Rmax</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_error_df_general.html">create_error_df_general()</a></code> </p>
+        </td>
+        <td><p>Creates a dataframe of errors at given inaccuracies</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_error_df_pH.html">create_error_df_pH()</a></code> </p>
+        </td>
+        <td><p>Creates a dataframe of errors in pH potential at given inaccuracies</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_error_df_pLigand.html">create_error_df_pLigand()</a></code> </p>
+        </td>
+        <td><p>Creates a dataframe of errors in pLigand potential at given inaccuracies</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_error_df_redox.html">create_error_df_redox()</a></code> </p>
+        </td>
+        <td><p>Creates a dataframe of errors in redox potential at given inaccuracies</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_error_df_redox_multiple.html">create_error_df_redox_multiple()</a></code> </p>
+        </td>
+        <td><p>Creates an error df at multiple inaccuracies, with multiple Rmin/Rmax/delta/e0 parameters</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-ranges" class="hasAnchor"><a href="#section-ranges" class="anchor"></a>Ranges</h2>
+          <p class="section-desc"><p>Functions for finding ranges of suitable biochemical values</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="create_ranges_multiple.html">create_ranges_multiple()</a></code> </p>
+        </td>
+        <td><p>Takes in the input of create_error_df_redox_multiple and creates a simple ranges plot:
+e.g. minimum and maximum measureable value at different error thresholds for each sensor.</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_ranges_redox.html">plot_ranges_redox()</a></code> </p>
+        </td>
+        <td><p>Takes in a ranges_df dataframe and makes a plot!</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ranges_df-redoxSensor-method.html">ranges_df(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Finds the ranges df of this redox sensor at given inaccuracies</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="ranges_df.html">ranges_df()</a></code> </p>
+        </td>
+        <td><p>Find the ranges df of an object</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-plots" class="hasAnchor"><a href="#section-plots" class="anchor"></a>Plots</h2>
+          <p class="section-desc"><p>Plotting functions</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="plotFractionMax-Sensor-method.html">plotFractionMax(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction of sensors in the max state</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotFractionMax-pHSensor-method.html">plotFractionMax(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction of pH sensors in the max state</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotFractionMax-redoxSensor-method.html">plotFractionMax(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction of redox sensors in the max state</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotProperty-Sensor-method.html">plotProperty(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction max of a generic</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotProperty-pHSensor-method.html">plotProperty(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the fraction of pH of a pHSensor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotProperty-redoxSensor-method.html">plotProperty(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Plot the E of a redoxSensor</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotSpectra-sensorSpectra-method.html">plotSpectra(<i>&lt;sensorSpectra&gt;</i>)</a></code> </p>
+        </td>
+        <td><p>Create a plot (ggplot object) for a sensorSpetra object</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plot_ranges_redox.html">plot_ranges_redox()</a></code> </p>
+        </td>
+        <td><p>Takes in a ranges_df dataframe and makes a plot!</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-errors" class="hasAnchor"><a href="#section-errors" class="anchor"></a>Errors</h2>
+          <p class="section-desc"><p>Utils functions for finding errors in biochemical values</p></p>
+        </th>
+      </tr>
+      
+      
+    </tbody><tbody>
+      
+      
+      <tr>
+        
+        <td>
+          <p><code><a href="Error_E.html">Error_E()</a></code> </p>
+        </td>
+        <td><p>What is the error in redox potential at a given redox potential (mV),
+given some parameters of R and the error in R?</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Error_general.html">Error_general()</a></code> </p>
+        </td>
+        <td><p>A general function for calculating the error in some parameter</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Error_pH.html">Error_pH()</a></code> </p>
+        </td>
+        <td><p>What is the error in pH at a given pH,
+given some parameters of R and the error in R?</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Error_pLigand.html">Error_pLigand()</a></code> </p>
+        </td>
+        <td><p>What is the error in pLigand at a given pLigand,
+given some parameters of R and the error in R?</p></td>
+      </tr>
+    </tbody><tbody>
+      <tr>
+        <th colspan="2">
+          <h2 id="section-all-functions" class="hasAnchor"><a href="#section-all-functions" class="anchor"></a>All Functions</h2>
+          <p class="section-desc"><p>A comprehensive list of all package functions</p></p>
         </th>
       </tr>
       
@@ -141,9 +555,41 @@ given some parameters of R and the error in R?</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="Error_general.html">Error_general()</a></code> </p>
+        </td>
+        <td><p>A general function for calculating the error in some parameter</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Error_pH.html">Error_pH()</a></code> </p>
+        </td>
+        <td><p>What is the error in pH at a given pH,
+given some parameters of R and the error in R?</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="Error_pLigand.html">Error_pLigand()</a></code> </p>
+        </td>
+        <td><p>What is the error in pLigand at a given pLigand,
+given some parameters of R and the error in R?</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="R_of_E.html">R_of_E()</a></code> </p>
         </td>
         <td><p>What was the recorded fluorescence ratio at a certain redox potential?</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="R_of_pH.html">R_of_pH()</a></code> </p>
+        </td>
+        <td><p>Finds R, given a pH</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="R_of_pLigand.html">R_of_pLigand()</a></code> </p>
+        </td>
+        <td><p>Finds R, given a pLigand</p></td>
       </tr><tr>
         
         <td>
@@ -159,9 +605,27 @@ given some parameters of R and the error in R?</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="create_error_df_redox.html">create_error_df_redox()</a></code> </p>
+          <p><code><a href="create_error_df_general.html">create_error_df_general()</a></code> </p>
         </td>
         <td><p>Creates a dataframe of errors at given inaccuracies</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_error_df_pH.html">create_error_df_pH()</a></code> </p>
+        </td>
+        <td><p>Creates a dataframe of errors in pH potential at given inaccuracies</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_error_df_pLigand.html">create_error_df_pLigand()</a></code> </p>
+        </td>
+        <td><p>Creates a dataframe of errors in pLigand potential at given inaccuracies</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="create_error_df_redox.html">create_error_df_redox()</a></code> </p>
+        </td>
+        <td><p>Creates a dataframe of errors in redox potential at given inaccuracies</p></td>
       </tr><tr>
         
         <td>
@@ -184,12 +648,6 @@ e.g. minimum and maximum measureable value at different error thresholds for eac
       </tr><tr>
         
         <td>
-          <p><code><a href="error_df.html">error_df()</a></code> </p>
-        </td>
-        <td><p>Find the error df of an object</p></td>
-      </tr><tr>
-        
-        <td>
           <p><code><a href="formatSpectraData.html">formatSpectraData()</a></code> </p>
         </td>
         <td><p>Formats sensor information into a dataframe suitable for input into database</p></td>
@@ -204,27 +662,15 @@ and a pLigand</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getAbsError-R-redoxSensor.html">`getAbsError-R`(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getAbsError-R-redoxSensor-method.html">`getAbsError-R`(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the error for a given sensor object at a given R</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getAbsError-R.html">`getAbsError-R`()</a></code> </p>
-        </td>
-        <td><p>Get the error, given a ratio value (generic)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getAbsError-sensor.html">getAbsError(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getAbsError-Sensor-method.html">getAbsError(<i>&lt;Sensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the error for a given sensor object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getAbsError.html">getAbsError()</a></code> </p>
-        </td>
-        <td><p>Get the error (generic)</p></td>
       </tr><tr>
         
         <td>
@@ -234,75 +680,45 @@ and a pLigand</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getE-redoxSensor.html">getE(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getE-redoxSensor-method.html">getE(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the redox potential (E) for a redox sensor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getE.html">getE()</a></code> </p>
-        </td>
-        <td><p>Get the redox potential (E) value (generic)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getE_deriv-redoxSensor.html">getE_deriv(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getE_deriv-redoxSensor-method.html">getE_deriv(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the derivative of the redox potential (dE/dR) for a redox sensor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getE_deriv.html">getE_deriv()</a></code> </p>
-        </td>
-        <td><p>Get the the derivative of the redox potential (dE/dR) (generic)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getErrorTable-sensor.html">getErrorTable(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getErrorTable-Sensor-method.html">getErrorTable(<i>&lt;Sensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the error table for a given sensor object</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getErrorTable.html">getErrorTable()</a></code> </p>
-        </td>
-        <td><p>Get a table of the errors (generic)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getFractionMax-methods.html">getFractionMax(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getFractionMax-Sensor-method.html">getFractionMax(<i>&lt;Sensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the fraction of sensors in the state corresponding to "Rmax"</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getFractionMax.html">getFractionMax()</a></code> </p>
-        </td>
-        <td><p>Generic for the getFractionMax method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getProperty-methods.html">getProperty(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getProperty-Sensor-method.html">getProperty(<i>&lt;Sensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the fraction of sensors in the state corresponding to "Rmax" (wrapper)</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getProperty-pHSensor.html">getProperty(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getProperty-pHSensor-method.html">getProperty(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the pH of a pH sensor (wrapper)</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getProperty-redoxSensor.html">getProperty(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getProperty-redoxSensor-method.html">getProperty(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the redox potential (E) for a redox sensor (wrapper)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getProperty.html">getProperty()</a></code> </p>
-        </td>
-        <td><p>Wrapper: Get the function that gets the biochemical property of this sensor</p></td>
       </tr><tr>
         
         <td>
@@ -312,21 +728,9 @@ and a pLigand</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="getR.html">getR()</a></code> </p>
-        </td>
-        <td><p>Get an array of R values (generic)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getpH-pHSensor.html">getpH(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="getpH-pHSensor-method.html">getpH(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Get the pH of a pH sensor</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="getpH.html">getpH()</a></code> </p>
-        </td>
-        <td><p>Get the pH value (generic)</p></td>
       </tr><tr>
         
         <td>
@@ -342,67 +746,61 @@ and a pLigand</p></td>
       </tr><tr>
         
         <td>
+          <p><code><a href="pH.html">pH()</a></code> </p>
+        </td>
+        <td><p>Finds pH, given R, Rmin, and Rmax</p></td>
+      </tr><tr>
+        
+        <td>
           <p><code><a href="pHSensor-class.html">pHSensor-class</a></code> </p>
         </td>
         <td><p>An S4 class to represent a 2-state redox sensor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plotFractionMax-Sensor.html">plotFractionMax(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+          <p><code><a href="pLigand.html">pLigand()</a></code> </p>
+        </td>
+        <td><p>Finds pLigand, given R, Rmin, and Rmax</p></td>
+      </tr><tr>
+        
+        <td>
+          <p><code><a href="plotFractionMax-Sensor-method.html">plotFractionMax(<i>&lt;Sensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot the fraction of sensors in the max state</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plotFractionMax-pHSensor.html">plotFractionMax(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="plotFractionMax-pHSensor-method.html">plotFractionMax(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot the fraction of pH sensors in the max state</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plotFractionMax-redoxSensor.html">plotFractionMax(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="plotFractionMax-redoxSensor-method.html">plotFractionMax(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot the fraction of redox sensors in the max state</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plotFractionMax.html">plotFractionMax()</a></code> </p>
-        </td>
-        <td><p>Plot the fraction of objects in the max state (generic)</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plotProperty-Sensor.html">plotProperty(<i>&lt;Sensor&gt;</i>)</a></code> </p>
+          <p><code><a href="plotProperty-Sensor-method.html">plotProperty(<i>&lt;Sensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot the fraction max of a generic</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plotProperty-pHSensor.html">plotProperty(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="plotProperty-pHSensor-method.html">plotProperty(<i>&lt;pHSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot the fraction of pH of a pHSensor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plotProperty-redoxSensor.html">plotProperty(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
+          <p><code><a href="plotProperty-redoxSensor-method.html">plotProperty(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Plot the E of a redoxSensor</p></td>
       </tr><tr>
         
         <td>
-          <p><code><a href="plotProperty.html">plotProperty()</a></code> </p>
-        </td>
-        <td><p>Plot the property of an object</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plotSpectra-generic.html">plotSpectra()</a></code> </p>
-        </td>
-        <td><p>A generic for the plotSpectra method</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="plotSpectra-sensorSpectra.html">plotSpectra(<i>&lt;sensorSpectra&gt;</i>)</a></code> </p>
+          <p><code><a href="plotSpectra-sensorSpectra-method.html">plotSpectra(<i>&lt;sensorSpectra&gt;</i>)</a></code> </p>
         </td>
         <td><p>Create a plot (ggplot object) for a sensorSpetra object</p></td>
       </tr><tr>
@@ -417,12 +815,6 @@ and a pLigand</p></td>
           <p><code><a href="rangePlot-redoxSensor-method.html">rangePlot(<i>&lt;redoxSensor&gt;</i>)</a></code> </p>
         </td>
         <td><p>Make a plot of the suited ranges for this sensor</p></td>
-      </tr><tr>
-        
-        <td>
-          <p><code><a href="rangePlot.html">rangePlot()</a></code> </p>
-        </td>
-        <td><p>Make a rangeplot for this object</p></td>
       </tr><tr>
         
         <td>

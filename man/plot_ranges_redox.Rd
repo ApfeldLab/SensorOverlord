@@ -2,9 +2,14 @@
 % Please edit documentation in R/utils.R
 \name{plot_ranges_redox}
 \alias{plot_ranges_redox}
-\title{Takes in a ranges_df dataframe and makes a plot!}
+\title{Takes in a ranges_df dataframe and makes a plot (for redox).}
 \usage{
-plot_ranges_redox(ranges, ylim = c(-350, -150), by = 20)
+plot_ranges_redox(
+  ranges,
+  ylim = c(-350, -150),
+  by = 20,
+  ylab = "Glutathione Redox Potential (mV)"
+)
 }
 \arguments{
 \item{ranges}{A dataframe of ranges with at least these columns:
@@ -17,12 +22,14 @@ plot_ranges_redox(ranges, ylim = c(-350, -150), by = 20)
 \item{ylim}{The limits of the ranges plot}
 
 \item{by}{the 'by' argument of the limits axis tick marks}
+
+\item{ylab}{The label of the ranges plot}
 }
 \value{
 A ggplot object
 }
 \description{
-Takes in a ranges_df dataframe and makes a plot!
+Takes in a ranges_df dataframe and makes a plot (for redox).
 }
 \examples{
 error_df <- create_error_df_redox_multiple(

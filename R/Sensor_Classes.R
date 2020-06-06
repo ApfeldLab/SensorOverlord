@@ -36,15 +36,29 @@ setClass("redoxSensor",
              list(e0 = "numeric"),
          contains = "Sensor")
 
-#' An S4 class to represent a 2-state redox sensor
+#' An S4 class to represent a 2-state pH sensor
 #'
 #' @slot Rmin To represent the ratio emission value R in the protenated state
 #' @slot Rmax to represent the ratio emission value R in the deprotenated state
 #' @slot delta To represent the ratio between emission in the
 #' deprotenated and protenated states in the second wavelength of the ratio.
-#' @slot pKa The midpoint/pKa of the redox sensor
+#' @slot pKa The midpoint/pKa of the pH sensor
 #' @export
 setClass("pHSensor",
          slots =
              list(pKa = "numeric"),
+         contains = "Sensor")
+
+#' An S4 class to represent a 2-state ligand sensor
+#'
+#' @slot Rmin To represent the ratio emission value R in the bound state
+#' @slot Rmax to represent the ratio emission value R in the unbound state
+#' @slot delta To represent the ratio between emission in the
+#' unbound and bound states in the second wavelength of the ratio.
+#' @slot pKd The midpoint/pKd of the ligand sensor
+#' @export
+setClass("ligandSensor",
+         slots =
+             list(pKd = "numeric",
+                  ligand_name = "character"),
          contains = "Sensor")
