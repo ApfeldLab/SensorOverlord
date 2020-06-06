@@ -436,6 +436,7 @@ Error_E <- function(E, Rmin, Rmax, delta, e0, error_R, temp = 295.15) {
 #' @param delta the ratiometric fluorescence in the first wavelength
 #' @param pKa the sensor's midpoint/pKa
 #' @param error_R a function that, given an R, returns the error in that R
+#' @param ... not used (for generalization compatability)
 #' @return A list with (1) 'pH', the given pH,
 #' (2) 'larger_pH', the largest possible E, at the given error
 #' (3) 'smaller_pH', the smallest possible E, at the given error
@@ -444,7 +445,7 @@ Error_E <- function(E, Rmin, Rmax, delta, e0, error_R, temp = 295.15) {
 #' @examples
 #' Error_pH(pH = 7.3, Rmin = 1, Rmax = 5, delta = 0.2, pKa = 8, error_R = function(x) 0.02 * x)
 #' @export
-Error_pH <- function(pH, Rmin, Rmax, delta, pKa, error_R) {
+Error_pH <- function(pH, Rmin, Rmax, delta, pKa, error_R, ...) {
   Error_general(param = pH, param_name = "pH",
                 R_of_param = R_of_pH, param_of_R = sensorOverlord::pH,
                 Rmin = Rmin, Rmax = Rmax, delta = delta,
@@ -461,7 +462,7 @@ Error_pH <- function(pH, Rmin, Rmax, delta, pKa, error_R) {
 #' @param delta the ratiometric fluorescence in the first wavelength
 #' @param pKd the sensor's midpoint/pKd
 #' @param error_R a function that, given an R, returns the error in that R
-#' @param temp the temperature at which measurements were made
+#' @param ... not used (for generalization compatability)
 #' @return A list with (1) 'pH', the given pH,
 #' (2) 'larger_pH', the largest possible E, at the given error
 #' (3) 'smaller_pH', the smallest possible E, at the given error
@@ -471,7 +472,7 @@ Error_pH <- function(pH, Rmin, Rmax, delta, pKa, error_R) {
 #' Error_pLigand(pLigand = 7.3, ligand_name = "pNADPH",
 #' Rmin = 1, Rmax = 5, delta = 0.2, pKd = 8, error_R = function(x) 0.02 * x)
 #' @export
-Error_pLigand <- function(pLigand, ligand_name, Rmin, Rmax, delta, pKd, error_R) {
+Error_pLigand <- function(pLigand, Rmin, Rmax, delta, pKd, error_R, ligand_name, ...) {
   Error_general(param = pLigand, param_name = ligand_name,
                 R_of_param = R_of_pLigand, param_of_R = sensorOverlord::pLigand,
                 Rmin = Rmin, Rmax = Rmax, delta = delta,
@@ -493,6 +494,7 @@ Error_pLigand <- function(pLigand, ligand_name, Rmin, Rmax, delta, pKd, error_R)
 #' @param midpoint the sensor's midpoint
 #' @param temp (optional, default: 295.15) the temperature (in Kelvin) at which measurements were made
 #' @param by (optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.
+#' @param ... Additional arguments to pass into the param_error_fun (before temperature)
 #' @return A dataframe of errors with columns:
 #' param: the value of the param
 #' 'Error': the error in this param
@@ -502,7 +504,7 @@ Error_pLigand <- function(pLigand, ligand_name, Rmin, Rmax, delta, pKd, error_R)
 #' @export
 create_error_df_general <- function(inaccuracies, param_name,
                                     param_error_fun,
-                                    param_min, param_max, Rmin, Rmax, delta, midpoint, temp = 295.15, by = 0.01) {
+                                    param_min, param_max, Rmin, Rmax, delta, midpoint, ..., temp = 295.15, by = 0.01) {
   error_df_full <- data.frame()
   error_df_full[[param_name]] = c()
   error_df_full$Error = c()
@@ -512,7 +514,8 @@ create_error_df_general <- function(inaccuracies, param_name,
     error <- param_error_fun(
       seq(param_min, param_max, by = by),
       Rmin, Rmax, delta, midpoint,
-      error_R = function(x) inaccuracy * x, temp = temp
+      error_R = function(x) inaccuracy * x, ...,
+      temp = temp
     )
     new_df <- list()
     new_df[[param_name]] = error[[param_name]]
@@ -552,8 +555,55 @@ create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e
                           midpoint = e0, temp = temp, by = by)
 }
 
-# TODO next May 31, 2020: Finish up this section by writing create_error_df_pH
-# and the equivalent for pLigand
+#' Creates a dataframe of errors in pH potential at given inaccuracies
+#'
+#' @param inaccuracies A vector of inaccuracies (e.g. 0.02 for 2\% error), always relative
+#' @param pHmin The minimum pH for which to record error
+#' @param pHmax The maximum pH for which to record error
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param pKa the sensor's midpoint/pKa
+#' @param temp (optional, default: 295.15) the temperature (in Kelvin) at which measurements were made
+#' @param by (optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.
+#' @return A dataframe of errors with columns:
+#' 'pH': the pH,
+#' 'Error': the error in this pH
+#' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
+#' @examples
+#' create_error_df_pH(c(0.01, 0.02), 2, 10, 1, 5, 0.2, 7)
+#' @export
+create_error_df_pH <- function(inaccuracies, pHmin, pHmax, Rmin, Rmax, delta, pKa, by = 0.01) {
+  create_error_df_general(inaccuracies = inaccuracies, param_name = "pH",
+                          param_error_fun = Error_pH, param_min = pHmin, param_max = pHmax,
+                          Rmin = Rmin, Rmax = Rmax, delta = delta,
+                          midpoint = pKa, by = by)
+}
+
+#' Creates a dataframe of errors in pLigand potential at given inaccuracies
+#'
+#' @param inaccuracies A vector of inaccuracies (e.g. 0.02 for 2\% error), always relative
+#' @param pLigand_min The minimum pLigand for which to record error
+#' @param pLigand_max The maximum pLigand for which to record error
+#' @param Rmin the minimum possible ratiometric fluorescence
+#' @param Rmax the maximum possible ratiometric fluorescence
+#' @param delta the ratiometric fluorescence in the first wavelength
+#' @param pKd the sensor's midpoint/pKd
+#' @param by (optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.
+#' @return A dataframe of errors with columns:
+#' 'pLigand': the pLigand,
+#' 'Error': the error in this pLigand
+#' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
+#' @examples
+#' create_error_df_pLigand(c(0.01, 0.02), 2, 10, 1, 5, 0.2, 7,
+#' ligand_name = "NADPH")
+#' @export
+create_error_df_pLigand <- function(inaccuracies, pLigand_min, pLigand_max, Rmin, Rmax, delta, pKd, by = 0.01, ligand_name = "ligand") {
+  create_error_df_general(inaccuracies = inaccuracies, param_name = ligand_name,
+                          param_error_fun = Error_pLigand, param_min = pLigand_min, param_max = pLigand_max,
+                          Rmin = Rmin, Rmax = Rmax, delta = delta,
+                          midpoint = pKd, by = by, ligand_name = ligand_name)
+}
 
 # Error dataframes at multiple inaccuracies ------------------------------------
 

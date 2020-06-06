@@ -6,7 +6,8 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Finds R, given a pH — R_of_pH • sensorOverlord</title>
+<title>What is the error in pLigand at a given pLigand,
+given some parameters of R and the error in R? — Error_pLigand • sensorOverlord</title>
 
 
 <!-- jquery -->
@@ -39,8 +40,10 @@
 
 
 
-<meta property="og:title" content="Finds R, given a pH — R_of_pH" />
-<meta property="og:description" content="Finds R, given a pH" />
+<meta property="og:title" content="What is the error in pLigand at a given pLigand,
+given some parameters of R and the error in R? — Error_pLigand" />
+<meta property="og:description" content="What is the error in pLigand at a given pLigand,
+given some parameters of R and the error in R?" />
 
 
 
@@ -103,23 +106,25 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Finds R, given a pH</h1>
+    <h1>What is the error in pLigand at a given pLigand,
+given some parameters of R and the error in R?</h1>
     
-    <div class="hidden name"><code>R_of_pH.Rd</code></div>
+    <div class="hidden name"><code>Error_pLigand.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Finds R, given a pH</p>
+    <p>What is the error in pLigand at a given pLigand,
+given some parameters of R and the error in R?</p>
     </div>
 
-    <pre class="usage"><span class='fu'>R_of_pH</span>(<span class='no'>pH</span>, <span class='no'>Rmin</span>, <span class='no'>Rmax</span>, <span class='no'>delta</span>, <span class='no'>pKa</span>, <span class='no'>...</span>)</pre>
+    <pre class="usage"><span class='fu'>Error_pLigand</span>(<span class='no'>pLigand</span>, <span class='no'>Rmin</span>, <span class='no'>Rmax</span>, <span class='no'>delta</span>, <span class='no'>pKd</span>, <span class='no'>error_R</span>, <span class='no'>ligand_name</span>, <span class='no'>...</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>pH</th>
-      <td><p>the sensor's pH</p></td>
+      <th>pLigand</th>
+      <td><p>the pLigand</p></td>
     </tr>
     <tr>
       <th>Rmin</th>
@@ -134,21 +139,44 @@
       <td><p>the ratiometric fluorescence in the first wavelength</p></td>
     </tr>
     <tr>
-      <th>pKa</th>
-      <td><p>the sensor's pKa</p></td>
+      <th>pKd</th>
+      <td><p>the sensor's midpoint/pKd</p></td>
+    </tr>
+    <tr>
+      <th>error_R</th>
+      <td><p>a function that, given an R, returns the error in that R</p></td>
+    </tr>
+    <tr>
+      <th>ligand_name</th>
+      <td><p>the name of the ligand</p></td>
     </tr>
     <tr>
       <th>...</th>
-      <td><p>Not used</p></td>
+      <td><p>not used (for generalization compatability)</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>the ratiometric fluoresence at this pH</p>
+    <p>A list with (1) 'pH', the given pH,
+(2) 'larger_pH', the largest possible E, at the given error
+(3) 'smaller_pH', the smallest possible E, at the given error
+(4) 'max_error' the largest possible difference between the observed and expected E</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>R_of_pH</span>(<span class='kw'>pH</span> <span class='kw'>=</span> <span class='fl'>3</span>, <span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>pKa</span> <span class='kw'>=</span> <span class='fl'>7</span>)</div><div class='output co'>#&gt; [1] 4.998001</div></pre>
+    <pre class="examples"><div class='input'><span class='fu'>Error_pLigand</span>(<span class='kw'>pLigand</span> <span class='kw'>=</span> <span class='fl'>7.3</span>, <span class='kw'>ligand_name</span> <span class='kw'>=</span> <span class='st'>"pNADPH"</span>,
+<span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>pKd</span> <span class='kw'>=</span> <span class='fl'>8</span>, <span class='kw'>error_R</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fl'>0.02</span> * <span class='no'>x</span>)</div><div class='output co'>#&gt; $pNADPH
+#&gt; [1] 7.3
+#&gt; 
+#&gt; $larger_pNADPH
+#&gt; [1] 7.273913
+#&gt; 
+#&gt; $smaller_pNADPH
+#&gt; [1] 7.326085
+#&gt; 
+#&gt; $max_error
+#&gt; [1] 0.02608707
+#&gt; </div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

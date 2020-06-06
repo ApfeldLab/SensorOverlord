@@ -4,7 +4,7 @@
 \alias{R_of_pLigand}
 \title{Finds R, given a pLigand}
 \usage{
-R_of_pLigand(pLigand, Rmin, Rmax, delta, pKd)
+R_of_pLigand(pLigand, Rmin, Rmax, delta, pKd, ...)
 }
 \arguments{
 \item{pLigand}{the sensor's pLigand}

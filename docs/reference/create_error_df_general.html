@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Creates a dataframe of errors in redox potential at given inaccuracies — create_error_df_redox • sensorOverlord</title>
+<title>Creates a dataframe of errors at given inaccuracies — create_error_df_general • sensorOverlord</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="Creates a dataframe of errors in redox potential at given inaccuracies — create_error_df_redox" />
-<meta property="og:description" content="Creates a dataframe of errors in redox potential at given inaccuracies" />
+<meta property="og:title" content="Creates a dataframe of errors at given inaccuracies — create_error_df_general" />
+<meta property="og:description" content="Creates a dataframe of errors at given inaccuracies" />
 
 
 
@@ -103,23 +103,26 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Creates a dataframe of errors in redox potential at given inaccuracies</h1>
+    <h1>Creates a dataframe of errors at given inaccuracies</h1>
     
-    <div class="hidden name"><code>create_error_df_redox.Rd</code></div>
+    <div class="hidden name"><code>create_error_df_general.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>Creates a dataframe of errors in redox potential at given inaccuracies</p>
+    <p>Creates a dataframe of errors at given inaccuracies</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_error_df_redox</span>(
+    <pre class="usage"><span class='fu'>create_error_df_general</span>(
   <span class='no'>inaccuracies</span>,
-  <span class='no'>Emin</span>,
-  <span class='no'>Emax</span>,
+  <span class='no'>param_name</span>,
+  <span class='no'>param_error_fun</span>,
+  <span class='no'>param_min</span>,
+  <span class='no'>param_max</span>,
   <span class='no'>Rmin</span>,
   <span class='no'>Rmax</span>,
   <span class='no'>delta</span>,
-  <span class='no'>e0</span>,
+  <span class='no'>midpoint</span>,
+  <span class='no'>...</span>,
   <span class='kw'>temp</span> <span class='kw'>=</span> <span class='fl'>295.15</span>,
   <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.01</span>
 )</pre>
@@ -132,12 +135,20 @@
       <td><p>A vector of inaccuracies (e.g. 0.02 for 2% error), always relative</p></td>
     </tr>
     <tr>
-      <th>Emin</th>
-      <td><p>The minimum redox potential, in mV, for which to record error</p></td>
+      <th>param_name</th>
+      <td><p>The name of the parameter</p></td>
     </tr>
     <tr>
-      <th>Emax</th>
-      <td><p>The maximum redox potential, in mV, for which to record error</p></td>
+      <th>param_error_fun</th>
+      <td><p>The function that finds the error in this parameter</p></td>
+    </tr>
+    <tr>
+      <th>param_min</th>
+      <td><p>The minimum param for which to record error</p></td>
+    </tr>
+    <tr>
+      <th>param_max</th>
+      <td><p>The maximum param in mV, for which to record error</p></td>
     </tr>
     <tr>
       <th>Rmin</th>
@@ -152,8 +163,12 @@
       <td><p>the ratiometric fluorescence in the first wavelength</p></td>
     </tr>
     <tr>
-      <th>e0</th>
-      <td><p>the sensor's midpoint potential</p></td>
+      <th>midpoint</th>
+      <td><p>the sensor's midpoint</p></td>
+    </tr>
+    <tr>
+      <th>...</th>
+      <td><p>Additional arguments to pass into the param_error_fun (before temperature)</p></td>
     </tr>
     <tr>
       <th>temp</th>
@@ -168,12 +183,12 @@
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
     <p>A dataframe of errors with columns:
-'E': the redox potential (mV),
-'Error': the error in this redox potential (mV)
+param: the value of the param
+'Error': the error in this param
 'Inaccuracy': The inaccuracy of the measurements (relative to R).</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>create_error_df_redox</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.01</span>, <span class='fl'>0.02</span>), -<span class='fl'>300</span>, -<span class='fl'>200</span>, <span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>0.2</span>, -<span class='fl'>275</span>)</div><div class='output co'>#&gt;             E       Error Inaccuracy
+    <pre class="examples"><div class='input'><span class='fu'>create_error_df_general</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.01</span>, <span class='fl'>0.02</span>), <span class='st'>"E"</span>, <span class='no'>Error_E</span>, -<span class='fl'>300</span>, -<span class='fl'>200</span>, <span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>0.2</span>, -<span class='fl'>275</span>)</div><div class='output co'>#&gt;             E       Error Inaccuracy
 #&gt; 1     -300.00   1.4008963       0.01
 #&gt; 2     -299.99   1.3999066       0.01
 #&gt; 3     -299.98   1.3989179       0.01

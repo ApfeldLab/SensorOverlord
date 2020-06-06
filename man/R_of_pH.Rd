@@ -4,7 +4,7 @@
 \alias{R_of_pH}
 \title{Finds R, given a pH}
 \usage{
-R_of_pH(pH, Rmin, Rmax, delta, pKa)
+R_of_pH(pH, Rmin, Rmax, delta, pKa, ...)
 }
 \arguments{
 \item{pH}{the sensor's pH}
@@ -16,6 +16,8 @@ R_of_pH(pH, Rmin, Rmax, delta, pKa)
 \item{delta}{the ratiometric fluorescence in the first wavelength}
 
 \item{pKa}{the sensor's pKa}
+
+\item{...}{Not used}
 }
 \value{
 the ratiometric fluoresence at this pH

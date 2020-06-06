@@ -4,7 +4,7 @@
 \alias{pH}
 \title{Finds pH, given R, Rmin, and Rmax}
 \usage{
-pH(R, Rmin, Rmax, delta, pKa)
+pH(R, Rmin, Rmax, delta, pKa, ...)
 }
 \arguments{
 \item{R}{the ratiometric fluorescence}
@@ -16,6 +16,8 @@ pH(R, Rmin, Rmax, delta, pKa)
 \item{delta}{the ratiometric fluorescence in the first wavelength}
 
 \item{pKa}{the sensor's pKa}
+
+\item{...}{unused}
 }
 \value{
 the pH, numeric

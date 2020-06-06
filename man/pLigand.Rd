@@ -4,7 +4,7 @@
 \alias{pLigand}
 \title{Finds pLigand, given R, Rmin, and Rmax}
 \usage{
-pLigand(R, Rmin, Rmax, delta, pKd)
+pLigand(R, Rmin, Rmax, delta, pKd, ...)
 }
 \arguments{
 \item{R}{the ratiometric fluorescence}
@@ -16,6 +16,8 @@ pLigand(R, Rmin, Rmax, delta, pKd)
 \item{delta}{the ratiometric fluorescence in the first wavelength}
 
 \item{pKd}{the sensor's pKd}
+
+\item{...}{not used}
 }
 \value{
 the pLigand, numeric

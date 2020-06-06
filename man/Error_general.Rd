@@ -66,6 +66,6 @@ A list with (1) 'E', the given redox potential,
 A general function for calculating the error in some parameter
 }
 \examples{
-Error_general(param = -275, param_name = "E", R_of_param = R_of_E, param_of_R = E,
+Error_general(param = -275, param_name = "E", R_of_param = R_of_E, param_of_R = sensorOverlord::E,
 Rmin = 1, Rmax = 5, delta = 0.2, midpoint = -275, error_R = function(x) 0.02 * x)
 }
