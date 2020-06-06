@@ -262,7 +262,7 @@ E <- function(R, Rmin, Rmax, delta, e0, temp = 295.15) {
 #' @export
 pH <- function(R, Rmin, Rmax, delta, pKa, ...) {
   return(pKa + log10(delta)
-         + log10((Rmax - R) / (R - Rmin)))
+    + log10((Rmax - R) / (R - Rmin)))
 }
 
 #' Finds pLigand, given R, Rmin, and Rmax
@@ -326,7 +326,7 @@ R_of_E <- function(E, Rmin, Rmax, delta, e0, temp = 295.15) {
 #' @export
 R_of_pH <- function(pH, Rmin, Rmax, delta, pKa, ...) {
   A <- 10^(pH - pKa) / delta
-  (Rmax + A*Rmin) / (A + 1)
+  (Rmax + A * Rmin) / (A + 1)
 }
 
 #' Finds R, given a pLigand
@@ -340,8 +340,10 @@ R_of_pH <- function(pH, Rmin, Rmax, delta, pKa, ...) {
 #' R_of_pLigand(pLigand = 2, Rmin = 1, Rmax = 5, delta = 0.2, pKd = 7)
 #' @export
 R_of_pLigand <- function(pLigand, Rmin, Rmax, delta, pKd, ...) {
-  R_of_pH(pH = pLigand, Rmin = Rmin, Rmax = Rmax, delta = delta,
-          pKa = pKd)
+  R_of_pH(
+    pH = pLigand, Rmin = Rmin, Rmax = Rmax, delta = delta,
+    pKa = pKd
+  )
 }
 
 # Errors (one output)-----------------------------------------------------------
@@ -382,23 +384,29 @@ R_of_pLigand <- function(pLigand, Rmin, Rmax, delta, pKd, ...) {
 #' (4) 'max_error' the largest possible difference between the observed and expected E
 #'
 #' @examples
-#' Error_general(param = -275, param_name = "E", R_of_param = R_of_E, param_of_R = sensorOverlord::E,
-#' Rmin = 1, Rmax = 5, delta = 0.2, midpoint = -275, error_R = function(x) 0.02 * x)
+#' Error_general(
+#'   param = -275, param_name = "E", R_of_param = R_of_E, param_of_R = sensorOverlord::E,
+#'   Rmin = 1, Rmax = 5, delta = 0.2, midpoint = -275, error_R = function(x) 0.02 * x
+#' )
 #' @export
 Error_general <- function(param, param_name, R_of_param, param_of_R,
                           Rmin, Rmax, delta, midpoint, error_R, temp = 295.15) {
   R <- R_of_param(param, Rmin, Rmax, delta, midpoint, temp)
-  larger_param <- suppressWarnings(param_of_R(R + error_R(R),
-                                              Rmin, Rmax, delta, midpoint, temp))
+  larger_param <- suppressWarnings(param_of_R(
+    R + error_R(R),
+    Rmin, Rmax, delta, midpoint, temp
+  ))
   larger_param[is.nan(larger_param)] <- Inf
-  smaller_param <- suppressWarnings(param_of_R(R - error_R(R),
-                                               Rmin, Rmax, delta, midpoint, temp))
+  smaller_param <- suppressWarnings(param_of_R(
+    R - error_R(R),
+    Rmin, Rmax, delta, midpoint, temp
+  ))
   smaller_param[is.nan(smaller_param)] <- Inf
   return_list <- list()
-  return_list[[param_name]] = param
-  return_list[[paste0("larger_", param_name)]] = larger_param
-  return_list[[paste0("smaller_", param_name)]] = smaller_param
-  return_list$max_error = pmax(abs(param - larger_param), abs(param - smaller_param))
+  return_list[[param_name]] <- param
+  return_list[[paste0("larger_", param_name)]] <- larger_param
+  return_list[[paste0("smaller_", param_name)]] <- smaller_param
+  return_list$max_error <- pmax(abs(param - larger_param), abs(param - smaller_param))
   return_list
 }
 
@@ -421,10 +429,12 @@ Error_general <- function(param, param_name, R_of_param, param_of_R,
 #' Error_E(E = -275, Rmin = 1, Rmax = 5, delta = 0.2, e0 = -275, error_R = function(x) 0.02 * x)
 #' @export
 Error_E <- function(E, Rmin, Rmax, delta, e0, error_R, temp = 295.15) {
-  Error_general(param = E, param_name = "E",
-                R_of_param = R_of_E, param_of_R = sensorOverlord::E,
-                Rmin = Rmin, Rmax = Rmax, delta = delta,
-                midpoint = e0, error_R = error_R, temp = temp)
+  Error_general(
+    param = E, param_name = "E",
+    R_of_param = R_of_E, param_of_R = sensorOverlord::E,
+    Rmin = Rmin, Rmax = Rmax, delta = delta,
+    midpoint = e0, error_R = error_R, temp = temp
+  )
 }
 
 #' What is the error in pH at a given pH,
@@ -446,10 +456,12 @@ Error_E <- function(E, Rmin, Rmax, delta, e0, error_R, temp = 295.15) {
 #' Error_pH(pH = 7.3, Rmin = 1, Rmax = 5, delta = 0.2, pKa = 8, error_R = function(x) 0.02 * x)
 #' @export
 Error_pH <- function(pH, Rmin, Rmax, delta, pKa, error_R, ...) {
-  Error_general(param = pH, param_name = "pH",
-                R_of_param = R_of_pH, param_of_R = sensorOverlord::pH,
-                Rmin = Rmin, Rmax = Rmax, delta = delta,
-                midpoint = pKa, error_R = error_R)
+  Error_general(
+    param = pH, param_name = "pH",
+    R_of_param = R_of_pH, param_of_R = sensorOverlord::pH,
+    Rmin = Rmin, Rmax = Rmax, delta = delta,
+    midpoint = pKa, error_R = error_R
+  )
 }
 
 #' What is the error in pLigand at a given pLigand,
@@ -469,14 +481,18 @@ Error_pH <- function(pH, Rmin, Rmax, delta, pKa, error_R, ...) {
 #' (4) 'max_error' the largest possible difference between the observed and expected E
 #'
 #' @examples
-#' Error_pLigand(pLigand = 7.3, ligand_name = "pNADPH",
-#' Rmin = 1, Rmax = 5, delta = 0.2, pKd = 8, error_R = function(x) 0.02 * x)
+#' Error_pLigand(
+#'   pLigand = 7.3, ligand_name = "pNADPH",
+#'   Rmin = 1, Rmax = 5, delta = 0.2, pKd = 8, error_R = function(x) 0.02 * x
+#' )
 #' @export
 Error_pLigand <- function(pLigand, Rmin, Rmax, delta, pKd, error_R, ligand_name, ...) {
-  Error_general(param = pLigand, param_name = ligand_name,
-                R_of_param = R_of_pLigand, param_of_R = sensorOverlord::pLigand,
-                Rmin = Rmin, Rmax = Rmax, delta = delta,
-                midpoint = pKd, error_R = error_R)
+  Error_general(
+    param = pLigand, param_name = ligand_name,
+    R_of_param = R_of_pLigand, param_of_R = sensorOverlord::pLigand,
+    Rmin = Rmin, Rmax = Rmax, delta = delta,
+    midpoint = pKd, error_R = error_R
+  )
 }
 
 # Error dataframes--------------------------------------------------------------
@@ -506,9 +522,9 @@ create_error_df_general <- function(inaccuracies, param_name,
                                     param_error_fun,
                                     param_min, param_max, Rmin, Rmax, delta, midpoint, ..., temp = 295.15, by = 0.01) {
   error_df_full <- data.frame()
-  error_df_full[[param_name]] = c()
-  error_df_full$Error = c()
-  error_df_full$Inaccuracy = c()
+  error_df_full[[param_name]] <- c()
+  error_df_full$Error <- c()
+  error_df_full$Inaccuracy <- c()
 
   for (inaccuracy in inaccuracies) {
     error <- param_error_fun(
@@ -518,9 +534,9 @@ create_error_df_general <- function(inaccuracies, param_name,
       temp = temp
     )
     new_df <- list()
-    new_df[[param_name]] = error[[param_name]]
-    new_df$Error = error$max_error
-    new_df$Inaccuracy = as.character(rep(inaccuracy, length(error$max_error)))
+    new_df[[param_name]] <- error[[param_name]]
+    new_df$Error <- error$max_error
+    new_df$Inaccuracy <- as.character(rep(inaccuracy, length(error$max_error)))
 
     error_df_full <- rbind(
       error_df_full,
@@ -549,10 +565,12 @@ create_error_df_general <- function(inaccuracies, param_name,
 #' create_error_df_redox(c(0.01, 0.02), -300, -200, 1, 5, 0.2, -275)
 #' @export
 create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e0, temp = 295.15, by = 0.01) {
-  create_error_df_general(inaccuracies = inaccuracies, param_name = "E",
-                          param_error_fun = Error_E, param_min = Emin, param_max = Emax,
-                          Rmin = Rmin, Rmax = Rmax, delta = delta,
-                          midpoint = e0, temp = temp, by = by)
+  create_error_df_general(
+    inaccuracies = inaccuracies, param_name = "E",
+    param_error_fun = Error_E, param_min = Emin, param_max = Emax,
+    Rmin = Rmin, Rmax = Rmax, delta = delta,
+    midpoint = e0, temp = temp, by = by
+  )
 }
 
 #' Creates a dataframe of errors in pH potential at given inaccuracies
@@ -574,10 +592,12 @@ create_error_df_redox <- function(inaccuracies, Emin, Emax, Rmin, Rmax, delta, e
 #' create_error_df_pH(c(0.01, 0.02), 2, 10, 1, 5, 0.2, 7)
 #' @export
 create_error_df_pH <- function(inaccuracies, pHmin, pHmax, Rmin, Rmax, delta, pKa, by = 0.01) {
-  create_error_df_general(inaccuracies = inaccuracies, param_name = "pH",
-                          param_error_fun = Error_pH, param_min = pHmin, param_max = pHmax,
-                          Rmin = Rmin, Rmax = Rmax, delta = delta,
-                          midpoint = pKa, by = by)
+  create_error_df_general(
+    inaccuracies = inaccuracies, param_name = "pH",
+    param_error_fun = Error_pH, param_min = pHmin, param_max = pHmax,
+    Rmin = Rmin, Rmax = Rmax, delta = delta,
+    midpoint = pKa, by = by
+  )
 }
 
 #' Creates a dataframe of errors in pLigand potential at given inaccuracies
@@ -597,13 +617,16 @@ create_error_df_pH <- function(inaccuracies, pHmin, pHmax, Rmin, Rmax, delta, pK
 #' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
 #' @examples
 #' create_error_df_pLigand(c(0.01, 0.02), 2, 10, 1, 5, 0.2, 7,
-#' ligand_name = "NADPH")
+#'   ligand_name = "NADPH"
+#' )
 #' @export
 create_error_df_pLigand <- function(inaccuracies, pLigand_min, pLigand_max, Rmin, Rmax, delta, pKd, by = 0.01, ligand_name = "ligand") {
-  create_error_df_general(inaccuracies = inaccuracies, param_name = ligand_name,
-                          param_error_fun = Error_pLigand, param_min = pLigand_min, param_max = pLigand_max,
-                          Rmin = Rmin, Rmax = Rmax, delta = delta,
-                          midpoint = pKd, by = by, ligand_name = ligand_name)
+  create_error_df_general(
+    inaccuracies = inaccuracies, param_name = ligand_name,
+    param_error_fun = Error_pLigand, param_min = pLigand_min, param_max = pLigand_max,
+    Rmin = Rmin, Rmax = Rmax, delta = delta,
+    midpoint = pKd, by = by, ligand_name = ligand_name
+  )
 }
 
 # Error dataframes at multiple inaccuracies ------------------------------------
@@ -629,38 +652,41 @@ create_error_df_pLigand <- function(inaccuracies, pLigand_min, pLigand_max, Rmin
 #' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
 #' @examples
 #' create_error_df_redox_multiple(
-#' c(0.01, 0.02), -300, -200,
-#' data.frame(
+#'   c(0.01, 0.02), -300, -200,
+#'   data.frame(
 #'     "Rmin" = c(1, 2),
 #'     "Rmax" = c(5, 6),
 #'     "delta" = c(0.2, 1.2),
 #'     "name" = c("normal", "plusOne"),
 #'     "e0" = c(-275, -274)
-#' )
+#'   )
 #' )
 #' @export
 create_error_df_redox_multiple <- function(inaccuracies, Emin, Emax, param_df, temp = 295.15, by = 0.01) {
-  error_df_full <- data.frame(E = c(), Rmin = c(), Rmax = c(),
-                              Name = c(), Error = c(), Inaccuracy = c())
+  error_df_full <- data.frame(
+    E = c(), Rmin = c(), Rmax = c(),
+    Name = c(), Error = c(), Inaccuracy = c()
+  )
   # Loop through each sensor in the param_df
-  for(n in 1:nrow(param_df)) {
+  for (n in 1:nrow(param_df)) {
     sensor_params <- param_df[n, ]
 
-    new_error <- create_error_df_redox(inaccuracies, Emin = Emin, Emax = Emax,
-                          Rmin = sensor_params[,"Rmin"], Rmax = sensor_params[,"Rmax"],
-                          delta = sensor_params[,"delta"], e0 = sensor_params[,"e0"],
-                          temp = temp, by = by)
+    new_error <- create_error_df_redox(inaccuracies,
+      Emin = Emin, Emax = Emax,
+      Rmin = sensor_params[, "Rmin"], Rmax = sensor_params[, "Rmax"],
+      delta = sensor_params[, "delta"], e0 = sensor_params[, "e0"],
+      temp = temp, by = by
+    )
 
-    new_error$Rmin = as.character(rep(sensor_params[,"Rmin"], length(new_error$E)))
-    new_error$Rmax = as.character(rep(sensor_params[,"Rmax"], length(new_error$E)))
-    new_error$Name = as.character(rep(sensor_params[,"name"], length(new_error$E)))
-    new_error %>%  mutate_if(is.factor, as.character) -> new_error
+    new_error$Rmin <- as.character(rep(sensor_params[, "Rmin"], length(new_error$E)))
+    new_error$Rmax <- as.character(rep(sensor_params[, "Rmax"], length(new_error$E)))
+    new_error$Name <- as.character(rep(sensor_params[, "name"], length(new_error$E)))
+    new_error %>% mutate_if(is.factor, as.character) -> new_error
 
     error_df_full <- rbind(
       error_df_full,
       new_error
     )
-
   }
   error_df_full
 }
@@ -685,38 +711,41 @@ create_error_df_redox_multiple <- function(inaccuracies, Emin, Emax, param_df, t
 #' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
 #' @examples
 #' create_error_df_pH_multiple(
-#' c(0.01, 0.02), 2, 10,
-#' data.frame(
+#'   c(0.01, 0.02), 2, 10,
+#'   data.frame(
 #'     "Rmin" = c(1, 2),
 #'     "Rmax" = c(5, 6),
 #'     "delta" = c(0.2, 1.2),
 #'     "name" = c("normal", "plusOne"),
 #'     "pKa" = c(7, 8)
-#' )
+#'   )
 #' )
 #' @export
 create_error_df_pH_multiple <- function(inaccuracies, pHmin, pHmax, param_df, by = 0.01) {
-  error_df_full <- data.frame(pH = c(), Rmin = c(), Rmax = c(),
-                              Name = c(), Error = c(), Inaccuracy = c())
+  error_df_full <- data.frame(
+    pH = c(), Rmin = c(), Rmax = c(),
+    Name = c(), Error = c(), Inaccuracy = c()
+  )
   # Loop through each sensor in the param_df
-  for(n in 1:nrow(param_df)) {
+  for (n in 1:nrow(param_df)) {
     sensor_params <- param_df[n, ]
 
-    new_error <- create_error_df_pH(inaccuracies, pHmin = pHmin, pHmax = pHmax,
-                                       Rmin = sensor_params[,"Rmin"], Rmax = sensor_params[,"Rmax"],
-                                       delta = sensor_params[,"delta"], pKa = sensor_params[,"pKa"],
-                                       by = by)
+    new_error <- create_error_df_pH(inaccuracies,
+      pHmin = pHmin, pHmax = pHmax,
+      Rmin = sensor_params[, "Rmin"], Rmax = sensor_params[, "Rmax"],
+      delta = sensor_params[, "delta"], pKa = sensor_params[, "pKa"],
+      by = by
+    )
 
-    new_error$Rmin = as.character(rep(sensor_params[,"Rmin"], length(new_error$E)))
-    new_error$Rmax = as.character(rep(sensor_params[,"Rmax"], length(new_error$E)))
-    new_error$Name = as.character(rep(sensor_params[,"name"], length(new_error$E)))
-    new_error %>%  mutate_if(is.factor, as.character) -> new_error
+    new_error$Rmin <- as.character(rep(sensor_params[, "Rmin"], length(new_error$E)))
+    new_error$Rmax <- as.character(rep(sensor_params[, "Rmax"], length(new_error$E)))
+    new_error$Name <- as.character(rep(sensor_params[, "name"], length(new_error$E)))
+    new_error %>% mutate_if(is.factor, as.character) -> new_error
 
     error_df_full <- rbind(
       error_df_full,
       new_error
     )
-
   }
   error_df_full
 }
@@ -742,39 +771,42 @@ create_error_df_pH_multiple <- function(inaccuracies, pHmin, pHmax, param_df, by
 #' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
 #' @examples
 #' create_error_df_pLigand_multiple(
-#' c(0.01, 0.02), 2, 10,
-#' data.frame(
+#'   c(0.01, 0.02), 2, 10,
+#'   data.frame(
 #'     "Rmin" = c(1, 2),
 #'     "Rmax" = c(5, 6),
 #'     "delta" = c(0.2, 1.2),
 #'     "name" = c("normal", "plusOne"),
 #'     "pKd" = c(7, 8)
-#' ),
-#' ligand_name = "NADPH"
+#'   ),
+#'   ligand_name = "NADPH"
 #' )
 #' @export
 create_error_df_pLigand_multiple <- function(inaccuracies, pLigand_min, pLigand_max, param_df, by = 0.01, ligand_name) {
-  error_df_full <- data.frame(ligand_name = c(), Rmin = c(), Rmax = c(),
-                              Name = c(), Error = c(), Inaccuracy = c())
+  error_df_full <- data.frame(
+    ligand_name = c(), Rmin = c(), Rmax = c(),
+    Name = c(), Error = c(), Inaccuracy = c()
+  )
   # Loop through each sensor in the param_df
-  for(n in 1:nrow(param_df)) {
+  for (n in 1:nrow(param_df)) {
     sensor_params <- param_df[n, ]
 
-    new_error <- create_error_df_pLigand(inaccuracies, pLigand_min = pLigand_min, pLigand_max = pLigand_max,
-                                    Rmin = sensor_params[,"Rmin"], Rmax = sensor_params[,"Rmax"],
-                                    delta = sensor_params[,"delta"], pKd = sensor_params[,"pKd"],
-                                    by = by, ligand_name = ligand_name)
+    new_error <- create_error_df_pLigand(inaccuracies,
+      pLigand_min = pLigand_min, pLigand_max = pLigand_max,
+      Rmin = sensor_params[, "Rmin"], Rmax = sensor_params[, "Rmax"],
+      delta = sensor_params[, "delta"], pKd = sensor_params[, "pKd"],
+      by = by, ligand_name = ligand_name
+    )
 
-    new_error$Rmin = as.character(rep(sensor_params[,"Rmin"], length(new_error$E)))
-    new_error$Rmax = as.character(rep(sensor_params[,"Rmax"], length(new_error$E)))
-    new_error$Name = as.character(rep(sensor_params[,"name"], length(new_error$E)))
-    new_error %>%  mutate_if(is.factor, as.character) -> new_error
+    new_error$Rmin <- as.character(rep(sensor_params[, "Rmin"], length(new_error$E)))
+    new_error$Rmax <- as.character(rep(sensor_params[, "Rmax"], length(new_error$E)))
+    new_error$Name <- as.character(rep(sensor_params[, "name"], length(new_error$E)))
+    new_error %>% mutate_if(is.factor, as.character) -> new_error
 
     error_df_full <- rbind(
       error_df_full,
       new_error
     )
-
   }
   error_df_full
 }
@@ -798,37 +830,39 @@ create_error_df_pLigand_multiple <- function(inaccuracies, pLigand_min, pLigand_
 #' 'error_thresh': the error threshold associated with this row (mV)
 #' @examples
 #' error_df <- create_error_df_redox_multiple(
-#' c(0.02), -400, -200,
-#' data.frame(
-#'   Rmin = 0.97,
-#'   Rmax = 4.12,
-#'   delta = 0.23,
-#'   name = "roGFP2",
-#'   e0 = -299
-#' )
+#'   c(0.02), -400, -200,
+#'   data.frame(
+#'     Rmin = 0.97,
+#'     Rmax = 4.12,
+#'     delta = 0.23,
+#'     name = "roGFP2",
+#'     e0 = -299
+#'   )
 #' )
 #' create_ranges_multiple(error_df)
 #' @import dplyr
 #' @export
 create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5), parameter = "E") {
-  ranges_df <- data.frame("Sensor_Name" = c(), "Minimum" = c(),
-                          "Inaccuracy" = c(), "Maximum" = c(),
-                          "error_thresh" = c())
-  names <- unique(error_df[,"Name"])
-  inaccuracies <- unique(error_df[,"Inaccuracy"])
-  for(inaccuracy in inaccuracies) {
+  ranges_df_temp <- data.frame(
+    "Sensor_Name" = c(), "Minimum" = c(),
+    "Inaccuracy" = c(), "Maximum" = c(),
+    "error_thresh" = c()
+  )
+  names <- unique(error_df[, "Name"])
+  inaccuracies <- unique(error_df[, "Inaccuracy"])
+  for (inaccuracy in inaccuracies) {
     error_df_inaccuracy <- error_df %>% dplyr::filter(Inaccuracy == inaccuracy)
-    for(name in names) {
+    for (name in names) {
       sensor_error <- error_df_inaccuracy %>% dplyr::filter(Name == name)
-      for(thresh in thresholds) {
+      for (thresh in thresholds) {
         within_threshold <- sensor_error %>%
           dplyr::filter(Error <= thresh)
-        maximum_value <- suppressWarnings(max(within_threshold[,parameter]))
-        minimum_value <- suppressWarnings(min(within_threshold[,parameter]))
+        maximum_value <- suppressWarnings(max(within_threshold[, parameter]))
+        minimum_value <- suppressWarnings(min(within_threshold[, parameter]))
         new_df <- data.frame(
           "Sensor_Name" = paste0(name, "_", as.character(inaccuracy)),
-          "Minimum" = if(is.finite(minimum_value)) minimum_value else "NA",
-          "Maximum" = if(is.finite(maximum_value)) maximum_value else "NA",
+          "Minimum" = if (is.finite(minimum_value)) minimum_value else "NA",
+          "Maximum" = if (is.finite(maximum_value)) maximum_value else "NA",
           "Inaccuracy" = inaccuracy,
           "error_thresh" = thresh,
           stringsAsFactors = FALSE
@@ -842,17 +876,19 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
   }
 
   # Include multiple inaccuracies in this dataframe, if appliciable
-  ranges_df <- data.frame("Sensor_Name" = c(), "Minimum" = c(),
-                               "Inaccuracy" = c(), "Maximum" = c(),
-                               "error_thresh" = c())
+  ranges_df <- data.frame(
+    "Sensor_Name" = c(), "Minimum" = c(),
+    "Inaccuracy" = c(), "Maximum" = c(),
+    "error_thresh" = c()
+  )
   inaccuracy_frequencies <- data.frame(table(error_df[, "Inaccuracy"]))
   inaccuracy_frequencies$Freq <- inaccuracy_frequencies$Freq / min(inaccuracy_frequencies$Freq)
-  for(i in 1:nrow(inaccuracy_frequencies)) {
-    current_inaccuracy <- as.character(inaccuracy_frequencies[i,1])
+  for (i in 1:nrow(inaccuracy_frequencies)) {
+    current_inaccuracy <- as.character(inaccuracy_frequencies[i, 1])
     relevant_ranges <- ranges_df_temp %>% dplyr::filter(Inaccuracy == current_inaccuracy)
     ranges_df <- rbind(
       ranges_df,
-      relevant_ranges[rep(1:nrow(relevant_ranges), inaccuracy_frequencies[i,2]),]
+      relevant_ranges[rep(1:nrow(relevant_ranges), inaccuracy_frequencies[i, 2]), ]
     )
   }
   ranges_df
@@ -880,10 +916,14 @@ plot_ranges_general <- function(ranges, ylim, by, y_label) {
   suppressWarnings(ranges$Maximum <- as.numeric(ranges$Maximum))
   ranges <- ranges[complete.cases(ranges), ]
   ggplot() +
-    geom_linerange(data = ranges %>% arrange(-error_thresh),
-                    mapping=aes(x = Sensor_Name, ymin = Minimum,
-                                ymax = Maximum, lwd = 1, color = error_thresh),
-                   size = 10) +
+    geom_linerange(
+      data = ranges %>% arrange(-error_thresh),
+      mapping = aes(
+        x = Sensor_Name, ymin = Minimum,
+        ymax = Maximum, lwd = 1, color = error_thresh
+      ),
+      size = 10
+    ) +
     scale_y_continuous(breaks = seq(ylim[1], ylim[2], by = by)) +
     scale_color_continuous(high = "lightgreen", low = "forestgreen") +
     xlab("") +
@@ -906,14 +946,14 @@ plot_ranges_general <- function(ranges, ylim, by, y_label) {
 #' @return A ggplot object
 #' @examples
 #' error_df <- create_error_df_redox_multiple(
-#' c(0.02, 0.04), -400, -200,
-#' data.frame(
-#'   Rmin = 0.97,
-#'   Rmax = 4.12,
-#'   delta = 0.23,
-#'   name = "roGFP2",
-#'   e0 = -299
-#' )
+#'   c(0.02, 0.04), -400, -200,
+#'   data.frame(
+#'     Rmin = 0.97,
+#'     Rmax = 4.12,
+#'     delta = 0.23,
+#'     name = "roGFP2",
+#'     e0 = -299
+#'   )
 #' )
 #' ranges_df <- create_ranges_multiple(error_df)
 #' plot_ranges_redox(ranges_df)
@@ -940,24 +980,26 @@ plot_ranges_redox <- function(ranges, ylim = c(-350, -150),
 #' @return A ggplot object
 #' @examples
 #' error_df <- create_error_df_pH_multiple(
-#' c(0.01, 0.02), 2, 10,
-#' data.frame(
-#'   "Rmin" = c(1, 2),
-#'   "Rmax" = c(5, 6),
-#'   "delta" = c(0.2, 1.2),
-#'   "name" = c("normal", "plusOne"),
-#'   "pKa" = c(7, 8)
+#'   c(0.01, 0.02), 2, 10,
+#'   data.frame(
+#'     "Rmin" = c(1, 2),
+#'     "Rmax" = c(5, 6),
+#'     "delta" = c(0.2, 1.2),
+#'     "name" = c("normal", "plusOne"),
+#'     "pKa" = c(7, 8)
+#'   )
 #' )
+#' ranges_df <- create_ranges_multiple(error_df,
+#'   parameter = "pH",
+#'   thresholds = c(0.01, 0.05, 0.10, 0.15, 0.20)
 #' )
-#' ranges_df <- create_ranges_multiple(error_df, parameter = "pH",
-#' thresholds = c(0.01, 0.05, 0.10, 0.15, 0.20))
 #' plot_ranges_pH(ranges_df)
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import cowplot
 #' @export
 plot_ranges_pH <- function(ranges, ylim = c(1, 14),
-                              by = 1, ylab = "pH") {
+                           by = 1, ylab = "pH") {
   plot_ranges_general(ranges, ylim, by, y_label = ylab)
 }
 
@@ -974,25 +1016,26 @@ plot_ranges_pH <- function(ranges, ylim = c(1, 14),
 #' @return A ggplot object
 #' @examples
 #' error_df <- create_error_df_pLigand_multiple(
-#' c(0.01, 0.02), 2, 10,
-#' data.frame(
-#'   "Rmin" = c(1, 2),
-#'   "Rmax" = c(5, 6),
-#'   "delta" = c(0.2, 1.2),
-#'   "name" = c("normal", "plusOne"),
-#'   "pKd" = c(7, 8)
-#' ),
-#' ligand_name = "NADPH"
+#'   c(0.01, 0.02), 2, 10,
+#'   data.frame(
+#'     "Rmin" = c(1, 2),
+#'     "Rmax" = c(5, 6),
+#'     "delta" = c(0.2, 1.2),
+#'     "name" = c("normal", "plusOne"),
+#'     "pKd" = c(7, 8)
+#'   ),
+#'   ligand_name = "NADPH"
 #' )
-#' ranges_df <- create_ranges_multiple(error_df, parameter = "NADPH",
-#' thresholds = c(0.01, 0.05, 0.10, 0.15, 0.20))
+#' ranges_df <- create_ranges_multiple(error_df,
+#'   parameter = "NADPH",
+#'   thresholds = c(0.01, 0.05, 0.10, 0.15, 0.20)
+#' )
 #' plot_ranges_pLigand(ranges_df, ylab = "pNADPH")
 #' @import ggplot2
 #' @import RColorBrewer
 #' @import cowplot
 #' @export
 plot_ranges_pLigand <- function(ranges, ylim = c(1, 14),
-                           by = 1, ylab = "pLigand") {
+                                by = 1, ylab = "pLigand") {
   plot_ranges_general(ranges, ylim, by, y_label = ylab)
 }
-

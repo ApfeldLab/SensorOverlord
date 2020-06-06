@@ -74,6 +74,7 @@ test_that("Ranges are reasonable for a pLigand sensor", {
   expect_lt(as.numeric(ranges$Maximum[2]) - 8.85, 0.001)
   expect_lt(as.numeric(ranges$Maximum[3]) - 8.88, 0.001)
   expect_lt(as.numeric(ranges$Maximum[4]) - 8.89, 0.001)
+})
 
 test_that("Multiple inaccuracies are not excluded from a ranges df", {
   my_sensor <- data.frame(name = "Sensor", Rmin = 0.852, Rmax = 6.65,
