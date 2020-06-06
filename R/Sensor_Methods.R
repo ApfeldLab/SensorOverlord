@@ -770,8 +770,8 @@ setMethod(
 #' Adding this method on 31 May 2020, hoping this style will depreciate
 #' getErrorTable in the future.
 #'
-#' @param object A redoxSensor object
-#' @param inaccuracies (optional, default: c(0.02)) A vector of inaccuracies
+#' @param object A pHSensor object
+#' @param inaccuracies (optional, default: c(0.01)) A vector of inaccuracies
 #' (e.g. 0.02 for 2\% error), always relative
 #' @param pHmin (optional, default: 1)  The minimum pH
 #' for which to record error
@@ -785,7 +785,7 @@ setMethod(
 #' 'pH': the pH,
 #' 'Rmin': the minimum possible ratiometric fluorescence for this sensor
 #' 'Rmax': the maximum possible ratiometric fluorescence for this sensor
-#' 'Error': the error in this redox potential
+#' 'Error': the error in this pH
 #' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
 #' @examples
 #' my_sensor <- new("pHSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2), pKa = 7)
@@ -811,6 +811,56 @@ setMethod(
       )
     }
 )
+
+#' Finds the error df of this ligand sensor at given inaccuracies
+#'
+#' Adding this method on 31 May 2020, hoping this style will depreciate
+#' getErrorTable in the future.
+#'
+#' @param object A ligandSensor object
+#' @param inaccuracies (optional, default: c(0.01)) A vector of inaccuracies
+#' (e.g. 0.02 for 2\% error), always relative
+#' @param pLigand_min (optional, default: 1)  The minimum pLigand
+#' for which to record error
+#' @param pLigandmax (optional, default: 14) The maximum pLigand
+#' for which to record error
+#' @param by (optional, default: 0.001) The granularity of the error table--e.g.,
+#'  by = 0.01 would record 7 and 7.01, etc.
+#' @param name (optional, default: "Sensor") A name for this sensor
+#' @return A dataframe of errors with columns:
+#' 'Name': this sensor name
+#' 'pLigand': the pLigand,
+#' 'Rmin': the minimum possible ratiometric fluorescence for this sensor
+#' 'Rmax': the maximum possible ratiometric fluorescence for this sensor
+#' 'Error': the error in this pLigand
+#' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
+#' @examples
+#' my_sensor <- new("ligandSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2),
+#' pKd = 7, ligand_name = "NADPH")
+#' error_df(my_sensor,
+#'   inaccuracies = c(0.01, 0.02), pLigand_min = 1, pLigand_max = 14,
+#' )
+#' @export
+setMethod(
+  "error_df",
+  "ligandSensor",
+  definition =
+    function(object, inaccuracies = c(0.01), pLigand_min = 1, pLigand_max = 14,
+             by = 0.001, name = "Sensor") {
+      create_error_df_pLigand_multiple(
+        inaccuracies = inaccuracies, pLigand_min = pLigand_min, pLigand_max = pLigand_max,
+        param_df = data.frame(
+          Rmin = object@Rmin,
+          Rmax = object@Rmax,
+          delta = object@delta,
+          name = name,
+          pKd = object@pKd
+        ),
+        ligand_name = object@ligand_name
+      )
+    }
+)
+
 
 #' Find the ranges df of an object
 #'
@@ -914,6 +964,50 @@ setMethod(
     }
 )
 
+#' Finds the ranges df of this ligand sensor at given inaccuracies
+#'
+#' Adding this method on 31 May 2020, hoping this style will depreciate
+#' getErrorTable in the future.
+#'
+#' @param object A ligandSensor object
+#' @param inaccuracies (optional, default: c(0.02)) A vector of inaccuracies
+#' (e.g. 0.02 for 2\% error), always relative
+#' @param pLigand_min (optional, default: 1)  The minimum pLigand
+#' for which to record error
+#' @param pLigand_max (optional, default: 14) The maximum pLigand
+#' for which to record error
+#' @param by (optional, default: 0.001) The granularity of the error table--e.g.,
+#'  by = 0.01 would record 7 and 7.01, etc.
+#' @param name (optional, default: "Sensor") A name for this sensor
+#' @param thresholds A vector of error thresholds (e.g. c(0.5, 1) for 0.5 and 1)
+#' @return A dataframe of suited ranges with these columns:
+#' 'Sensor_Name': the name of the sensor
+#' 'Minimum': the minimum pLigand measurable at the given inaccuracy
+#' 'Maximum': the maximum pLigand measurable at the given inaccuracy
+#' 'Inaccuracy': the inaccuracy associated with this row (relative)
+#' 'error_thresh': the error threshold associated with this row
+#' @examples
+#' my_sensor <- new("ligandSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2),
+#' pKa = 7, ligand_name = "NADPH")
+#' ranges_df(my_sensor)
+#' @export
+setMethod(
+  "ranges_df",
+  "ligandSensor",
+  definition =
+    function(object, inaccuracies = c(0.02), pLigand_min = 1, pLigand_max = 14,
+             by = 0.001, name = "Sensor", thresholds = c(0.01, 0.05, 0.1, 0.15, 0.2)) {
+      create_ranges_multiple(
+        error_df = error_df(object,
+                            inaccuracies = inaccuracies,
+                            pLigand_min = pLigand_min, pLigand_max = pLigand_max,
+                            by = by, name = name
+        ),
+        thresholds = thresholds, parameter = object@ligand_name
+      )
+    }
+)
+
 #' Make a rangeplot for this object
 #'
 #' @param object An object
@@ -978,5 +1072,33 @@ setMethod(
   definition =
     function(object, ranges = ranges_df(object), ylim = c(1, 14), by = 1) {
       plot_ranges_pH(ranges, ylim = ylim, by = by)
+    }
+)
+
+#' Make a plot of the suited ranges for this ligandSensor
+#'
+#'
+#' @param object A ligandSensor object
+#' @param ranges (optional, default = ranges_df(object)) A ranges dataframe)
+#' @return A dataframe of suited ranges with these columns:
+#' 'Sensor_Name': the name of the sensor
+#' 'Minimum': the minimum pLigand measurable at the given inaccuracy
+#' 'Maximum': the maximum pLigand measurable at the given inaccuracy
+#' 'Inaccuracy': the inaccuracy associated with this row (relative)
+#' 'error_thresh': the error threshold associated with this row (mV)
+#' @param ylim The limits of the ranges plot
+#' @param by the 'by' argument of the limits axis tick marks
+#' @examples
+#' my_sensor <- new("ligandSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2),
+#' pKd = 7, ligand_name = "NADPH")
+#' rangePlot(my_sensor)
+#' @export
+setMethod(
+  "rangePlot",
+  "ligandSensor",
+  definition =
+    function(object, ranges = ranges_df(object), ylim = c(1, 14), by = 1) {
+      plot_ranges_pLigand(ranges, ylim = ylim, by = by,
+                          ylab = paste0("p[", object@ligand_name, "]"))
     }
 )
