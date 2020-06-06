@@ -790,6 +790,7 @@ create_error_df_pLigand_multiple <- function(inaccuracies, pLigand_min, pLigand_
 #' 'Error': the error in this redox potential (mV)
 #' 'Inaccuracy': The inaccuracy of the measurements (relative to R).
 #' @param thresholds A vector of error thresholds (e.g. c(0.5, 1) for 0.5mV and 1mV)
+#' @param parameter the biochemical value being measured
 #' @return A dataframe of suited ranges with these columns:
 #' 'Sensor_Name': the name of the sensor
 #' 'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
@@ -810,7 +811,7 @@ create_error_df_pLigand_multiple <- function(inaccuracies, pLigand_min, pLigand_
 #' create_ranges_multiple(error_df)
 #' @import dplyr
 #' @export
-create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)) {
+create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5), parameter = "E") {
   ranges_df <- data.frame("Sensor_Name" = c(), "Minimum" = c(),
                           "Inaccuracy" = c(), "Maximum" = c(),
                           "error_thresh" = c())
@@ -823,8 +824,8 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
       for(thresh in thresholds) {
         within_threshold <- sensor_error %>%
           dplyr::filter(Error <= thresh)
-        maximum_value <- suppressWarnings(max(within_threshold[,"E"]))
-        minimum_value <- suppressWarnings(min(within_threshold[,"E"]))
+        maximum_value <- suppressWarnings(max(within_threshold[,parameter]))
+        minimum_value <- suppressWarnings(min(within_threshold[,parameter]))
         new_df <- data.frame(
           "Sensor_Name" = paste0(name, "_", as.character(inaccuracy)),
           "Minimum" = if(is.finite(minimum_value)) minimum_value else "NA",
@@ -848,12 +849,47 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
 #' Takes in a ranges_df dataframe and makes a plot!
 #' @param ranges A dataframe of ranges with at least these columns:
 #' 'Sensor_Name': the name of the sensor
+#' 'Minimum': the minimum parameter measurable at the given inaccuracy
+#' 'Maximum': the maximum parameter measurable at the given inaccuracy
+#' 'Inaccuracy': the inaccuracy associated with this row (relative)
+#' 'error_thresh': the error threshold associated with this row
+#' @param ylim The limits of the ranges plot
+#' @param by the 'by' argument of the limits axis tick marks
+#' @return A ggplot object
+#' @examples
+#' @import ggplot2
+#' @import RColorBrewer
+#' @import cowplot
+#' @export
+plot_ranges_general <- function(ranges, ylim, by, y_label) {
+  ranges$Inaccuracy <- as.numeric(ranges$Inaccuracy)
+  suppressWarnings(ranges$Minimum <- as.numeric(ranges$Minimum))
+  suppressWarnings(ranges$Maximum <- as.numeric(ranges$Maximum))
+  ranges <- ranges[complete.cases(ranges), ]
+  ggplot() +
+    geom_linerange(data = ranges %>% arrange(-error_thresh),
+                    mapping=aes(x = Sensor_Name, ymin = Minimum,
+                                ymax = Maximum, lwd = 1, color = error_thresh),
+                   size = 10) +
+    scale_y_continuous(breaks = seq(ylim[1], ylim[2], by = by)) +
+    scale_color_continuous(high = "lightgreen", low = "forestgreen") +
+    xlab("") +
+    ylab(y_label) +
+    theme_classic() +
+    theme(aspect.ratio = 1) +
+    coord_flip(ylim = ylim)
+}
+
+#' Takes in a ranges_df dataframe and makes a plot (for redox).
+#' @param ranges A dataframe of ranges with at least these columns:
+#' 'Sensor_Name': the name of the sensor
 #' 'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
 #' 'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
 #' 'Inaccuracy': the inaccuracy associated with this row (relative)
 #' 'error_thresh': the error threshold associated with this row (mV)
 #' @param ylim The limits of the ranges plot
 #' @param by the 'by' argument of the limits axis tick marks
+#' @param ylab The label of the ranges plot
 #' @return A ggplot object
 #' @examples
 #' error_df <- create_error_df_redox_multiple(
@@ -872,24 +908,78 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
 #' @import RColorBrewer
 #' @import cowplot
 #' @export
-plot_ranges_redox <- function(ranges, ylim = c(-350, -150), by = 20) {
-  ranges$Inaccuracy <- as.numeric(ranges$Inaccuracy)
-  suppressWarnings(ranges$Minimum <- as.numeric(ranges$Minimum))
-  suppressWarnings(ranges$Maximum <- as.numeric(ranges$Maximum))
-  ranges <- ranges[complete.cases(ranges), ]
-  ggplot() +
-    geom_linerange(data = ranges %>% arrange(-error_thresh),
-                    mapping=aes(x = Sensor_Name, ymin = Minimum,
-                                ymax = Maximum, lwd = 1, color = error_thresh),
-                   size = 10) +
-    scale_y_continuous(breaks = seq(ylim[1], ylim[2], by = by)) +
-    scale_color_continuous(high = "lightgreen", low = "forestgreen") +
-    xlab("") +
-    ylab("Glutathione Redox Potential (mV)") +
-    theme_classic() +
-    theme(aspect.ratio = 1) +
-    coord_flip(ylim = c(-350, -150))
+plot_ranges_redox <- function(ranges, ylim = c(-350, -150),
+                              by = 20, ylab = "Glutathione Redox Potential (mV)") {
+  plot_ranges_general(ranges, ylim, by, y_label = ylab)
 }
 
 
+#' Takes in a ranges_df dataframe and makes a plot (for pH).
+#' @param ranges A dataframe of ranges with at least these columns:
+#' 'Sensor_Name': the name of the sensor
+#' 'Minimum': the minimum pH measurable at the given inaccuracy
+#' 'Maximum': the maximum pH measurable at the given inaccuracy
+#' 'Inaccuracy': the inaccuracy associated with this row (relative)
+#' 'error_thresh': the error threshold associated with this row
+#' @param ylim The limits of the ranges plot
+#' @param by the 'by' argument of the limits axis tick marks
+#' @param ylab The label of the ranges plot
+#' @return A ggplot object
+#' @examples
+#' error_df <- create_error_df_pH_multiple(
+#' c(0.01, 0.02), 2, 10,
+#' data.frame(
+#'   "Rmin" = c(1, 2),
+#'   "Rmax" = c(5, 6),
+#'   "delta" = c(0.2, 1.2),
+#'   "name" = c("normal", "plusOne"),
+#'   "pKa" = c(7, 8)
+#' )
+#' )
+#' ranges_df <- create_ranges_multiple(error_df, parameter = "pH",
+#' thresholds = c(0.01, 0.05, 0.10, 0.15, 0.20))
+#' plot_ranges_pH(ranges_df)
+#' @import ggplot2
+#' @import RColorBrewer
+#' @import cowplot
+#' @export
+plot_ranges_pH <- function(ranges, ylim = c(1, 14),
+                              by = 1, ylab = "pH") {
+  plot_ranges_general(ranges, ylim, by, y_label = ylab)
+}
+
+#' Takes in a ranges_df dataframe and makes a plot (for pLigand).
+#' @param ranges A dataframe of ranges with at least these columns:
+#' 'Sensor_Name': the name of the sensor
+#' 'Minimum': the minimum pLigand measurable at the given inaccuracy
+#' 'Maximum': the maximum pLigand measurable at the given inaccuracy
+#' 'Inaccuracy': the inaccuracy associated with this row (relative)
+#' 'error_thresh': the error threshold associated with this row
+#' @param ylim The limits of the ranges plot
+#' @param by the 'by' argument of the limits axis tick marks
+#' @param ylab The label of the ranges plot
+#' @return A ggplot object
+#' @examples
+#' error_df <- create_error_df_pLigand_multiple(
+#' c(0.01, 0.02), 2, 10,
+#' data.frame(
+#'   "Rmin" = c(1, 2),
+#'   "Rmax" = c(5, 6),
+#'   "delta" = c(0.2, 1.2),
+#'   "name" = c("normal", "plusOne"),
+#'   "pKd" = c(7, 8)
+#' ),
+#' ligand_name = "NADPH"
+#' )
+#' ranges_df <- create_ranges_multiple(error_df, parameter = "NADPH",
+#' thresholds = c(0.01, 0.05, 0.10, 0.15, 0.20))
+#' plot_ranges_pLigand(ranges_df, ylab = "pNADPH")
+#' @import ggplot2
+#' @import RColorBrewer
+#' @import cowplot
+#' @export
+plot_ranges_pLigand <- function(ranges, ylim = c(1, 14),
+                           by = 1, ylab = "pLigand") {
+  plot_ranges_general(ranges, ylim, by, y_label = ylab)
+}
 
