@@ -833,12 +833,27 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
           "error_thresh" = thresh,
           stringsAsFactors = FALSE
         )
-        ranges_df <- rbind(
-          ranges_df,
+        ranges_df_temp <- rbind(
+          ranges_df_temp,
           new_df
         )
       }
     }
+  }
+
+  # Include multiple inaccuracies in this dataframe, if appliciable
+  ranges_df <- data.frame("Sensor_Name" = c(), "Minimum" = c(),
+                               "Inaccuracy" = c(), "Maximum" = c(),
+                               "error_thresh" = c())
+  inaccuracy_frequencies <- data.frame(table(error_df[, "Inaccuracy"]))
+  inaccuracy_frequencies$Freq <- inaccuracy_frequencies$Freq / min(inaccuracy_frequencies$Freq)
+  for(i in 1:nrow(inaccuracy_frequencies)) {
+    current_inaccuracy <- as.character(inaccuracy_frequencies[i,1])
+    relevant_ranges <- ranges_df_temp %>% dplyr::filter(Inaccuracy == current_inaccuracy)
+    ranges_df <- rbind(
+      ranges_df,
+      relevant_ranges[rep(1:nrow(relevant_ranges), inaccuracy_frequencies[i,2]),]
+    )
   }
   ranges_df
 }
