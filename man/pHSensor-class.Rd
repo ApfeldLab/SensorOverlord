@@ -3,9 +3,9 @@
 \docType{class}
 \name{pHSensor-class}
 \alias{pHSensor-class}
-\title{An S4 class to represent a 2-state redox sensor}
+\title{An S4 class to represent a 2-state pH sensor}
 \description{
-An S4 class to represent a 2-state redox sensor
+An S4 class to represent a 2-state pH sensor
 }
 \section{Slots}{
 
@@ -17,6 +17,6 @@ An S4 class to represent a 2-state redox sensor
 \item{\code{delta}}{To represent the ratio between emission in the
 deprotenated and protenated states in the second wavelength of the ratio.}
 
-\item{\code{pKa}}{The midpoint/pKa of the redox sensor}
+\item{\code{pKa}}{The midpoint/pKa of the pH sensor}
 }}
 

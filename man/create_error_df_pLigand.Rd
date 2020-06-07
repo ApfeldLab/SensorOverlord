@@ -46,5 +46,6 @@ Creates a dataframe of errors in pLigand potential at given inaccuracies
 }
 \examples{
 create_error_df_pLigand(c(0.01, 0.02), 2, 10, 1, 5, 0.2, 7,
-ligand_name = "NADPH")
+  ligand_name = "NADPH"
+)
 }

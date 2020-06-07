@@ -117,7 +117,11 @@ e.g. minimum and maximum measureable value at different error thresholds for eac
 e.g. minimum and maximum measureable value at different error thresholds for each sensor.</p>
     </div>
 
-    <pre class="usage"><span class='fu'>create_ranges_multiple</span>(<span class='no'>error_df</span>, <span class='kw'>thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>1</span>, <span class='fl'>1.5</span>, <span class='fl'>2</span>, <span class='fl'>2.5</span>))</pre>
+    <pre class="usage"><span class='fu'>create_ranges_multiple</span>(
+  <span class='no'>error_df</span>,
+  <span class='kw'>thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>1</span>, <span class='fl'>1.5</span>, <span class='fl'>2</span>, <span class='fl'>2.5</span>),
+  <span class='kw'>parameter</span> <span class='kw'>=</span> <span class='st'>"E"</span>
+)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
@@ -134,6 +138,10 @@ e.g. minimum and maximum measureable value at different error thresholds for eac
       <th>thresholds</th>
       <td><p>A vector of error thresholds (e.g. c(0.5, 1) for 0.5mV and 1mV)</p></td>
     </tr>
+    <tr>
+      <th>parameter</th>
+      <td><p>the biochemical value being measured</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -147,14 +155,14 @@ e.g. minimum and maximum measureable value at different error thresholds for eac
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='no'>error_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_error_df_redox_multiple.html'>create_error_df_redox_multiple</a></span>(
-<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.02</span>), -<span class='fl'>400</span>, -<span class='fl'>200</span>,
-<span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
-  <span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>0.97</span>,
-  <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>4.12</span>,
-  <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.23</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"roGFP2"</span>,
-  <span class='kw'>e0</span> <span class='kw'>=</span> -<span class='fl'>299</span>
-)
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.02</span>), -<span class='fl'>400</span>, -<span class='fl'>200</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+    <span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>0.97</span>,
+    <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>4.12</span>,
+    <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.23</span>,
+    <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"roGFP2"</span>,
+    <span class='kw'>e0</span> <span class='kw'>=</span> -<span class='fl'>299</span>
+  )
 )
 <span class='fu'>create_ranges_multiple</span>(<span class='no'>error_df</span>)</div><div class='output co'>#&gt;   Sensor_Name Minimum Maximum Inaccuracy error_thresh
 #&gt; 1 roGFP2_0.02      NA      NA       0.02          0.5

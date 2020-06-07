@@ -911,27 +911,28 @@ create_ranges_multiple <- function(error_df, thresholds = c(0.5, 1, 1.5, 2, 2.5)
 #' @import cowplot
 #' @export
 plot_ranges_general <- function(ranges, ylim, by, y_label) {
-  ranges$Inaccuracy <- as.numeric(ranges$Inaccuracy)
-  suppressWarnings(ranges$Minimum <- as.numeric(ranges$Minimum))
-  suppressWarnings(ranges$Maximum <- as.numeric(ranges$Maximum))
-  ranges <- ranges[complete.cases(ranges), ]
-  ggplot() +
-    geom_linerange(
-      data = ranges %>% arrange(-error_thresh),
-      mapping = aes(
-        x = Sensor_Name, ymin = Minimum,
-        ymax = Maximum, lwd = 1, color = error_thresh
-      ),
-      size = 10
-    ) +
-    scale_y_continuous(breaks = seq(ylim[1], ylim[2], by = by)) +
-    scale_color_continuous(high = "lightgreen", low = "forestgreen") +
-    xlab("") +
-    ylab(y_label) +
-    theme_classic() +
-    theme(aspect.ratio = 1) +
-    coord_flip(ylim = ylim)
+    ranges$Inaccuracy <- as.numeric(ranges$Inaccuracy)
+    suppressWarnings(ranges$Minimum <- as.numeric(ranges$Minimum))
+    suppressWarnings(ranges$Maximum <- as.numeric(ranges$Maximum))
+    ranges <- ranges[complete.cases(ranges), ]
+    ggplot() +
+        geom_linerange(
+            data = ranges %>% arrange(-error_thresh),
+            mapping = aes(
+                x = Sensor_Name, ymin = Minimum,
+                ymax = Maximum, lwd = 1, color = error_thresh
+            ),
+            size = 10
+        ) +
+        scale_y_continuous(breaks = seq(ylim[1], ylim[2], by = by)) +
+        scale_color_continuous(high = "lightgreen", low = "forestgreen") +
+        xlab("") +
+        ylab(y_label) +
+        theme_classic() +
+        theme(aspect.ratio = 1) +
+        coord_flip(ylim = ylim)
 }
+
 
 #' Takes in a ranges_df dataframe and makes a plot (for redox).
 #' @param ranges A dataframe of ranges with at least these columns:

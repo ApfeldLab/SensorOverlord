@@ -1,0 +1,24 @@
+<p> To predict whether a sensor is well-suited to your needs, you need to know a few things:
+</p>
+<h4>How precise are your microscopy techniques?</h4>
+<p>
+Your microscope and analysis methods will produce noise in your ratiometric measurements.
+To determine that noise, run through your microscopy pipeline with GFP or another mock sensor, making
+measurements that should be consistent with each image (for example, 410/410 with a roGFP, or 410/470 with GFP).
+</p>
+<p>
+Then, use those measurements to estimate your relative error. For example, we found 95% of our 410/410 measurements
+were approximately between 1.028 and 0.972, leading us to believe that our error was +/- 2.8%.
+</p>
+<h4>How accurate do you need your measurements to be?</h4>
+<p>
+For example, you may be trying to distinguish between
+a pH of 7.1 and 7.3, in which case you will need an accuracy of at least 0.2.
+</p>
+<h4>What are the biochemical and biophysical parameters of your sensor?</h4>
+<p>
+You can generally find estimates of these parameters in the literature. We have
+also aggregated these estimates in the supplementary notes of <a href = "https://www.biorxiv.org/content/10.1101/2020.01.31.928895v1">the associated manuscript.</a>
+</p>
+
+

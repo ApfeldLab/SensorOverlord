@@ -988,7 +988,7 @@ setMethod(
 #' 'error_thresh': the error threshold associated with this row
 #' @examples
 #' my_sensor <- new("ligandSensor", new("Sensor", Rmin = 1, Rmax = 5, delta = 0.2),
-#' pKa = 7, ligand_name = "NADPH")
+#' pKd = 7, ligand_name = "NADPH")
 #' ranges_df(my_sensor)
 #' @export
 setMethod(

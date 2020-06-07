@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>A general function for calculating the error in some parameter — Error_general • sensorOverlord</title>
+<title>Takes in a ranges_df dataframe and makes a plot (for pLigand). — plot_ranges_pLigand • sensorOverlord</title>
 
 
 <!-- jquery -->
@@ -39,8 +39,8 @@
 
 
 
-<meta property="og:title" content="A general function for calculating the error in some parameter — Error_general" />
-<meta property="og:description" content="A general function for calculating the error in some parameter" />
+<meta property="og:title" content="Takes in a ranges_df dataframe and makes a plot (for pLigand). — plot_ranges_pLigand" />
+<meta property="og:description" content="Takes in a ranges_df dataframe and makes a plot (for pLigand)." />
 
 
 
@@ -103,113 +103,64 @@
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>A general function for calculating the error in some parameter</h1>
+    <h1>Takes in a ranges_df dataframe and makes a plot (for pLigand).</h1>
     
-    <div class="hidden name"><code>Error_general.Rd</code></div>
+    <div class="hidden name"><code>plot_ranges_pLigand.Rd</code></div>
     </div>
 
     <div class="ref-description">
-    <p>A general function for calculating the error in some parameter</p>
+    <p>Takes in a ranges_df dataframe and makes a plot (for pLigand).</p>
     </div>
 
-    <pre class="usage"><span class='fu'>Error_general</span>(
-  <span class='no'>param</span>,
-  <span class='no'>param_name</span>,
-  <span class='no'>R_of_param</span>,
-  <span class='no'>param_of_R</span>,
-  <span class='no'>Rmin</span>,
-  <span class='no'>Rmax</span>,
-  <span class='no'>delta</span>,
-  <span class='no'>midpoint</span>,
-  <span class='no'>error_R</span>,
-  <span class='kw'>temp</span> <span class='kw'>=</span> <span class='fl'>295.15</span>
-)</pre>
+    <pre class="usage"><span class='fu'>plot_ranges_pLigand</span>(<span class='no'>ranges</span>, <span class='kw'>ylim</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>14</span>), <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"pLigand"</span>)</pre>
 
     <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
     <table class="ref-arguments">
     <colgroup><col class="name" /><col class="desc" /></colgroup>
     <tr>
-      <th>param</th>
-      <td><p>The parameter over which we are calculating error</p></td>
+      <th>ranges</th>
+      <td><p>A dataframe of ranges with at least these columns:
+'Sensor_Name': the name of the sensor
+'Minimum': the minimum pLigand measurable at the given inaccuracy
+'Maximum': the maximum pLigand measurable at the given inaccuracy
+'Inaccuracy': the inaccuracy associated with this row (relative)
+'error_thresh': the error threshold associated with this row</p></td>
     </tr>
     <tr>
-      <th>param_name</th>
-      <td><p>The name of the parameter over which we are calculating error</p></td>
+      <th>ylim</th>
+      <td><p>The limits of the ranges plot</p></td>
     </tr>
     <tr>
-      <th>R_of_param</th>
-      <td><p>A function that maps from param --&gt; R
-NOTE: R_of_param must have arguments in the correct ordrer. They should be:</p><ul>
-<li><p>"param"</p></li>
-<li><p>"Rmin"</p></li>
-<li><p>"Rmax"</p></li>
-<li><p>"delta"</p></li>
-<li><p>"midpoint"</p></li>
-<li><p>"temperature, in kelvin"</p></li>
-</ul></td>
+      <th>by</th>
+      <td><p>the 'by' argument of the limits axis tick marks</p></td>
     </tr>
     <tr>
-      <th>param_of_R</th>
-      <td><p>A function that maps from R --&gt; param
-NOTE: param_of_R must have arguments in the correct order. They should be:
-#'</p><ul>
-<li><p>"R"</p></li>
-<li><p>"Rmin"</p></li>
-<li><p>"Rmax"</p></li>
-<li><p>"delta"</p></li>
-<li><p>"midpoint"</p></li>
-<li><p>"temperature, in kelvin"</p></li>
-</ul></td>
-    </tr>
-    <tr>
-      <th>Rmin</th>
-      <td><p>the minimum possible ratiometric fluorescence</p></td>
-    </tr>
-    <tr>
-      <th>Rmax</th>
-      <td><p>the maximum possible ratiometric fluorescence</p></td>
-    </tr>
-    <tr>
-      <th>delta</th>
-      <td><p>the ratiometric fluorescence in the first wavelength</p></td>
-    </tr>
-    <tr>
-      <th>midpoint</th>
-      <td><p>the sensor's midpoint (e.g. e0 for redox, pKa for pH, pKd for other ligand)</p></td>
-    </tr>
-    <tr>
-      <th>error_R</th>
-      <td><p>a function that, given an R, returns the error in that R</p></td>
-    </tr>
-    <tr>
-      <th>temp</th>
-      <td><p>the temperature at which measurements were made</p></td>
+      <th>ylab</th>
+      <td><p>The label of the ranges plot</p></td>
     </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
 
-    <p>A list with (1) 'E', the given redox potential,
-(2) 'larger_E', the largest possible E, at the given error
-(3) 'smaller_E', the smallest possible E, at the given error
-(4) 'max_error' the largest possible difference between the observed and expected E</p>
+    <p>A ggplot object</p>
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='fu'>Error_general</span>(
-  <span class='kw'>param</span> <span class='kw'>=</span> -<span class='fl'>275</span>, <span class='kw'>param_name</span> <span class='kw'>=</span> <span class='st'>"E"</span>, <span class='kw'>R_of_param</span> <span class='kw'>=</span> <span class='no'>R_of_E</span>, <span class='kw'>param_of_R</span> <span class='kw'>=</span> <span class='kw pkg'>sensorOverlord</span><span class='kw ns'>::</span><span class='no'><a href='E.html'>E</a></span>,
-  <span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.2</span>, <span class='kw'>midpoint</span> <span class='kw'>=</span> -<span class='fl'>275</span>, <span class='kw'>error_R</span> <span class='kw'>=</span> <span class='kw'>function</span>(<span class='no'>x</span>) <span class='fl'>0.02</span> * <span class='no'>x</span>
-)</div><div class='output co'>#&gt; $E
-#&gt; [1] -275
-#&gt; 
-#&gt; $larger_E
-#&gt; [1] -274.2516
-#&gt; 
-#&gt; $smaller_E
-#&gt; [1] -275.7789
-#&gt; 
-#&gt; $max_error
-#&gt; [1] 0.778922
-#&gt; </div></pre>
+    <pre class="examples"><div class='input'><span class='no'>error_df</span> <span class='kw'>&lt;-</span> <span class='fu'>create_error_df_pLigand_multiple</span>(
+  <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.01</span>, <span class='fl'>0.02</span>), <span class='fl'>2</span>, <span class='fl'>10</span>,
+  <span class='fu'><a href='https://rdrr.io/r/base/data.frame.html'>data.frame</a></span>(
+    <span class='st'>"Rmin"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>1</span>, <span class='fl'>2</span>),
+    <span class='st'>"Rmax"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>5</span>, <span class='fl'>6</span>),
+    <span class='st'>"delta"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.2</span>, <span class='fl'>1.2</span>),
+    <span class='st'>"name"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='st'>"normal"</span>, <span class='st'>"plusOne"</span>),
+    <span class='st'>"pKd"</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>7</span>, <span class='fl'>8</span>)
+  ),
+  <span class='kw'>ligand_name</span> <span class='kw'>=</span> <span class='st'>"NADPH"</span>
+)
+<span class='no'>ranges_df</span> <span class='kw'>&lt;-</span> <span class='fu'><a href='create_ranges_multiple.html'>create_ranges_multiple</a></span>(<span class='no'>error_df</span>,
+  <span class='kw'>parameter</span> <span class='kw'>=</span> <span class='st'>"NADPH"</span>,
+  <span class='kw'>thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.01</span>, <span class='fl'>0.05</span>, <span class='fl'>0.10</span>, <span class='fl'>0.15</span>, <span class='fl'>0.20</span>)
+)
+<span class='fu'>plot_ranges_pLigand</span>(<span class='no'>ranges_df</span>, <span class='kw'>ylab</span> <span class='kw'>=</span> <span class='st'>"pNADPH"</span>)</div><div class='img'><img src='plot_ranges_pLigand-1.png' alt='' width='700' height='433' /></div></pre>
   </div>
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">

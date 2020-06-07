@@ -35,6 +35,8 @@ What is the error in pLigand at a given pLigand,
 given some parameters of R and the error in R?
 }
 \examples{
-Error_pLigand(pLigand = 7.3, ligand_name = "pNADPH",
-Rmin = 1, Rmax = 5, delta = 0.2, pKd = 8, error_R = function(x) 0.02 * x)
+Error_pLigand(
+  pLigand = 7.3, ligand_name = "pNADPH",
+  Rmin = 1, Rmax = 5, delta = 0.2, pKd = 8, error_R = function(x) 0.02 * x
+)
 }
