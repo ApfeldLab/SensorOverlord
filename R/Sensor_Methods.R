@@ -760,7 +760,8 @@ setMethod(
           delta = object@delta,
           name = name,
           e0 = object@e0
-        )
+        ),
+        by = by
       )
     }
 )

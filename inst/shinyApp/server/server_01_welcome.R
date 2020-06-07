@@ -3,9 +3,9 @@ options(shiny.sanitize.errors = FALSE)
 
 # Make a lookup table for the bounds associated with a sensor type
 boundsLookup <- list(
-    "redox" = c(-400, -100),
-    "pH" = c(1, 14),
-    "other" = c(0, 1)
+    "redox" = c(-400, -100, 1),
+    "pH" = c(1, 14, 0.1),
+    "other" = c(0, 1, 0.01)
 )
 
 # Tab Links
@@ -134,13 +134,15 @@ get_accuracies <- reactive({
 get_ranges_df <- reactive({
   ranges_df(sensorInfo$sensor,
     inaccuracies = input$relErr,
-    thresholds = get_accuracies()
+    thresholds = get_accuracies(),
+    by = boundsLookup[[sensorInfo$sensor_type]][3]
   )
 })
 
 get_error_df <- reactive({
   error_df(sensorInfo$sensor,
-    inaccuracies = input$relErr
+    inaccuracies = input$relErr,
+    by = boundsLookup[[sensorInfo$sensor_type]][3]
   )
 })
 # Home Page -------------------------------------------------
@@ -154,7 +156,7 @@ output$range <- renderPlot({
 
   rangePlot(isolate(sensorInfo$sensor),
     ranges = isolate(get_ranges_df()),
-    ylim = isolate(sensorInfo$bounds)
+    ylim = isolate(sensorInfo$bounds[1:2])
   ) +
     theme(
       axis.title = element_text(size = rel(1.5)),
