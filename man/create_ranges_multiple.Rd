@@ -36,14 +36,14 @@ e.g. minimum and maximum measureable value at different error thresholds for eac
 }
 \examples{
 error_df <- create_error_df_redox_multiple(
-c(0.02), -400, -200,
-data.frame(
-  Rmin = 0.97,
-  Rmax = 4.12,
-  delta = 0.23,
-  name = "roGFP2",
-  e0 = -299
-)
+  c(0.02), -400, -200,
+  data.frame(
+    Rmin = 0.97,
+    Rmax = 4.12,
+    delta = 0.23,
+    name = "roGFP2",
+    e0 = -299
+  )
 )
 create_ranges_multiple(error_df)
 }

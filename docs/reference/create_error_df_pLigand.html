@@ -159,6 +159,10 @@
       <th>by</th>
       <td><p>(optional, default: 0.01) The granularity of the error table--e.g., by = 0.01 would record 275 and 275.01, etc.</p></td>
     </tr>
+    <tr>
+      <th>ligand_name</th>
+      <td><p>The name of this ligand</p></td>
+    </tr>
     </table>
 
     <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
@@ -170,7 +174,8 @@
 
     <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
     <pre class="examples"><div class='input'><span class='fu'>create_error_df_pLigand</span>(<span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.01</span>, <span class='fl'>0.02</span>), <span class='fl'>2</span>, <span class='fl'>10</span>, <span class='fl'>1</span>, <span class='fl'>5</span>, <span class='fl'>0.2</span>, <span class='fl'>7</span>,
-<span class='kw'>ligand_name</span> <span class='kw'>=</span> <span class='st'>"NADPH"</span>)</div><div class='output co'>#&gt;      NADPH      Error Inaccuracy
+  <span class='kw'>ligand_name</span> <span class='kw'>=</span> <span class='st'>"NADPH"</span>
+)</div><div class='output co'>#&gt;      NADPH      Error Inaccuracy
 #&gt; 1     2.00        Inf       0.01
 #&gt; 2     2.01        Inf       0.01
 #&gt; 3     2.02        Inf       0.01
