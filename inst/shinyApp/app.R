@@ -16,8 +16,9 @@ ui <- navbarPage(
     fluid=TRUE,
     theme = "bootstrap.min.css",
     source(file.path("ui", "ui_01_welcome.R"), local = TRUE)$value,
-    source(file.path("ui", "ui_02_customSensor.R"), local = TRUE)$value,
-    source(file.path("ui", "ui_04_settings.R"), local = TRUE)$value,
+    source(file.path("ui", "ui_02_analysis.R"), local = TRUE)$value,
+    source(file.path("ui", "ui_03_more.R"), local = TRUE)$value,
+    #source(file.path("ui", "ui_04_settings.R"), local = TRUE)$value,
     footer = includeHTML("www/footer.html")
 )
 

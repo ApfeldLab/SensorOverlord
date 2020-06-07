@@ -1,7 +1,7 @@
 Package: sensorOverlord
 Type: Package
 Title: A Tyrant of Absolute Quantitative Ratiometric Microscopy
-Version: 0.1.0
+Version: 0.2.0
 Author: Julian Stanley
 Maintainer: Julian Stanley <stanley.ju@husky.neu.edu>
 Description: "This package provides a few classes and methods that can help you 
