@@ -3,9 +3,9 @@ options(shiny.sanitize.errors = FALSE)
 
 # Make a lookup table for the bounds associated with a sensor type
 boundsLookup <- list(
-    "redox" = c(-400, -100, 1),
-    "pH" = c(1, 14, 0.1),
-    "other" = c(0, 1, 0.01)
+  "redox" = c(-400, -100, 1),
+  "pH" = c(1, 14, 0.1),
+  "other" = c(0, 1, 0.01)
 )
 
 # Tab Links
@@ -84,6 +84,16 @@ observeEvent(input$`use-upload`, {
   sensorInfo$sensor_type <- sensor_type
 })
 
+update_sensor_lambda <- observeEvent(input$sensors, {
+  if (input$sensors %in% sensorNames) {
+    index <- match(input$sensors, sensorData$sensor_name)
+    updateNumericInput(session, inputId = "lambda1",
+                       value = sensorData$lambda1_recommended[[index]])
+    updateNumericInput(session, inputId = "lambda2",
+                       value = sensorData$lambda2_recommended[[index]])
+  }
+})
+
 getSensor <- reactive({
 
   # Make easy-access variables for the wavelength range
@@ -103,6 +113,21 @@ getSensor <- reactive({
       values_maximum = sensorData$values_max[[index]]
     )
 
+    # Check to make sure sensor is defined at the given lambdas
+    min_lambda <- min(spectra@lambdas)
+    max_lambda <- max(spectra@lambdas)
+    if ((lambda1_low < min_lambda) || (lambda2_low < min_lambda) ||
+      (lambda1_high > max_lambda) || (lambda2_high > max_lambda)) {
+      stop(paste0(
+        "Cannot make sensor at given wavelengths.\n",
+        "The given spectra is only defined from ",
+        ceiling(min_lambda), " to ", floor(max_lambda),
+        ", but you are requesting analysis of R values",
+        " taken at [", lambda1_low, ", ", lambda1_high, "] / [",
+        lambda2_low, ", ", lambda2_high, "].\n",
+        "Please redefine your query wavelengths and run the analysis again."
+      ))
+    }
     # Make a sensor from the spectra
     sensor <-
       newSensorFromSpectra(spectra,
@@ -226,10 +251,11 @@ output$customChars <- output$customChars2 <- renderText({
     input$midpoint
   )
   return(paste0(
-      "Sensor: ", sensorInfo$sensor_name, " | ",
-      "Rmin: ", round(sensor@Rmin, 2), " | ",
-      "Rmax: ", round(sensor@Rmax, 2), " | ",
-      "Dynamic range: ", round(sensor@Rmax / sensor@Rmin, 3)))
+    "Sensor: ", sensorInfo$sensor_name, " | ",
+    "Rmin: ", round(sensor@Rmin, 2), " | ",
+    "Rmax: ", round(sensor@Rmax, 2), " | ",
+    "Dynamic range: ", round(sensor@Rmax / sensor@Rmin, 3)
+  ))
 })
 
 # Output the graph of R vs FractionMax of the custom sensor

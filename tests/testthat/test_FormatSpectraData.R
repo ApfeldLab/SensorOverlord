@@ -10,41 +10,42 @@ sensor_midpoint <- 1
 test_that("The spectra data table contains 8 entries", {
     data <- formatSpectraData(
         name, type, readout, lambda_max,
-        values_max, lambda_min, values_min, sensor_midpoint)
+        values_max, lambda_min, values_min, sensor_midpoint,
+        410, 470)
 
-    expect_equal(length(data), 8)
+    expect_equal(length(data), 10)
 })
 
 test_that("Length validation works in formatting", {
     expect_error(formatSpectraData(
         name = c("name", "otherName"), type, readout, lambda_max,
-        values_max, lambda_min, values_min, sensor_midpoint
+        values_max, lambda_min, values_min, sensor_midpoint, 410, 470
     ), "Length of the name argument is not 1")
 
     expect_error(formatSpectraData(
         name, type = c("type", "otherType"), readout, lambda_max,
-        values_max, lambda_min, values_min, sensor_midpoint
+        values_max, lambda_min, values_min, sensor_midpoint, 410, 470
     ), "Length of the type argument is not 1")
 
     expect_error(formatSpectraData(
         name, type, readout = c("readout", "otherReadout"), lambda_max,
-        values_max, lambda_min, values_min, sensor_midpoint
+        values_max, lambda_min, values_min, sensor_midpoint, 410, 470
     ), "Length of the readout argument is not 1")
 
     expect_error(formatSpectraData(
         name, type, readout, lambda_max,
-        values_max, lambda_min, values_min, sensor_midpoint = c(1, 2)
+        values_max, lambda_min, values_min, sensor_midpoint = c(1, 2), 410, 470
     ), "Length of the sensor_midpoint argument is not 1")
 
     expect_error(formatSpectraData(
         name, type, readout, lambda_max = 1:10,
-        values_max = 1:20, lambda_min, values_min, sensor_midpoint
+        values_max = 1:20, lambda_min, values_min, sensor_midpoint, 410, 470
     ), "The lambda and values for the maximum state have
              different lengths")
 
     expect_error(formatSpectraData(
         name, type, readout, lambda_max,
-        values_max, lambda_min = 1:10, values_min = 1:20, sensor_midpoint
+        values_max, lambda_min = 1:10, values_min = 1:20, sensor_midpoint, 410, 470
     ), "The lambda and values for the minimum state have
              different lengths")
 })
@@ -52,42 +53,42 @@ test_that("Length validation works in formatting", {
 test_that("Type validation works in formatting", {
     expect_error(formatSpectraData(
         name = 2, type, readout, lambda_max,
-        values_max, lambda_min, values_min, sensor_midpoint
+        values_max, lambda_min, values_min, sensor_midpoint, 410, 470
     ), "The name argument must be a character type")
 
     expect_error(formatSpectraData(
         name, type = 2, readout, lambda_max,
-        values_max, lambda_min, values_min, sensor_midpoint
+        values_max, lambda_min, values_min, sensor_midpoint, 410, 470
     ), "The type argument must be a character type")
 
     expect_error(formatSpectraData(
         name, type, readout = 2, lambda_max,
-        values_max, lambda_min, values_min, sensor_midpoint
+        values_max, lambda_min, values_min, sensor_midpoint, 410, 470
     ), "The readout argument must be a character type")
 
     expect_error(formatSpectraData(
         name, type, readout, lambda_max = rep("", 10),
-        values_max, lambda_min, values_min, sensor_midpoint
+        values_max, lambda_min, values_min, sensor_midpoint, 410, 470
     ), "lambda_max must be numeric")
 
     expect_error(formatSpectraData(
         name, type, readout, lambda_max,
-        values_max = rep("", 10), lambda_min, values_min, sensor_midpoint
+        values_max = rep("", 10), lambda_min, values_min, sensor_midpoint, 410, 470
     ), "values_max must be numeric")
 
     expect_error(formatSpectraData(
         name, type, readout, lambda_max,
-        values_max, lambda_min = rep("", 10), values_min, sensor_midpoint
+        values_max, lambda_min = rep("", 10), values_min, sensor_midpoint, 410, 470
     ), "lambda_min must be numeric")
 
     expect_error(formatSpectraData(
         name, type, readout, lambda_max,
-        values_max, lambda_min, values_min = rep("", 10), sensor_midpoint
+        values_max, lambda_min, values_min = rep("", 10), sensor_midpoint, 410, 470
     ), "values_min must be numeric")
 
     expect_error(formatSpectraData(
         name, type, readout, lambda_max,
-        values_max, lambda_min, values_min, sensor_midpoint = ""
+        values_max, lambda_min, values_min, sensor_midpoint = "", 410, 470
     ), "sensor_midpoint must be numeric")
 })
 

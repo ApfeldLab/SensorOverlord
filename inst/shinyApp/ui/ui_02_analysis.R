@@ -8,11 +8,14 @@ tabPanel("Main Analysis",
                  fluidRow(
                      # Select a sensor
                      h4("What sensor would you like to use?", align = "left"),
-                     selectInput(
+                     selectizeInput(
                          inputId = "sensors",
                          label = "Select a sensor",
-                         choices = c("Custom", sensorNames),
-                         selected = sensorNames[1],
+                         choices = list(
+                             Custom = c("Custom"),
+                             redox =  sensorNames_redox,
+                             pH = sensorNames_pH),
+                         selected = sensorNames_redox[1],
                          multiple = FALSE
                      ),
                      br(),

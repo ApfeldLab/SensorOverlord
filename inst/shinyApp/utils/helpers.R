@@ -24,7 +24,14 @@ getSensorData <- function() {
 }
 
 sensorData <- getSensorData()
-sensorNames <- sensorData$'sensor_name'
+
+all_names <- sensorData[, c('sensor_type', 'sensor_name')]
+sensorNames <- all_names[,2]
+sensorNames_redox <- all_names %>% dplyr::filter(sensor_type == "redox")
+sensorNames_redox <- sensorNames_redox[,2]
+
+sensorNames_pH <- all_names %>% dplyr::filter(sensor_type == "pH")
+sensorNames_pH <- sensorNames_pH[,2]
 
 
 # Make a specific type of sensor

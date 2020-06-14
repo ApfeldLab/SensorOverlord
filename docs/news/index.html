@@ -6,7 +6,7 @@
 <meta http-equiv="X-UA-Compatible" content="IE=edge">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Finds the ranges df of this redox sensor at given inaccuracies — ranges_df,redoxSensor-method • sensorOverlord</title>
+<title>Changelog • sensorOverlord</title>
 
 
 <!-- jquery -->
@@ -39,9 +39,7 @@
 
 
 
-<meta property="og:title" content="Finds the ranges df of this redox sensor at given inaccuracies — ranges_df,redoxSensor-method" />
-<meta property="og:description" content="Adding this method on 31 May 2020, hoping this style will depreciate
-getErrorTable in the future." />
+<meta property="og:title" content="Changelog" />
 
 
 
@@ -60,7 +58,7 @@ getErrorTable in the future." />
   </head>
 
   <body data-spy="scroll" data-target="#toc">
-    <div class="container template-reference-topic">
+    <div class="container template-news">
       <header>
       <div class="navbar navbar-default navbar-fixed-top" role="navigation">
   <div class="container">
@@ -119,92 +117,35 @@ getErrorTable in the future." />
 <div class="row">
   <div class="col-md-9 contents">
     <div class="page-header">
-    <h1>Finds the ranges df of this redox sensor at given inaccuracies</h1>
-    
-    <div class="hidden name"><code>ranges_df-redoxSensor-method.Rd</code></div>
+      <h1 data-toc-skip>Changelog <small></small></h1>
+      
     </div>
 
-    <div class="ref-description">
-    <p>Adding this method on 31 May 2020, hoping this style will depreciate
-getErrorTable in the future.</p>
-    </div>
-
-    <pre class="usage"><span class='co'># S4 method for redoxSensor</span>
-<span class='fu'><a href='ranges_df.html'>ranges_df</a></span>(
-  <span class='no'>object</span>,
-  <span class='kw'>inaccuracies</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.02</span>),
-  <span class='kw'>Emin</span> <span class='kw'>=</span> -<span class='fl'>400</span>,
-  <span class='kw'>Emax</span> <span class='kw'>=</span> -<span class='fl'>200</span>,
-  <span class='kw'>temp</span> <span class='kw'>=</span> <span class='fl'>295.15</span>,
-  <span class='kw'>by</span> <span class='kw'>=</span> <span class='fl'>0.01</span>,
-  <span class='kw'>name</span> <span class='kw'>=</span> <span class='st'>"Sensor"</span>,
-  <span class='kw'>thresholds</span> <span class='kw'>=</span> <span class='fu'><a href='https://rdrr.io/r/base/c.html'>c</a></span>(<span class='fl'>0.5</span>, <span class='fl'>1</span>, <span class='fl'>1.5</span>, <span class='fl'>2</span>, <span class='fl'>2.5</span>)
-)</pre>
-
-    <h2 class="hasAnchor" id="arguments"><a class="anchor" href="#arguments"></a>Arguments</h2>
-    <table class="ref-arguments">
-    <colgroup><col class="name" /><col class="desc" /></colgroup>
-    <tr>
-      <th>object</th>
-      <td><p>A redoxSensor object</p></td>
-    </tr>
-    <tr>
-      <th>inaccuracies</th>
-      <td><p>(optional, default: c(0.02)) A vector of inaccuracies
-(e.g. 0.02 for 2% error), always relative</p></td>
-    </tr>
-    <tr>
-      <th>Emin</th>
-      <td><p>(optional, default: -400)  The minimum redox potential, in mV,
-for which to record error</p></td>
-    </tr>
-    <tr>
-      <th>Emax</th>
-      <td><p>(optional, default: -200) The maximum redox potential, in mV,
-for which to record error</p></td>
-    </tr>
-    <tr>
-      <th>temp</th>
-      <td><p>(optional, default: 295.15) the temperature (in Kelvin) at which measurements were made</p></td>
-    </tr>
-    <tr>
-      <th>by</th>
-      <td><p>(optional, default: 0.01) The granularity of the error table--e.g.,
-by = 0.01 would record 275 and 275.01, etc.</p></td>
-    </tr>
-    <tr>
-      <th>name</th>
-      <td><p>(optional, default: "Sensor") A name for this sensor</p></td>
-    </tr>
-    <tr>
-      <th>thresholds</th>
-      <td><p>A vector of error thresholds (e.g. c(0.5, 1) for 0.5mV and 1mV)</p></td>
-    </tr>
-    </table>
-
-    <h2 class="hasAnchor" id="value"><a class="anchor" href="#value"></a>Value</h2>
-
-    <p>A dataframe of suited ranges with these columns:
-'Sensor_Name': the name of the sensor
-'Minimum': the minimum redox potential (mV) measurable at the given inaccuracy
-'Maximum': the maximum redox potential (mV) measurable at the given inaccuracy
-'Inaccuracy': the inaccuracy associated with this row (relative)
-'error_thresh': the error threshold associated with this row (mV)</p>
-
-    <h2 class="hasAnchor" id="examples"><a class="anchor" href="#examples"></a>Examples</h2>
-    <pre class="examples"><div class='input'><span class='no'>my_sensor</span> <span class='kw'>&lt;-</span> <span class='fu'>new</span>(<span class='st'>"redoxSensor"</span>, <span class='fu'>new</span>(<span class='st'>"Sensor"</span>, <span class='kw'>Rmin</span> <span class='kw'>=</span> <span class='fl'>1</span>, <span class='kw'>Rmax</span> <span class='kw'>=</span> <span class='fl'>5</span>, <span class='kw'>delta</span> <span class='kw'>=</span> <span class='fl'>0.2</span>), <span class='kw'>e0</span> <span class='kw'>=</span> -<span class='fl'>250</span>)
-<span class='fu'><a href='ranges_df.html'>ranges_df</a></span>(<span class='no'>my_sensor</span>)</div><div class='output co'>#&gt;   Sensor_Name Minimum Maximum Inaccuracy error_thresh
-#&gt; 1 Sensor_0.02      NA      NA       0.02          0.5
-#&gt; 2 Sensor_0.02 -256.99 -222.08       0.02          1.0
-#&gt; 3 Sensor_0.02 -264.86 -214.32       0.02          1.5
-#&gt; 4 Sensor_0.02 -269.44 -209.77       0.02          2.0
-#&gt; 5 Sensor_0.02 -272.67 -206.56       0.02          2.5</div></pre>
+    <div id="sensoroverlord-020" class="section level1">
+<h1 class="page-header" data-toc-text="0.2.0">
+<a href="#sensoroverlord-020" class="anchor"></a>sensorOverlord 0.2.0</h1>
+<ul>
+<li>Computes error directly</li>
+<li>Extends computations to ligandSensor objects</li>
+<li>Adds rangePlot functionality</li>
+<li>Major improvements and UI redesign of shiny application</li>
+</ul>
+</div>
+    <div id="sensoroverlord-010" class="section level1">
+<h1 class="page-header" data-toc-text="0.1.0">
+<a href="#sensoroverlord-010" class="anchor"></a>sensorOverlord 0.1.0</h1>
+<ul>
+<li>First functional version of the package, published alongwide biorxiv preprint.</li>
+</ul>
+</div>
   </div>
+
   <div class="col-md-3 hidden-xs hidden-sm" id="pkgdown-sidebar">
     <nav id="toc" data-toggle="toc" class="sticky-top">
       <h2 data-toc-skip>Contents</h2>
     </nav>
   </div>
+
 </div>
 
 

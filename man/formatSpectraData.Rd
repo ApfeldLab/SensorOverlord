@@ -12,14 +12,16 @@ formatSpectraData(
   values_max,
   lambda_min,
   values_min,
-  sensor_midpoint
+  sensor_midpoint,
+  lambda1_recommended,
+  lambda2_recommended
 )
 }
 \arguments{
 \item{name}{Character string. The name of the sensor}
 
 \item{type}{The type of sensor. One of:
-{redox, pH, ATP}}
+{redox, pH, pLigand}}
 
 \item{readout}{The readout of the sensor. One of:
 {exitation ratiometric, emission ratiometric}}
@@ -28,13 +30,13 @@ formatSpectraData(
 maximum state (corresponding to Rmax)}
 
 \item{values_max}{The emission values in the maximum state (corresponding
-to Rmax)}
+to Rmax--so, deprotenated or oxidized or not bound to ligand)}
 
 \item{lambda_min}{The lambda values corresponding to the emission in the
 minimum state (corresponding to Rmin)}
 
 \item{values_min}{The emission values in the minimum state (corresponding
-to Rmin)}
+to Rmin--so, protenated or reduced or bound to ligand)}
 
 \item{sensor_midpoint}{Numeric. The midpoint of the sensor. Depending
 on your sensor, this could be:

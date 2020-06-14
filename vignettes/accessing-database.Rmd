@@ -1,0 +1,90 @@
+---
+title: "Accessing and Manipulating the Database"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{adding_to_db}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+These actions are performed with the `mongolite` package, along with helper functions
+in this package, `sensorOverlord`. 
+
+## Accessing DB entries
+
+I find it easiest to turn the database entries into a dataframe before using them in R.
+
+Note: The database is a mongo database--so, it's stored in JSON format. This wasn't a design choice--mongodb just had a free server hosting platform that was really easy to use to store small amounts of data. If this database grows, it may need to be migrated to a tabular SQL format.
+
+To access entries, use `sensorOverlord::getDb()$find()`:
+
+```R
+data.frame(sensorOverlord::getDb()$find())
+```
+
+Or, functions from data.table are a bit faster:
+
+```R
+data.table::data.table(sensorOverlord::getDb()$find())
+```
+
+## Adding a new DB entry 
+
+First, import a local file with your spectra. For example:
+
+```R
+deGFP1 <- data.table::fread("/home/julian/2019_Sensor_Overlord_Local/Spectra_and_info/Sensors_Main/pH_Sensors/deGFP1/Hanson2002/deGFP1.csv")
+```
+
+Then, extract the columns with the wavelengths and expression values of Rdeprot/Rprot, Rox/Rred, etc.
+
+In the following methods, "values_min"/other references to 'min' refer to the ligand-bound state (e.g. reduced or protenated) and the "values_max"/other references to 'max' refer to the ligand-unbound state (e.g. oxidized or deprotenated). This is just an artifact of depreciated terminology.
+
+```R
+lambda_max <- deGFP1$V1
+values_max <- deGFP1$V2
+lambda_min <- deGFP1$V3
+values_min <- deGFP1$V4
+```
+
+Now, you can use the `sensorOverlord::formatSpectraData` function to format the data into
+a list for submission to the database:
+
+```R
+submission <- formatSpectraData(name = "deGFP1", type = "pH", readout = "emission ratiometric", lambda_max = lambda_max, values_max = values_max, lambda_min = lambda_min, values_min = values_min, sensor_midpoint = 8.02,
+lambda1_recommended = 515, lambda2_recommended = 460)
+```
+
+Then, when you're ready to submit your entry, you can use `sensorOverlord::getDb()` and `$insert` to add your new submission:
+
+```R
+getDb()$insert(submission)
+```
+
+## Removing a DB entry
+
+If you made a mistake in your entry, you may want to remove it. Assuming that your sensor name is unique:
+
+```R
+getDb()$remove('{"sensor_name" : "deGFP1"}')
+```
+
+In the future, it would be better if this database had unique IDs, in case you accidentally added
+a sensor with the same name as an existing one. I can do that--it just takes a little bit of effort. If you're reading this
+and using SensorOverlord, please shoot me an email (julianst [at] mit [dot] edu) and I can spend some time to make this db more rigorous. 
+
+## Modifying an entry
+
+While updating this package recently, I noticed that I should add recommended $\lambda_1$ and $\lambda_2$ values to each sensor, based on the values we chose for the manuscript. So, I needed to modify entries with those values. To do that, you can use the `$update` method in a database. For example, here's the format to add a new "lambda1_recommended" value to roGFP1 in the database:
+
+```R
+sensorOverlord::getDb()$update('{"sensor_name": "roGFP1"}', '{"$set":{"lambda1_recommended": 410}}')
+```
+

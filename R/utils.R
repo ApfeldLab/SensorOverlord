@@ -42,17 +42,17 @@ rescaleToRange <- function(new_xs, old_xs, y) {
 #'
 #' @param name Character string. The name of the sensor
 #' @param type The type of sensor. One of:
-#' {redox, pH, ATP}
+#' {redox, pH, pLigand}
 #' @param readout The readout of the sensor. One of:
 #' {exitation ratiometric, emission ratiometric}
 #' @param lambda_max The lambda values corresponding to the emission in the
 #' maximum state (corresponding to Rmax)
 #' @param values_max The emission values in the maximum state (corresponding
-#' to Rmax)
+#' to Rmax--so, deprotenated or oxidized or not bound to ligand)
 #' @param lambda_min The lambda values corresponding to the emission in the
 #' minimum state (corresponding to Rmin)
 #' @param values_min The emission values in the minimum state (corresponding
-#' to Rmin)
+#' to Rmin--so, protenated or reduced or bound to ligand)
 #' @param sensor_midpoint Numeric. The midpoint of the sensor. Depending
 #' on your sensor, this could be:
 #' {e0, pKa, log-midpoint}
@@ -68,7 +68,9 @@ formatSpectraData <-
            values_max,
            lambda_min,
            values_min,
-           sensor_midpoint) {
+           sensor_midpoint,
+           lambda1_recommended,
+           lambda2_recommended) {
     # Data validation -------
 
     # Validating lengths
@@ -100,7 +102,7 @@ formatSpectraData <-
     }
 
     # Validating types
-    supported_types <- c("redox", "pH", "ATP")
+    supported_types <- c("redox", "pH", "pLigand")
     supported_readouts <-
       c("excitation ratiometric", "emission ratiometric")
 
@@ -148,7 +150,9 @@ formatSpectraData <-
         values_max = values_max,
         lambda_min = lambda_min,
         values_min = values_min,
-        sensor_midpoint = sensor_midpoint
+        sensor_midpoint = sensor_midpoint,
+        lambda1_recommended = lambda1_recommended,
+        lambda2_recommended = lambda2_recommended
       )
     )
   }
