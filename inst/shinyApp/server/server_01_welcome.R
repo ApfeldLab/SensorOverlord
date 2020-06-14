@@ -84,6 +84,17 @@ observeEvent(input$`use-upload`, {
   sensorInfo$sensor_type <- sensor_type
 })
 
+update_sensor_lambda <- observeEvent(input$sensors, {
+  browser()
+  if (input$sensors %in% sensorNames) {
+    index <- match(input$sensors, sensorData$sensor_name)
+    updateNumericInput(session, inputId = "lambda1",
+                       value = sensorData$lambda1_recommended[[index]])
+    updateNumericInput(session, inputId = "lambda2",
+                       value = sensorData$lambda2_recommended[[index]])
+  }
+})
+
 getSensor <- reactive({
 
   # Make easy-access variables for the wavelength range
