@@ -68,7 +68,9 @@ formatSpectraData <-
            values_max,
            lambda_min,
            values_min,
-           sensor_midpoint) {
+           sensor_midpoint,
+           lambda1_recommended,
+           lambda2_recommended) {
     # Data validation -------
 
     # Validating lengths
@@ -148,7 +150,9 @@ formatSpectraData <-
         values_max = values_max,
         lambda_min = lambda_min,
         values_min = values_min,
-        sensor_midpoint = sensor_midpoint
+        sensor_midpoint = sensor_midpoint,
+        lambda1_recommended = lambda1_recommended,
+        lambda2_recommended = lambda2_recommended
       )
     )
   }

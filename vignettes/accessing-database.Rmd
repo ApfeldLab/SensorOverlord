@@ -51,14 +51,15 @@ In the following methods, "values_min"/other references to 'min' refer to the li
 lambda_max <- deGFP1$V1
 values_max <- deGFP1$V2
 lambda_min <- deGFP1$V3
-values_max <- deGFP1$V4
+values_min <- deGFP1$V4
 ```
 
 Now, you can use the `sensorOverlord::formatSpectraData` function to format the data into
 a list for submission to the database:
 
 ```R
-submission <- formatSpectraData(name = "deGFP1", type = "pH", readout = "emission ratiometric", lambda_max = lambda_max, values_max = values_max, lambda_min = lambda_min, values_min = values_min, sensor_midpoint = 8.02)
+submission <- formatSpectraData(name = "deGFP1", type = "pH", readout = "emission ratiometric", lambda_max = lambda_max, values_max = values_max, lambda_min = lambda_min, values_min = values_min, sensor_midpoint = 8.02,
+lambda1_recommended = 515, lambda2_recommended = 460)
 ```
 
 Then, when you're ready to submit your entry, you can use `sensorOverlord::getDb()` and `$insert` to add your new submission:

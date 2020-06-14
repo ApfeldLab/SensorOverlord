@@ -12,7 +12,9 @@ formatSpectraData(
   values_max,
   lambda_min,
   values_min,
-  sensor_midpoint
+  sensor_midpoint,
+  lambda1_recommended,
+  lambda2_recommended
 )
 }
 \arguments{

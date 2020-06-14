@@ -85,7 +85,6 @@ observeEvent(input$`use-upload`, {
 })
 
 update_sensor_lambda <- observeEvent(input$sensors, {
-  browser()
   if (input$sensors %in% sensorNames) {
     index <- match(input$sensors, sensorData$sensor_name)
     updateNumericInput(session, inputId = "lambda1",
