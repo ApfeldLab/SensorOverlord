@@ -1,5 +1,5 @@
 ---
-title: "Adding a new database entry"
+title: "Accessing and Manipulating the Database"
 output: rmarkdown::html_vignette
 vignette: >
   %\VignetteIndexEntry{adding_to_db}
@@ -14,6 +14,28 @@ knitr::opts_chunk$set(
 )
 ```
 
+These actions are performed with the `mongolite` package, along with helper functions
+in this package, `sensorOverlord`. 
+
+## Accessing DB entries
+
+I find it easiest to turn the database entries into a dataframe before using them in R.
+
+Note: The database is a mongo database--so, it's stored in JSON format. This wasn't a design choice--mongodb just had a free server hosting platform that was really easy to use to store small amounts of data. If this database grows, it may need to be migrated to a tabular SQL format.
+
+To access entries, use `sensorOverlord::getDb()$find()`:
+
+```R
+data.frame(sensorOverlord::getDb()$find())
+```
+
+Or, functions from data.table are a bit faster:
+
+```R
+data.table::data.table(sensorOverlord::getDb()$find())
+```
+
+## Adding a new DB entry 
 
 First, import a local file with your spectra. For example:
 
@@ -45,7 +67,7 @@ Then, when you're ready to submit your entry, you can use `sensorOverlord::getDb
 getDb()$insert(submission)
 ```
 
-## Removing entry
+## Removing a DB entry
 
 If you made a mistake in your entry, you may want to remove it. Assuming that your sensor name is unique:
 
@@ -55,5 +77,13 @@ getDb()$remove('{"sensor_name" : "deGFP1"}')
 
 In the future, it would be better if this database had unique IDs, in case you accidentally added
 a sensor with the same name as an existing one. I can do that--it just takes a little bit of effort. If you're reading this
-and using SensorOverlord, please shoot me an email (julianst [at] mit [dot] edu) and I can spend some time to make this 
-db more rigorous. 
+and using SensorOverlord, please shoot me an email (julianst [at] mit [dot] edu) and I can spend some time to make this db more rigorous. 
+
+## Modifying an entry
+
+While updating this package recently, I noticed that I should add recommended $\lambda_1$ and $\lambda_2$ values to each sensor, based on the values we chose for the manuscript. So, I needed to modify entries with those values. To do that, you can use the `$update` method in a database. For example, here's the format to add a new "lambda1_recommended" value to roGFP1 in the database:
+
+```R
+sensorOverlord::getDb()$update('{"sensor_name": "roGFP1"}', '{"$set":{"lambda1_recommended": 410}}')
+```
+
