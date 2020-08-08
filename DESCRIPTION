@@ -25,5 +25,6 @@ Suggests:
     testthat,
     vdiffr,
     knitr,
-    rmarkdown
+    rmarkdown,
+    data.table
 VignetteBuilder: knitr
