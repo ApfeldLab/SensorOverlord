@@ -1,7 +1,8 @@
-pandoc: 2.7.3
+pandoc: 2.9.2.1
 pkgdown: 1.5.1
 pkgdown_sha: ~
 articles:
+  SensorOverlord_Walkthrough: SensorOverlord_Walkthrough.html
   accessing-database: accessing-database.html
-last_built: 2020-06-14T15:17Z
+last_built: 2020-08-08T13:54Z
 

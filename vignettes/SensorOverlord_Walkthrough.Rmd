@@ -1,0 +1,341 @@
+---
+title: "SensorOverlord Walkthrough"
+output: 
+  rmarkdown::html_vignette: default
+  word_document: default
+vignette: >
+  %\VignetteIndexEntry{SensorOverlord Walkthrough}
+  %\VignetteEncoding{UTF-8}
+  %\VignetteEngine{knitr::rmarkdown}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>"
+)
+```
+
+```{r setup, include = FALSE}
+library(sensorOverlord)
+```
+
+
+## Purpose and Audience
+
+This short tutorial is intended for microscopists who have:
+
+* A basic knowledge of R,
+
+* access to ratiometric images in their experimental system of interest, and
+
+* an interest in making accurate, quantitative measurements of $E_{GSH}$, pH, or 
+the concentration of a ligand.
+
+## Obtaining Pre-requisities
+
+### Installing the sensorOverlord Package
+
+The sensorOverlord package is available on GitHub. You can install it in R via the 
+`devtools` package. To install the `devtools` package, run `install.packages("devtools")`.
+
+To install the most recent version of the sensorOverlord package from GitHub:
+
+```R
+devtools::install_github("apfeldlab/sensoroverlord")
+```
+
+You can confirm your installation of `sensorOverlord` with `packageVersion`:
+
+```{R}
+packageVersion("sensorOverlord")
+```
+
+### Obtaining Sensor Biochemical and Biophysical Parameters
+
+#### 1. Biochemical parameters
+
+To use the SensorOverlord framework, you need to have access to a midpoint potential
+for your sensor. 
+
+For redox sensors, the midpoint potential is $E_0$. For pH sensors, the midpoint
+potential is $pKa$. For ligand-binding sensors, the midpoint is $pKd$. 
+
+The value of these midpoint potentials are almost always reported in the paper 
+in which the sensor of interest was first published. 
+
+Note that, for ligand-binding sensors, papers often report $Kd$. $pKd = -log_{10}(Kd)$ so,
+to convert $Kd$ to $pKd$, use the `log10` function:
+
+```R
+kD <- 5*10e-6
+pKd <- -log(kD)
+```
+
+#### 2. Biophysical parameters
+
+sensorOverlord requires as input:
+
+1. $R_A$: The ratio measurement of the sensor in State A. We also assume that State A
+is the state in which you have the _lowest_ ratio measurement, so this is sometimes also called
+$R_{min}$.
+2. $R_B$: The ratio measurement of the sensor in State B. Sometimes also called $R_{max}$.
+3. $\delta_{\lambda2}$: The distribution of the dynamic range in the second wavelength. This can be derived from the dynamic range of the sensor in both states.
+
+You can obtain these parameters in one of three ways:
+
+1. Upload a digitized spectra. `sensorOverlord` can programatically obtain these
+input values from a digitized spectra.
+
+2. Use a provided spectra. We have created a MongoDB database containing many the spectra of many
+published redox, pH, and ligand-binding sensors.
+
+3. Provide the parameters directly. These parameters can be measured empirically, 
+as explained in [Romero 2014](https://www.nature.com/articles/ncomms6020).
+
+
+**Option 1: Upload a digitized spectra**
+
+If you have excitation-emission spectra data for your each of your sensor's two
+states, you can upload those into R. 
+
+For example, you could have a .csv file with three columns:
+
+* lambda: The wavelength of the excitation or emission.
+* values_A: The intensity value of the sensor's output in state A.
+* values_B: The intensity value of the sensor's output in state B.
+
+Oftentimes with digitized spectra, the $\lambda$ values recorded in states A
+and B are not identical. In that case, you can use a .csv file with four columns:
+
+* lambda_A: The wavelengths recorded in state A.
+* values_A: The intensity value of the sensor's output in state A.
+* lambda_B: The wavelengths recorded in state B.
+* values_B: The intensity value of the sensor's output in state B.
+
+```R
+spectra <- read.csv("my_spectra.csv")
+```
+
+Once you have uploaded your spectra, you can use the `sensorOverlord::spectraMatrixFromValues` function
+to create a `Spectra` object:
+
+```R
+spectra_object <- spectraMatrixFromValues(
+  lambdas_minimum = spectra$lambda,
+  values_minimum = spectra$values_A,
+  lambdas_maximum = spectra$lambda,
+  values_maximum = spectra$values_B
+)
+```
+
+or
+
+```R
+spectra_object <- spectraMatrixFromValues(
+  lambdas_minimum = spectra$lambda_A,
+  values_minimum = spectra$values_A,
+  lambdas_maximum = spectra$lambda_B,
+  values_maximum = spectra$values_B
+)
+```
+
+You can use the `newSensorFromSpectra()` function to turn the 
+spectra object into a sensor object at a certain ratiometric wavelength pair:
+
+```R
+sensor_object <- newSensorFromSpectra(spectra_object, 
+  c(510, 520), c(455, 465))
+```
+
+That sensor object will now contain estimates for the three required parameters:
+
+```R
+Ra <- sensor_object@Rmin
+Rb <- sensor_object@Rmax
+delta2 <- sensor_object@delta
+```
+
+**Option 2: Use a Provided Spectra**
+
+You can access all sensor information from the database with `sensorOverlord::getDb()$find()`,
+which accepts JSON search queries. For more information, see the "Accessing and Manipulating the Database"
+vignette. For example:
+
+```{R}
+deGFP1_information <- getDb()$find('{"sensor_name" : "deGFP1"}')
+print(deGFP1_information$sensor_readout)
+print(deGFP1_information$sensor_midpoint)
+print(deGFP1_information$lambda1_recommended)
+print(deGFP1_information$lambda2_recommended)
+```
+
+The actual spectra information is in a list form, so you can use the `apply` 
+and `unlist` functions to obtain the spectra:
+
+```{R}
+library(data.table)
+deGFP1_spectra_information <- data.table(
+  apply(
+    deGFP1_information[c("lambda_min", "values_min", "lambda_max", "values_max")], 
+    2, function(x) unlist(x))
+  )
+```
+
+Then, you can follow the same instructions as if you had provided the spectra yourself:
+create a spectra object, then a sensor object at a specific wavelength pair, and then
+extract the relevant parameters:
+
+```{R}
+deGFP_spectra <- spectraMatrixFromValues(deGFP1_spectra_information$lambda_min,
+                                                         deGFP1_spectra_information$values_min,
+                                                         deGFP1_spectra_information$lambda_max,
+                                                         deGFP1_spectra_information$values_max)
+
+sensor_object <- newSensorFromSpectra(deGFP_spectra,
+                                     c(510, 520), c(455, 465))
+
+Ra <- sensor_object@Rmin
+Rb <- sensor_object@Rmax
+delta2 <- sensor_object@delta
+
+print(Ra)
+print(Rb)
+print(delta2)
+```
+
+**Option 3: Provide Parameters Directly**
+
+If you conducted the appropriate microscopy experiments, you may have also 
+obtained exact values of $R_a$, $R_b$, and $\delta_{\lambda2}$.
+
+If that's the case, you can use them to directly make a sensor object:
+
+```{R}
+R_reduced <- 0.6
+R_oxidized <- 5.2
+delta2 <- 0.171
+
+sensor_object <- new(
+            "Sensor",
+            Rmax = R_reduced,
+            Rmin = R_oxidized,
+            delta = delta2
+        )
+```
+
+### Estimating Microscopy Error
+
+In order to use the SensorOverlord framework, you need to have an estimate of
+the variability of your measurement of $R$ in your system of interest.
+
+There are various ways to accomplish this, as we detail in the Supplementary Information of the associated manuscript.
+
+For example, you can simply plot the $R$ values that you observed in a previous
+experiment in which you expected the $R$ value to stay constant over some period
+of time. Then, you can estimate your error in $R$ by looking at the standard error
+over that period.
+
+In C. elegans, we find that the error is constant, but relative to the $R$ value.
+
+SensorOverlord can accommodate any error model that you find in your system. 
+For example:
+
+```{R}
+# Relative error of 2.8%, or 0.028*R
+error_relative <- function(x) x*0.028
+
+# Absolute error of +/- 0.028 
+error_absolute <- function(x) 0.028
+
+# Quadratic error
+error_other <- function(x) 0.0001 * x^2 + 0.028*x + 0.5
+```
+
+For more information about incorporating different error models, see the "Customizing Error Model"
+vignette. For now, this tutorial will assume that you are using a _relative_ error.
+
+## Running the SensorOverlord model
+
+After completing the pre-requisites, you should have access to a sensor object
+and an error model. E.g.
+
+```{R}
+sensor_object <- new(
+            "Sensor",
+            Rmax = R_reduced,
+            Rmin = R_oxidized,
+            delta = delta2
+        )
+
+my_error <- function(x) x*0.028
+```
+`
+
+First, you'll need to turn your generic sensor object into a specific redox, pH, or ligand-binding sensor. For example:
+
+```{R}
+redox_sensor_object <-
+  new(
+    "redoxSensor",
+    sensor_object,
+    e0 = -265
+  )
+```
+
+Then, you can use the `error_df()` method, defined on redoxSensor, pHSensor, and ligandSensor objects, to get a table of the inaccuracy of the sensor at different values of redox potential, pH, or p[Ligand].
+
+```{R}
+redox_sensor_error <- error_df(
+  redox_sensor_object,
+  c(0.028),
+  Emin = -300,
+  Emax = -150
+)
+
+summary(redox_sensor_error)
+```
+
+```{R}
+library(ggplot2)
+ggplot(redox_sensor_error, aes(x = E, y = Error)) +
+  geom_line() +
+  ylim(c(0, 10))
+```
+
+For more information, see `?error_df,redoxSensor-method`, or the method for your type of sensor.
+
+You can export that table directly, or use it for further analysis. 
+
+`sensorOverlord` can also compute the ranges of redox potential, pH, or ligand concentration that a sensor can measure to different accuracy thresholds:
+
+
+```{R}
+# The redox potentials this sensor can measure, with an error in R of 
+# 2% or 3%, to an accuracy of 1mV or 2mV
+accurate_ranges <- ranges_df(redox_sensor_object,
+                                  inaccuracies = c(0.02, 0.03),
+                                  thresholds = c(1, 2))
+
+accurate_ranges
+```
+
+`sensorOverlord` also provides some default plotting methods that work for all sensor objects.
+
+`plotProperty` will plot $R$ vs the property of interest For example, for redox
+sensors, this will be $R$ vs $E_{GSH}$, the fraction of sensors in the oxidized state.
+
+```{R}
+plotProperty(redox_sensor_object)
+```
+
+`rangePlot` will plot the range of values a sensor can measure to a certain accuracy.
+
+```{R}
+rangePlot(redox_sensor_object, ranges = accurate_ranges)
+```
+
+In the plot above, notice how the range of values the sensor can measure accurately
+expands when the error in R is 2% ("Sensor_0.02") versus when the error in 3% ("Sensor_0.03").
+
+For more information on plotting methods, see the "Sensor Methods" section in [the documentation reference](https://apfeldlab.github.io/SensorOverlord/reference/index.html).
