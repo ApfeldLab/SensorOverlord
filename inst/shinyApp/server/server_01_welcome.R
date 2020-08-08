@@ -87,10 +87,14 @@ observeEvent(input$`use-upload`, {
 update_sensor_lambda <- observeEvent(input$sensors, {
   if (input$sensors %in% sensorNames) {
     index <- match(input$sensors, sensorData$sensor_name)
-    updateNumericInput(session, inputId = "lambda1",
-                       value = sensorData$lambda1_recommended[[index]])
-    updateNumericInput(session, inputId = "lambda2",
-                       value = sensorData$lambda2_recommended[[index]])
+    updateNumericInput(session,
+      inputId = "lambda1",
+      value = sensorData$lambda1_recommended[[index]]
+    )
+    updateNumericInput(session,
+      inputId = "lambda2",
+      value = sensorData$lambda2_recommended[[index]]
+    )
   }
 })
 
@@ -241,24 +245,62 @@ output$sensorChars <- renderText({
 
 # Custom Sensor Page ---------------------------------------------------
 # Output the characteristics of the custom sensor
-output$customChars <- output$customChars2 <- renderText({
-  # Make a sensor with custom characteristics
-  sensor <- sensorInfo$sensor
+output$customChars <- output$customChars2 <- renderDT(
+  {
+    # Make a sensor with custom characteristics
+    sensor <- sensorInfo$sensor
+    type <- input$sensorType
+    # Create a specific sensor object
+    sensor <- makeSpecificSensor(
+      sensor, type,
+      input$midpoint
+    )
 
-  # Create a specific sensor object
-  sensor <- makeSpecificSensor(
-    sensor, input$sensorType,
-    input$midpoint
-  )
-  return(paste0(
-    "Sensor: ", sensorInfo$sensor_name, " | ",
-    "Rmin: ", round(sensor@Rmin, 2), " | ",
-    "Rmax: ", round(sensor@Rmax, 2), " | ",
-    "Dynamic range: ", round(sensor@Rmax / sensor@Rmin, 3)
-  ))
-})
+    min_str <- switch(type, "redox" = "Rreduced", "pH" = "Rprotenated", "other" = "Rmin")
+    max_str <- switch(type, "redox" = "Roxidized", "pH" = "Rdeprotenated", "other" = "Rmax")
+
+    data.table(
+      Parameters = c("Sensor", min_str, max_str, "Dynamic Range"),
+      Values = c(
+        sensorInfo$sensor_name,
+        round(sensor@Rmin, 2), round(sensor@Rmax, 2),
+        round(sensor@Rmax / sensor@Rmin, 2)
+      )
+    )
+  },
+  options = list("pageLength" = 5, dom = "", searching = F, scrollX = T,
+                 columnDefs = list(list(className = 'dt-center', targets = "_all"))),
+  rownames = FALSE,
+  width = "50%"
+)
 
 # Output the graph of R vs FractionMax of the custom sensor
+output$plotFraction_Value <- output$plotFraction_Value2 <- renderPlot({
+  sensor <- sensorInfo$sensor
+
+  fracMax <- plotFractionMax(sensor) +
+           theme(
+             aspect.ratio = 1,
+             text = element_text(size = 20)
+           )
+
+  R_Value <- data.frame(R = getR(sensor), Value = getProperty(
+    sensor,
+    getR(sensor)
+  ))
+
+
+  value <- ggplot(R_Value, aes(x = R, y = Value)) +
+    geom_line() +
+    theme(
+      aspect.ratio = 1,
+      text = element_text(size = 20)
+    )
+
+  grid.arrange(fracMax, value, ncol = 2)
+
+})
+
 output$plotFractionMax_custom <- output$plotFractionMax_custom2 <- renderPlot({
   # Make a sensor with custom characteristics
   sensor <- sensorInfo$sensor

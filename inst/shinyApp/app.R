@@ -8,6 +8,8 @@ library(mongolite)
 library(shinyjs)
 library(plotly)
 library(shinycssloaders)
+library(DT)
+library(gridExtra)
 source(file.path("utils", "helpers.R"),  local = TRUE)
 
 ui <- navbarPage(

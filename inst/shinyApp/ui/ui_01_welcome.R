@@ -2,6 +2,12 @@ tabPanel(
   "Home",
   useShinyjs(),
   tags$style(appCSS),
+  tags$head(
+    tags$style(HTML("
+th { display: none; }
+td { font-size: 2em; }
+    "))
+  ),
   tags$div(
     class = "jumbotron",
     tags$div(
