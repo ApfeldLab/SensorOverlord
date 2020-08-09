@@ -10,6 +10,7 @@ library(plotly)
 library(shinycssloaders)
 library(DT)
 library(gridExtra)
+library(data.table)
 source(file.path("utils", "helpers.R"),  local = TRUE)
 
 ui <- navbarPage(

@@ -934,7 +934,8 @@ plot_ranges_general <- function(ranges, ylim, by, y_label) {
         ylab(y_label) +
         theme_classic() +
         theme(aspect.ratio = 1) +
-        coord_flip(ylim = ylim)
+        coord_flip(ylim = ylim) +
+        labs(color = "Inaccuracy Threshold")
 }
 
 

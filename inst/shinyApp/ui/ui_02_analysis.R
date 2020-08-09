@@ -49,9 +49,9 @@ tabPanel("Main Analysis",
           )
         ),
         br(),
-        p("You'll need to determine your microscopy imprecision empirically. For a reference,
-          we usually observe 2.8% error, but that can vary from 1% to 4% depending on image
-          analysis methods and experimental conditions."),
+        p("You'll need to determine your microscopy imprecision empirically. For reference,
+        95% of our observed ratios deviate from their true value by no more than 2.8%, but
+        that can vary from 1% to 4% depending on image analysis methods and experimental conditions."),
         p("Accuracy can be determined as you see fit!")
       ),
       hr(),

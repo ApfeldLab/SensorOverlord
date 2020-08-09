@@ -208,13 +208,14 @@ output$phasePlot <- renderPlotly({
     data = error_table, x = error_table[, sensor_type], y = ~Error,
     hoverinfo = "text", text = paste0(
       sensor_type, ": ", round(error_table[, sensor_type], 2), "\n",
-      "Error: ", round(error_table[, "Error"], 2)
+      "Inaccuracy: ", round(error_table[, "Error"], 2)
     )
   ) %>%
     add_lines() %>%
     layout(
       yaxis = list(
-        range = c(0, min(error_table$Error) * 5)
+        range = c(0, min(error_table$Error) * 5),
+        title = "Inaccuracy"
       ),
       xaxis = list(
         title = sensor_type
