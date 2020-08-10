@@ -114,7 +114,7 @@ tabPanel("Main Analysis",
     mainPanel(
       h3("Suitable Range", align = "center"),
       plotOutput(outputId = "range") %>% withSpinner(type = 6),
-      h3("Phase Plot", align = "center"),
+      h3("Predicted Inaccuracy Plot", align = "center"),
       plotlyOutput(outputId = "phasePlot", height = "500%", width = "100%") %>% withSpinner(type = 6)
     )
   ),
