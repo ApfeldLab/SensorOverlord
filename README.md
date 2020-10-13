@@ -1,5 +1,8 @@
 # SensorOverlord
 
+**Source:**
+[![GitHub Repo](https://img.shields.io/badge/GitHub%20Repository-SensorOverlord-blue.svg)](https://github.com/apfeldlab/sensoroverlord)
+
 **Build:**
 [![Build Status](https://travis-ci.com/ApfeldLab/SensorOverlord.svg?branch=master&status=passed)](https://travis-ci.com/github/ApfeldLab/SensorOverlord)
 [![codecov](https://codecov.io/gh/apfeldlab/sensoroverlord/branch/master/graph/badge.svg)](https://codecov.io/gh/apfeldlab/sensoroverlord)
@@ -14,6 +17,10 @@
 This package aims to help you understand the limitations of quantatative measurements with two-state ratiometric sensors. 
 
 You can load sensor spectra information into an object, take ratio measurements from that spectra, convert those ratio measurements into biophysically-meaningful values (e.g. fraction protenated and pH or fraction oxidized and redox potential), and then analyze how errors in ratio measurements affect the errors in those values. 
+
+## Detailed Information
+
+For more detailed information about this package, see our [manuscript in Scientific Reports](https://www.nature.com/articles/s41598-020-73987-0) and/or our [documentation site](https://apfeldlab.github.io/SensorOverlord/).
 
 ## Getting Started
 
